@@ -8,7 +8,7 @@
 
 **`서비스 링크`** : [<div> 서비스 링크]()
 
-**`피그마 링크`** :[<div> 피그마 링크](https://www.figma.com/design/2lII1sCPCt4isWAPofxaiV/B08%EC%A1%B0-%EC%84%B8%EB%AF%B8%EC%BD%9C%EB%A1%A0?node-id=2009-4&t=0R5QpcALqkuAm0Id-0)
+**`피그마 링크`** : [<div> 피그마 링크](https://www.figma.com/design/2lII1sCPCt4isWAPofxaiV/B08%EC%A1%B0-%EC%84%B8%EB%AF%B8%EC%BD%9C%EB%A1%A0?node-id=2009-4&t=0R5QpcALqkuAm0Id-0)
 
 ## 구성원
 
@@ -78,5 +78,37 @@
 ```
 
 ```
+
+</details>
+
+## 트러블 슈팅
+
+<details>
+<summary>트러블 슈팅 1</summary>
+<br>
+
+**`문제`**
+
+**`해결`**
+
+</details>
+
+<details>
+<summary>트러블 슈팅 2</summary>
+<br>
+
+**`문제`**
+
+**`해결`**
+
+</details>
+
+<details>
+<summary>트러블 슈팅 3</summary>
+<br>
+
+**`문제`**
+
+**`해결`**
 
 </details>
