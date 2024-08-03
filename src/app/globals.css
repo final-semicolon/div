@@ -2,32 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@layer base {
+  body {
+    @apply font-main;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+
+.swiper-pagination-bullet {
+  background-color: #ced7e3 !important;
+}
+.swiper-pagination-bullet-active {
+  background-color: #ced7e3 !important;
+}
+
+.w-md-editor {
+  border-radius: 8px !important;
+  border-color: #dbdbdb !important;
+}
+
+.w-md-editor-toolbar {
+  border-radius: 8px 8px 0 0 !important;
+  border-color: #dbdbdb !important;
+}
+
+.w-md-editor-content {
+  border-color: #dbdbdb !important;
+}
+
+.w-md-editor-text-input {
+  min-height: 512px !important;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .center-alignment {
+    @apply flex flex-col justify-center items-center;
+  }
+  .profile-like-bookmark {
+    @apply text-subtitle1 font-medium cursor-pointer p-[0px_25px_0px_25px];
   }
 }
+
+/* .custom-markdown {
+  font-family: font-regular;
+} */

@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-import { TanstackQueryProvider } from '@/query/queryClient';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-
-const inter = Inter({ subsets: ['latin'] });
+import 'react-toastify/dist/ReactToastify.css';
+import { AuthProvider } from '@/context/auth.context';
+import TanstackQueryProvider from '@/providers/TanstackQueryProvider';
+import { BookmarkProvider } from '@/providers/BookmarkProvider';
+import LikeProvider from '@/providers/LikeProvider';
 
 export const metadata: Metadata = {
   title: '<div>',
@@ -18,10 +19,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <TanstackQueryProvider>
-          {children}
-          <ReactQueryDevtools initialIsOpen={false} />
+          <AuthProvider>
+            <BookmarkProvider>
+              <LikeProvider>
+                {children}
+                <ReactQueryDevtools initialIsOpen={false} />
+              </LikeProvider>
+            </BookmarkProvider>
+          </AuthProvider>
         </TanstackQueryProvider>
       </body>
     </html>
