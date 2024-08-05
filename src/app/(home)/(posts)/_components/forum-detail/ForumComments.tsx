@@ -17,6 +17,7 @@ import BookmarkButton from '@/components/common/BookmarkButton';
 import KebabButton from '@/assets/images/common/KebabButton';
 import { revalidate } from '@/actions/revalidate';
 import ConfirmModal from '@/components/modal/ConfirmModal';
+import EndOfDataMessage from '@/components/common/EndOfDataMessage';
 
 const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -274,14 +275,9 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
               {replyToggle[comment.id] ? <ForumReply comment_id={comment.id} post_user_id={post_user_id} /> : null}
             </div>
           ))}
-          {!hasNextPage && (
-            <div className="p-5 items-center">
-              <p>End of Data</p>
-            </div>
-          )}
         </div>
       ))}
-
+      {!hasNextPage && !isPending && <EndOfDataMessage />}
       <div ref={ref}></div>
     </div>
   );
