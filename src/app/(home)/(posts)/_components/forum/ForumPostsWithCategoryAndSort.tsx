@@ -83,6 +83,11 @@ const ForumPostsWithCategoryAndSort = () => {
           </div>
         )}
         {isFetchingNextPage && <div>추가 게시물 로딩중...</div>}
+        {!hasNextPage && !isFetchingNextPage && (
+          <div className="p-5 items-center">
+            <p>End of Data</p>
+          </div>
+        )}
         <div ref={ref}></div>
       </div>
     </div>
