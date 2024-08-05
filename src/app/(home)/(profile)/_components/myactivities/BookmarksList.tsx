@@ -147,7 +147,7 @@ const BookmarksList = ({ selectedCategory, selectedForumCategory, selectedType }
 
       toast.success('삭제가 완료 되었습니다.');
     } catch (error) {
-      console.error('삭제 처리 중 오류 발생:', error);
+      // console.error('삭제 처리 중 오류 발생:', error);
     }
   };
 
@@ -185,6 +185,7 @@ const BookmarksList = ({ selectedCategory, selectedForumCategory, selectedType }
         )}
       </div>
       <ToastContainer />
+
       {paginatedItems.length === 0 ? (
         <div>북마크를 추가해보세요</div>
       ) : (
@@ -218,6 +219,8 @@ const BookmarksList = ({ selectedCategory, selectedForumCategory, selectedType }
                 profile_image={item.user.profile_image}
                 forum_category={item.forum_category}
                 created_at={item.created_at}
+                likesCount={item.likesCount}
+                commentsCount={item.commentsCount}
                 isSelected={selectedItems.has(item.id)}
                 onCheckboxChange={(id) => handleCheckboxChange(id, item.category, 'comment')}
               />

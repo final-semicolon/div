@@ -160,7 +160,7 @@ const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, 
 
       toast.success('삭제가 완료 되었습니다.');
     } catch (error) {
-      console.error('삭제 처리 중 오류 발생:', error);
+      // console.error('삭제 처리 중 오류 발생:', error);
     }
   };
 
@@ -230,6 +230,8 @@ const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, 
                 nickname={userData?.nickname || ''}
                 profile_image={userData?.profile_image || ''}
                 forum_category={item.forum_category}
+                likesCount={item.likesCount}
+                commentsCount={item.commentsCount}
                 created_at={item.created_at}
                 isSelected={selectedItems.has(item.id)}
                 onCheckboxChange={(id) => handleCheckboxChange(id, item.category, 'comment')}
