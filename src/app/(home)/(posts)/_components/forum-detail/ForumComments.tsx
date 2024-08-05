@@ -101,7 +101,8 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
     fetchNextPage,
     data: comments,
     isPending,
-    isError
+    isError,
+    hasNextPage
   } = useInfiniteQuery({
     queryKey: ['forumComments', param.id],
     initialPageParam: 0,
@@ -273,6 +274,11 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
               {replyToggle[comment.id] ? <ForumReply comment_id={comment.id} post_user_id={post_user_id} /> : null}
             </div>
           ))}
+          {!hasNextPage && (
+            <div className="p-5 items-center">
+              <p>End of Data</p>
+            </div>
+          )}
         </div>
       ))}
 
