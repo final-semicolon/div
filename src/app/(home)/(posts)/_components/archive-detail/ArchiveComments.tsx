@@ -99,7 +99,8 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
     fetchNextPage,
     data: comments,
     isPending,
-    isError
+    isError,
+    hasNextPage
   } = useInfiniteQuery({
     queryKey: ['archiveComments', param.id],
     initialPageParam: 0,
@@ -254,6 +255,11 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
               {replyToggle[comment.id] ? <ArchiveReply comment_id={comment.id} /> : null}
             </div>
           ))}
+          {!hasNextPage && (
+            <div className="p-5 items-center">
+              <p>End of Data</p>
+            </div>
+          )}
         </div>
       ))}
 
