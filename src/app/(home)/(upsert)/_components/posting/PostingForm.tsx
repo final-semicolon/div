@@ -1,5 +1,5 @@
 'use client';
-import { FormEvent, FormEventHandler, useState } from 'react';
+import { FormEvent, FormEventHandler, useRef, useState } from 'react';
 import Link from 'next/link';
 import { TpostFormData } from '@/types/upsert';
 import FormTitleInput from './postingform/FormTitleInput';
@@ -23,12 +23,14 @@ import PostingCategoryBox from './postingform/PostingCategoryBox';
 import UpsertTheme from '../UpsertTheme';
 import ThumbNailBox from '../ThumbNailBox';
 import { v4 as uuidv4 } from 'uuid';
+import { TAG_LIST } from '@/constants/tags';
 
 const PostingForm = () => {
+  const router = useRouter();
   const { categoryGroup, subCategory, clearCategory } = usePostingCategoryStore();
   const { me: user } = useAuth();
-  const router = useRouter();
-
+  const ref = useRef<HTMLFormElement>(null);
+  const [tagList, setTagList] = useState<Array<Ttag>>(TAG_LIST);
   const [content, setContent] = useState<string>('');
 
   if (!user?.id) {
@@ -76,7 +78,7 @@ const PostingForm = () => {
     thumbnailFormData.append('category', category);
     thumbnailFormData.append('name', uuidv4());
 
-    //유효성 검사 통과시 업로드 썸네일 업로드 후 글업로드
+    //유효성 검사 통과시 업로드 썸네일-글-태그순서로 업로드
 
     const thumbnail = await fetch('/api/upsert/thumbnail', {
       method: 'POST',
@@ -93,9 +95,17 @@ const PostingForm = () => {
       method: 'POST',
       body: JSON.stringify({ ...postData, thumbnailUrl })
     });
-    const { message } = await response.json();
+    const { data, message } = await response.json();
 
-    toast.success(message, { autoClose: 1500, onClose: () => router.push(`/${category}`) });
+    const tagsArray = tagList.filter((tag) => tag.selected === true);
+    if (tagsArray.length > 0 && !!data[0].id) {
+      const response = await fetch(`/api/upsert/tags/${data[0].id}`, {
+        method: 'POST',
+        body: JSON.stringify({ user_id: user.id, tags: tagsArray, category: data[0].category })
+      });
+    }
+
+    toast.success(message, { autoClose: 1500, onClose: () => router.push(`/${category}/${data[0].id}`) });
     clearCategory();
     return;
   };
@@ -107,13 +117,13 @@ const PostingForm = () => {
         <BackArrowIcon />
       </Link>
       <UpsertTheme />
-      <form className="flex flex-col gap-y-10 h-full" onSubmit={handleSubmit}>
+      <form ref={ref} className="flex flex-col gap-y-10 h-full" onSubmit={handleSubmit}>
         <PostingCategoryBox />
         <FormTitleInput />
-        <FormTagInput />
+        <FormTagInput tagList={tagList} setTagList={setTagList} />
         <ThumbNailBox />
         <FormContentArea content={content} setContent={setContent} />
-        <FormSubmitButton />
+        <FormSubmitButton content={content} />
       </form>
     </div>
   );

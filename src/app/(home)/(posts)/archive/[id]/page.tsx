@@ -10,11 +10,11 @@ const ArchiveDetailPage = async ({ params }: { params: { id: string } }) => {
   return (
     <div className="flex flex-col justify-center w-[1200px]  ">
       <BackClick />
-      <div className=" border rounded-xl p-4 ">
-        <ArchiveDetailPost archiveDetail={data} />
+      <div className=" border rounded-xl p-6 ">
+        <ArchiveDetailPost />
         <ArchiveInputComments />
       </div>
-      <ArchiveComments post_user_id={data[0]?.user_id} />
+      <ArchiveComments post_user_id={data[0].user_id} />
     </div>
   );
 };

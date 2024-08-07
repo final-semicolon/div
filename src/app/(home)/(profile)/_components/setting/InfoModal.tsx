@@ -1,9 +1,9 @@
 import Modal from '@/components/modal/Modal';
-import ConfirmModal from '@/components/modal/ConfirmModal'; // ConfirmModal을 import합니다.
+import ConfirmModal from '@/components/modal/ConfirmModal';
 import { useState, useEffect, ChangeEvent } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import X from '@/assets/images/common/X';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Check from '@/assets/images/common/Check';
 
 type InfoModalProps = {
@@ -81,7 +81,6 @@ const InfoModal = ({ isOpen, onClose, currentInfo, onInfoUpdate }: InfoModalProp
               <X width={20} height={20} />
             </div>
           </div>
-
           <h2
             className={`${
               currentInfo !== newInfo
@@ -161,9 +160,8 @@ const InfoModal = ({ isOpen, onClose, currentInfo, onInfoUpdate }: InfoModalProp
         isOpen={isConfirmModalOpen}
         onClose={handleCancelClose}
         onConfirm={handleConfirmClose}
-        message={`작성 중인 내용이 저장되지 않았습니다.\n정말 닫으시겠습니까?`}
+        message={`내용이 저장되지 않았습니다.\n정말 닫으시겠습니까?`}
       />
-      <ToastContainer />
     </>
   );
 };

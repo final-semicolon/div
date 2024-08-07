@@ -1,31 +1,20 @@
 'use client';
 
 import Logo from '@/assets/images/header/Logo';
-import SearchButton from '@/assets/images/header/SearchButton';
 import { useAuth } from '@/context/auth.context';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavLinks from './NavLinks';
 import SearchBar from './SearchBar';
 import UserMenu from './UserMenu';
 
 const Header = () => {
-  const { isLoggedIn, logOut, userData } = useAuth();
+  const { isLoggedIn, userData } = useAuth();
   const pathname = usePathname();
 
   const getLinkClasses = (path: string) => {
     return pathname === path ? 'text-main-500' : 'text-neutral-900';
-  };
-
-  const handleLogout = async () => {
-    const result = await logOut();
-    if (result.status === 200) {
-      toast.success('로그아웃되었습니다.');
-    }
   };
 
   return (
@@ -40,9 +29,8 @@ const Header = () => {
           <NavLinks getLinkClasses={getLinkClasses} />
         </div>
         <SearchBar />
-        <UserMenu isLoggedIn={isLoggedIn} userData={userData} handleLogout={handleLogout} />
+        <UserMenu isLoggedIn={isLoggedIn} userData={userData} />
       </div>
-      <ToastContainer />
     </header>
   );
 };

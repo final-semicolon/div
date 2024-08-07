@@ -1,144 +1,144 @@
 'use client';
 
-import { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
 import { timeForToday } from '@/utils/timeForToday';
-import { useParams, useRouter } from 'next/navigation';
 import MDEditor from '@uiw/react-md-editor';
 import Image from 'next/image';
-import { archiveDetailType } from '@/types/posts/archiveDetailTypes';
-import { useAuth } from '@/context/auth.context';
 import LikeButton from '@/components/common/LikeButton';
 import BookmarkButton from '@/components/common/BookmarkButton';
-import Share from '@/assets/images/common/Share';
-import KebabButton from '@/assets/images/common/KebabButton';
 import { handleRinkCopy } from '@/utils/handleRinkCopy';
-import { toast } from 'react-toastify';
+import Share from '@/assets/images/common/Share';
+import { useAuth } from '@/context/auth.context';
+import { useParams, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import KebabButton from '@/assets/images/common/KebabButton';
+import ConfirmModal from '@/components/modal/ConfirmModal';
+import { archiveDetailType } from '@/types/posts/archiveDetailTypes';
+import dayjs from 'dayjs';
 
-const ArchiveDetailPost = ({ archiveDetail }: { archiveDetail: archiveDetailType[] }) => {
-  const params = useParams();
-  const router = useRouter();
+import { filterSlang } from '@/utils/markdownCut';
+import TagBlock from '@/components/common/TagBlock';
+
+
+const ArchiveDetailPost = () => {
   const { me } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const param = useParams();
+  const router = useRouter();
+  const [kebobToggle, setKebobToggle] = useState<boolean>(false);
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
+  const [archiveDetail, setArchiveDetail] = useState<archiveDetailType | null>(null);
+  const [commentCount, setCommentCount] = useState<number>(0);
 
-  // 게시글 데이터 가져오기
-  const { data, error, isLoading } = useQuery<archiveDetailType[]>({
-    queryKey: ['archiveDetail', params.id],
-    queryFn: async () => {
-      const response = await fetch(`/api/posts/archive-detail/${params.id}`);
-      if (!response.ok) {
-        throw new Error('데이터를 가져오는데 실패했습니다.');
-      }
+  useEffect(() => {
+    const fetchArchiveDetail = async () => {
+      const response = await fetch(`/api/posts/archive-detail/${param.id}`);
       const data = await response.json();
-      return Array.isArray(data) ? data : [data];
-    }
-  });
+      setArchiveDetail(data[0]);
+      setCommentCount(data.commentCount);
+    };
 
-  // 게시글 삭제 기능
-  const deleteMutation = useMutation({
-    mutationFn: async (postId: string) => {
-      const response = await fetch(`/api/posts/archive-detail/${postId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: me?.id })
-      });
+    fetchArchiveDetail();
+  }, [param.id]);
 
-      if (!response.ok) {
-        throw new Error('게시글 삭제에 실패했습니다.');
-      }
-    },
-    onSuccess: () => {
-      toast.success('게시글이 성공적으로 삭제되었습니다.');
-      router.back();
-    },
-    onError: (error: Error) => {
-      toast.error('게시글 삭제에 실패했습니다. 다시 시도해 주세요.');
-    }
-  });
-
-  const handleKebabClick = () => {
-    setIsMenuOpen((prev) => !prev);
+  const handlePostDelete = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/archive-detail/${param.id}`, {
+      method: 'DELETE',
+      body: JSON.stringify({ id: me?.id })
+    });
+    router.push('/');
+    return;
   };
 
-  const handleDeleteClick = (postId: string) => {
-    if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
-      deleteMutation.mutate(postId);
-    }
+  const handlePostRetouch = () => {
+    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/edit/${param.id}?category=archive?page=0`);
   };
 
-  const handleEditClick = (postId: string) => {
-    router.push(`/edit/${postId}?category=archive`);
-  };
-
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
-
-  if (error || !data || data.length === 0) {
-    return <div>게시글을 불러오는데 실패했습니다: {error?.message}</div>;
-  }
+  if (!archiveDetail) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col gap-4">
-      {data.map((post) => (
-        <div key={post.id} className="w-full flex flex-col gap-2 p-4 border-b-[1px] ">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-2">
-              <Image
-                src={post.user.profile_image}
-                alt="archiveUserImage"
-                width={100}
-                height={100}
-                className="rounded-full w-10 h-10"
-              />
-              <div>
-                <h3>{post.user.nickname}</h3>
-                <div className="flex justify-start items-center gap-3">
-                  <p>
-                    {timeForToday(post.updated_at ? post.updated_at : post.created_at)}
-                    <span>{post.updated_at !== post.created_at && '(수정됨)'}</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            {me?.id === post.user.id && (
-              <div className="relative">
-                <button onClick={handleKebabClick} className="p-4">
-                  <KebabButton />
-                </button>
-                {isMenuOpen ? (
-                  <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center bg-white shadow-lg border rounded-lg">
-                    <button className="h-[44px]" onClick={() => handleEditClick(post.id)}>
-                      게시글 수정
-                    </button>
-                    <button className="h-[44px]" onClick={() => handleDeleteClick(post.id)}>
-                      게시글 삭제
-                    </button>
+      <div className="w-full flex flex-col gap-6 border-b-[1px] ">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-4">
+            {archiveDetail.user && (
+              <>
+                <Image
+                  src={archiveDetail.user.profile_image}
+                  alt="forumUserImage"
+                  width={50}
+                  height={50}
+                  className="rounded-full w-[48px] h-[48px]"
+                />
+                <div className="flex flex-col gap-2">
+                  <p className="text-subtitle1 font-medium">{archiveDetail.user.nickname}</p>
+                  <div className="flex justify-start items-center gap-2">
+                    <p className="text-body2 font-regular text-neutral-300">
+                      {timeForToday(archiveDetail.updated_at ? archiveDetail.updated_at : archiveDetail.created_at)}
+                      <span>{archiveDetail.updated_at !== archiveDetail.created_at && '(수정됨)'}</span>
+                    </p>
                   </div>
-                ) : null}
-              </div>
+                </div>
+              </>
             )}
           </div>
-          <div className="flex flex-col gap-4 mt-4">
-            <p className="text-h4 font-bold">{post.title}</p>
-            <MDEditor.Markdown source={post.content} className="text-body1 font-regular" />
-          </div>
-          <div className="flex justify-between items-center mb-4">
-            <p className="text-body1 text-neutral-400">{post.created_at.slice(0, 10).replace(/-/g, '.')}</p>
-            <div className="flex gap-5">
-              <LikeButton id={post.id} type="archive" />
-              <BookmarkButton id={post.id} type="archive" />
-              <button
-                type="button"
-                onClick={() => handleRinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/archive/${post.id}`)}
-              >
-                <Share />
-              </button>
-              <div className="text-main-400 text-subtitle1 font-medium">{post.comment[0].count}개의 댓글</div>
+          {archiveDetail.user_id === me?.id && (
+            <div className="relative">
+              <div className="p-4" onClick={() => setKebobToggle(!kebobToggle)}>
+                <KebabButton />
+              </div>
+              {kebobToggle && (
+                <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center shadow-lg border rounded-lg">
+                  <button
+                    className="h-[44px] w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
+                    onClick={handlePostRetouch}
+                  >
+                    게시글 수정
+                  </button>
+                  <button
+                    className="h-[44px] w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
+                    onClick={() => setConfirmModal(true)}
+                  >
+                    게시글 삭제
+                  </button>
+                </div>
+              )}
+              {confirmModal && (
+                <div>
+                  <ConfirmModal
+                    isOpen={confirmModal}
+                    onClose={() => setConfirmModal(false)}
+                    onConfirm={handlePostDelete}
+                    message={'게시글을 삭제하시겠습니까?'}
+                  />
+                </div>
+              )}
             </div>
+          )}
+        </div>
+        <div className="flex flex-col gap-6 whitespace-pre-wrap break-words" data-color-mode="light">
+          <p className="text-h4 font-bold">{archiveDetail.title}</p>
+
+          <MDEditor.Markdown source={filterSlang(archiveDetail.content)} className="text-body1 font-regular" />
+        </div>
+        <div className="flex justify-start items-start gap-2">
+          {archiveDetail.tags?.map((tag) => <div key={tag.id}>{tag && <TagBlock tag={tag.tag} />}</div>)}
+        </div>
+        <div className="flex justify-between items-center mb-6">
+          <p className="text-body1 font-regular text-neutral-400">
+            {dayjs(archiveDetail.created_at).format('YYYY-MM-DD HH:mm')}
+          </p>
+          <div className="flex gap-5">
+            <LikeButton id={archiveDetail.id} type="archive" />
+            <BookmarkButton id={archiveDetail.id} type="archive" />
+            <button
+              type="button"
+              onClick={() => handleRinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/archive/${archiveDetail.id}`)}
+            >
+              <Share />
+            </button>
+            <p className="text-subtitle1 font-medium text-main-400">{commentCount || 0}개의 댓글</p>
           </div>
         </div>
-      ))}
+      </div>
     </div>
   );
 };

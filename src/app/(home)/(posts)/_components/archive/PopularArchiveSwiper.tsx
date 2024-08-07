@@ -15,6 +15,7 @@ import CarouselRightHover from '@/assets/images/common/CarouselRightHover';
 import CarouselRight from '@/assets/images/common/CarouselRight';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { cutText, filterSlang } from '@/utils/markdownCut';
 
 const PopularArchiveSwiper = () => {
   const { data, error, isLoading } = usePopularArchivePosts();
@@ -82,23 +83,19 @@ const PopularArchiveSwiper = () => {
               onClick={() => handlePostClick(post.id)}
             >
               <div className="flex-grow-0 flex-shrink-0 relative rounded-xl">
-                {post.thumbnail && (
-                  <Image
-                    src={post.thumbnail}
-                    alt="Post Thumbnail"
-                    width={388}
-                    height={280}
-                    className="w-[366px] h-[264px] object-cover rounded-xl"
-                  />
-                )}
+                <Image
+                  src={post.thumbnail || '/images/archive/default_thumbnail.webp'}
+                  alt="Post Thumbnail"
+                  width={388}
+                  height={280}
+                  className="w-[366px] h-[264px] object-cover rounded-xl"
+                />
                 <div className="absolute top-4 right-4">
                   <BookmarkButton id={post.id} type="archive" />
                 </div>
               </div>
               <div className="flex flex-col justify-center items-start self-stretch flex-grow-0 flex-shrink-0 relative gap-2 px-5 py-2">
-                <h2 className="text-body1 font-bold text-neutral-900">
-                  {post.title.length > 20 ? `${post.title.slice(0, 20)}...` : post.title}
-                </h2>
+                <h2 className="text-body1 font-bold text-neutral-900">{cutText(post.title, 20)}</h2>
                 <p className="text-base text-body2 font-regular text-neutral-700">
                   {post.user.nickname
                     ? post.user.nickname.length > 20

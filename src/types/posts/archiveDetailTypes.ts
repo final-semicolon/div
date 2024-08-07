@@ -1,8 +1,16 @@
 import { Tables } from '../supabase';
 
 export type archiveDetailType = Tables<'archive_posts'> & {
-  user: Tables<'users'>;
-  comment: { count: number }[];
+  user: {
+    email: string;
+    github_url: string | null;
+    id: string;
+    info: string | null;
+    nickname: string | null;
+    profile_image: string;
+  } | null;
+  commentsCount: number;
+  tags: { id: string; tag: string }[];
 };
 
 type comments = {
@@ -60,5 +68,26 @@ export type archiveReplyType = {
   id: string;
   reply: reply[];
   created_at: string;
+  comment_id: string;
+  updated_at: string;
+  user: string[];
   count: number;
+  pageParams: number[];
+};
+
+export type archiveReplyInputProps = {
+  comment_id: string;
+  toggle: (id: string, count: number) => void;
+  count: number;
+};
+
+export type userReply = {
+  user_id: string | undefined;
+  comment_id: string;
+  reply: string;
+};
+
+export type archiveCommentInputProps = {
+  comment_id: string;
+  toggle: (id: string) => void;
 };
