@@ -47,7 +47,7 @@ const ArchiveDetailPost = () => {
   };
 
   const handlePostRetouch = () => {
-    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/edit/${param.id}?category=archive?page=0`);
+    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/edit/${param.id}?category=archive`);
   };
 
   if (!archiveDetail) return <div>Loading...</div>;
