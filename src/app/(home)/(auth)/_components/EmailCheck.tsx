@@ -29,7 +29,7 @@ const EmailCheck = ({
 
     const handleValidateEmail = async (email: string) => {
       if (!validateEmailFormat(email)) {
-        setEmailMessage('유효하지 않은 이메일 형식입니다.');
+        setEmailMessage('필수 입력 항목이에요.(또는 이메일 형식을 확인해주세요.)');
         setEmailValid(false);
         setIsCheckedEmail(false);
         return;
@@ -47,20 +47,20 @@ const EmailCheck = ({
         const result = await response.json();
 
         if (response.status === 409) {
-          setEmailMessage('이미 사용 중인 이메일입니다.');
+          setEmailMessage('이미 사용 중인 이메일이에요.');
           setEmailValid(false);
           setIsCheckedEmail(false);
         } else if (response.ok) {
-          setEmailMessage('사용 가능한 이메일입니다.');
+          setEmailMessage('사용 가능한 이메일이에요.');
           setEmailValid(true);
           setIsCheckedEmail(true);
         } else {
-          setEmailMessage(result.error || '이메일 확인 중 오류가 발생했습니다.');
+          setEmailMessage(result.error || '이메일 확인 중 오류가 발생했어요.');
           setEmailValid(false);
           setIsCheckedEmail(false);
         }
       } catch (error) {
-        setEmailMessage('이메일 확인 중 오류가 발생했습니다.');
+        setEmailMessage('이메일 확인 중 오류가 발생했어요.');
         setEmailValid(false);
         setIsCheckedEmail(false);
       }

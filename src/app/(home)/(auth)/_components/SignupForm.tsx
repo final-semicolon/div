@@ -61,14 +61,10 @@ const SignupForm = () => {
     setNicknameValid(isValidNickname);
 
     setPasswordMessage(
-      validatePassword(password)
-        ? '사용 가능한 비밀번호입니다.'
-        : '비밀번호는 영문, 숫자, 특수문자를 포함하여 10자 이상이어야 합니다.'
+      validatePassword(password) ? '사용 가능한 비밀번호에요.' : '영문/숫자/특수문자 혼합 (10자 이상).'
     );
-    setConfirmPasswordMessage(
-      password === confirmPassword ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.'
-    );
-    setNicknameMessage(isValidNickname ? '사용 가능한 닉네임입니다.' : '닉네임은 2자 이상 12자 이하여야 합니다.');
+    setConfirmPasswordMessage(password === confirmPassword ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않아요.');
+    setNicknameMessage(isValidNickname ? '사용 가능한 닉네임아에요.' : '닉네임은 2자 이상 입력해주세요.');
   }, [password, confirmPassword, nickname]);
 
   useEffect(() => {
@@ -137,7 +133,7 @@ const SignupForm = () => {
         <div className="flex items-center justify-center mb-16">
           <Logo />
         </div>
-        <div className="border-b-4 mb-8">
+        <div className="border-b-2 mb-8">
           <OAuthButtons handleLogin={handleOAuthLogin} />
         </div>
         <form onSubmit={handleSignup} className="mt-4">

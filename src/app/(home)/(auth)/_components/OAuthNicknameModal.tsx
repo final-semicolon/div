@@ -40,7 +40,7 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
       if (nickname.length < 2) {
         setNicknameValid(false);
         setIsCheckedNickname(false);
-        setNicknameMessage('닉네임은 2자 이상 12자 이하여야 합니다.');
+        setNicknameMessage('닉네임은 2자 이상 입력해주세요.');
         return;
       }
 
@@ -56,18 +56,18 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
         const result = await response.json();
 
         if (response.status === 409) {
-          setNicknameMessage('이미 사용중인 닉네임입니다.');
+          setNicknameMessage('이미 사용중인 닉네임이에요.');
           setIsCheckedNickname(false);
           setNicknameValid(false);
         } else if (response.ok) {
-          setNicknameMessage('사용 가능한 닉네임입니다.');
+          setNicknameMessage('사용 가능한 닉네임이에요.');
           setIsCheckedNickname(true);
           setNicknameValid(true);
         } else {
-          setNicknameMessage(result.error || '닉네임 확인 중 오류가 발생했습니다.');
+          setNicknameMessage(result.error || '닉네임 확인 중 오류가 발생했어요.');
         }
       } catch (error) {
-        setNicknameMessage('닉네임 확인 중 오류가 발생했습니다.');
+        setNicknameMessage('닉네임 확인 중 오류가 발생했어요.');
       }
     };
 
@@ -90,10 +90,10 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
         if (response.ok) {
           onNicknameUpdate(nickname);
         } else {
-          setNicknameMessage(result.error || '닉네임 업데이트 중 오류가 발생했습니다.');
+          setNicknameMessage(result.error || '닉네임 업데이트 중 오류가 발생했어요.');
         }
       } catch (error) {
-        setNicknameMessage('닉네임 업데이트 중 오류가 발생했습니다.');
+        setNicknameMessage('닉네임 업데이트 중 오류가 발생했어요.');
       }
     }
   };

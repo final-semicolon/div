@@ -133,7 +133,7 @@ function LoginForm() {
             </Link>
           </p>
         </div>
-        <div className="border-t-4 mt-8">
+        <div className="border-t-2 mt-8">
           <OAuthButtons handleLogin={handleOAuthLogin} />
         </div>
       </div>
