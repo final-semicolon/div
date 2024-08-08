@@ -11,7 +11,7 @@ const SignupButton = ({ onClick, disabled }: SignupButtonProps) => {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`w-full p-3 rounded-md ${disabled ? 'bg-main-100' : 'bg-main-400 text-white '}`}
+      className={`w-full p-3 rounded-md subtitle1-bold-18px  ${disabled ? 'bg-main-100 text-main-50' : 'bg-main-400 text-white '}`}
     >
       가입하기
     </button>

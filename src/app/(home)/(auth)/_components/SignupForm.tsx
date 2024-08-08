@@ -9,7 +9,7 @@ import PasswordFields from './PasswordFields';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useAuth } from '@/context/auth.context';
 import OAuthButtons from './OAuthButtons';
-import useOAuthLogin from '@/hooks/useOAuthLogin';
+import useOAuthLogin from '@/hooks/common/useOAuthLogin';
 import EmailCheck from './EmailCheck';
 import Logo from '@/assets/images/header/Logo';
 import NicknameCheck from './NicknameCheck ';
@@ -60,11 +60,13 @@ const SignupForm = () => {
     const isValidNickname = validateNickname(nickname);
     setNicknameValid(isValidNickname);
 
-    setPasswordMessage(
-      validatePassword(password) ? '사용 가능한 비밀번호에요.' : '영문/숫자/특수문자 혼합 (10자 이상).'
+    // setPasswordMessage(
+    //   validatePassword(password) ? '사용 가능한 비밀번호에요.' : '영문/숫자/특수문자 혼합 (10자 이상).'
+    // );
+    setConfirmPasswordMessage(
+      password === confirmPassword ? '영문/숫자/특수문자 혼합 (10자 이상)' : '영문/숫자/특수문자 혼합 (10자 이상)'
     );
-    setConfirmPasswordMessage(password === confirmPassword ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않아요.');
-    setNicknameMessage(isValidNickname ? '사용 가능한 닉네임아에요.' : '닉네임은 2자 이상 입력해주세요.');
+    setNicknameMessage(isValidNickname ? '사용 가능한 닉네임이에요.' : '2~12자 이하');
   }, [password, confirmPassword, nickname]);
 
   useEffect(() => {
@@ -179,7 +181,7 @@ const SignupForm = () => {
           </div>
           <SignupButton onClick={handleButtonClick} disabled={!formValid} />
           <p className="mt-3 text-center body2-regular-16px">
-            이미 아이디가 있으신가요?{' '}
+            이미 아이디가 있으신가요?
             <Link href="/login" className="body2-medium-16px underline">
               로그인
             </Link>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SigninInputField from './SigninInputField';
 
 type PasswordFieldsProps = {
@@ -40,7 +40,6 @@ const PasswordFields = ({
         valid={confirmPasswordValid}
         message={confirmPasswordMessage}
       />
-      <div className="text-sm text-gray-600 mb-3">영문/숫자/특수문자 혼합 (10자 이상)</div>
     </div>
   );
 };

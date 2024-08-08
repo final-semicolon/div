@@ -10,7 +10,7 @@ type OAuthButtonsProps = {
 const OAuthButtons = ({ handleLogin }: OAuthButtonsProps) => {
   return (
     <div className="mt-4 text-center">
-      <p className="text-gray-600">SNS 계정으로 로그인/회원가입</p>
+      <p className="subtitle1-medium-18px text-gray-600">SNS 계정으로 로그인/회원가입</p>
       <div className="flex justify-center mt-2 space-x-4">
         <button onClick={() => handleLogin('google')} className=" p-2 rounded-full flex items-center justify-center ">
           <Google />
