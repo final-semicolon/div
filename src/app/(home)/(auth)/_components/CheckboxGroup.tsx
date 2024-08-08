@@ -54,7 +54,7 @@ const CheckboxGroup = ({
 
   return (
     <div className="mb-4 ml-4">
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-3">
         <input
           id="agreeAll"
           type="checkbox"
@@ -66,7 +66,7 @@ const CheckboxGroup = ({
           모두 확인하였으며 동의합니다.
         </label>
       </div>
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-3">
         <input
           id="agreeTerms"
           type="checkbox"
@@ -82,7 +82,7 @@ const CheckboxGroup = ({
           활용 서비스 이용약관 (필수)
         </label>
       </div>
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-3">
         <input
           id="agreePrivacy"
           type="checkbox"

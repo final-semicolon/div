@@ -60,7 +60,7 @@ const NicknameCheck = ({
   }, [nickname, setIsCheckedNickname, setNicknameMessage, setNicknameValid]);
 
   return (
-    <div className="mb-4 flex items-center">
+    <div className="mb-3 flex items-center">
       <div className="flex-grow">
         <SigninInputField
           type="text"

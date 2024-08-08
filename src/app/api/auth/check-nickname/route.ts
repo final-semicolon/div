@@ -22,10 +22,10 @@ export async function POST(request: NextRequest) {
   }
 
   if (existingUsers.length > 0) {
-    const response: CheckNicknameResponse = { error: '닉네임이 이미 사용 중입니다.' };
+    const response: CheckNicknameResponse = { error: '닉네임이 이미 사용 중이에요.' };
     return NextResponse.json(response, { status: 409 });
   }
 
-  const response: CheckNicknameResponse = { message: '사용 가능한 닉네임입니다.' };
+  const response: CheckNicknameResponse = { message: '사용 가능한 닉네임이에요.' };
   return NextResponse.json(response);
 }

@@ -93,9 +93,9 @@ function LoginForm() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen ">
+    <div className="flex items-center justify-center min-h-full ">
       <div className="bg-white w-full max-w-sm">
-        <div className="flex items-center justify-center mb-16">
+        <div className="flex items-center justify-center mt-40 mb-16">
           <Logo />
         </div>
         {error && <p className="text-red-500 mb-4">{error}</p>}
