@@ -172,15 +172,15 @@ const SignupForm = () => {
             agreePrivacy={agreePrivacy}
             setAgreePrivacy={setAgreePrivacy}
           />
-          <div className="mb-6">
-            <div className="p-6 rounded flex items-center justify-center">
+          <div className="mb-2">
+            <div className="p-2 rounded flex items-center justify-center">
               <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={onReCaptchaChange} />
             </div>
           </div>
           <SignupButton onClick={handleButtonClick} disabled={!formValid} />
-          <p className="mt-4 text-center">
+          <p className="mt-3 text-center body2-regular-16px">
             이미 아이디가 있으신가요?{' '}
-            <Link href="/login" className="text-blue-600 hover:underline">
+            <Link href="/login" className="body2-medium-16px underline">
               로그인
             </Link>
           </p>
