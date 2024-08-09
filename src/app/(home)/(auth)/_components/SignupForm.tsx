@@ -65,7 +65,7 @@ const SignupForm = () => {
     );
 
     setConfirmPasswordMessage(password === confirmPassword ? '비밀번호가 일치해요.' : '비밀번호가 일치하지 않아요.');
-    setNicknameMessage(isValidNickname ? '사용 가능한 닉네임이에요.' : '2~12자 이하');
+    // setNicknameMessage(isValidNickname ? '사용 가능한 닉네임이에요.' : '2~12자 이하');
   }, [password, confirmPassword, nickname]);
 
   useEffect(() => {
@@ -130,13 +130,13 @@ const SignupForm = () => {
   return (
     <div className="flex items-center justify-center min-h-full">
       <div className="bg-white  w-full max-w-[420px]">
-        <div className="flex items-center justify-center mb-8">
+        <div className="flex items-center justify-center mb-[120px]">
           <Logo />
         </div>
         <div className="border-b-2 mb-8">
-          <OAuthButtons handleLogin={handleOAuthLogin} />
+          <OAuthButtons handleLogin={handleOAuthLogin} title="SNS 계정으로 회원가입" />
         </div>
-        <form onSubmit={handleSignup} className="mt-3">
+        <form onSubmit={handleSignup} className="mt-10">
           <EmailCheck
             email={email}
             setEmail={setEmail}

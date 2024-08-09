@@ -35,7 +35,7 @@ const LoginInputField = ({ type, value, onChange, placeholder, valid, message, l
   return (
     <div className="relative mb-6">
       <label className={`block mb-2 ${labelColor}`}>{label}</label>
-      <div className={`border rounded w-full p-4 ${borderColor} relative`}>
+      <div className={`border rounded-lg w-full p-4 ${borderColor} relative`}>
         <input
           type={type}
           value={value}

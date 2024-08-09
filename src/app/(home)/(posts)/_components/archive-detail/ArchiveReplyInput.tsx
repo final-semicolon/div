@@ -83,7 +83,7 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
 
   return (
     <div className="border-l-4 border-[#C7DCF5] border-b-[1px] p-6">
-      <div className="flex justify-center items-center gap-6" data-color-mode="light">
+      <div className="flex justify-center items-center gap-6">
         <Image
           src={userData?.profile_image ?? ''}
           alt="user profile image"

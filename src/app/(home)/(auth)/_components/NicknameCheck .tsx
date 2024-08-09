@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import InputField from './InputField';
+import { isNicknameValid } from '@/utils/validateBannedWords';
 
 type NicknameCheckProps = {
   nickname: string;
@@ -23,6 +24,11 @@ const NicknameCheck = ({
 }: NicknameCheckProps) => {
   useEffect(() => {
     const handleValidateNickname = async (nickname: string) => {
+      if (!isNicknameValid(nickname)) {
+        setNicknameMessage('사용할 수 없는 닉네임입니다.');
+        setIsCheckedNickname(false);
+        return;
+      }
       try {
         const response = await fetch('/api/auth/check-nickname', {
           method: 'POST',

@@ -20,11 +20,7 @@ const InputField = ({ type, value, onChange, placeholder, valid, message, label 
   const [hasInput, setHasInput] = useState<boolean>(false);
 
   // 라벨 색상 설정
-  const labelColor = !value
-    ? 'text-gray-900' // 기본 회색
-    : valid
-      ? 'text-main-400' // 유효성 충족
-      : 'text-red'; // 유효성 실패
+  const labelColor = !value ? 'text-gray-900' : valid ? 'text-main-400' : 'text-red';
 
   const messageColor = value ? (valid ? 'text-main-400' : 'text-red') : 'text-gray-900';
   const borderColor = value && !valid ? 'border-red' : isFocused ? 'border-main-400' : 'border-gray-900';
@@ -42,7 +38,7 @@ const InputField = ({ type, value, onChange, placeholder, valid, message, label 
   return (
     <div className="relative mb-6">
       <label className={`block subtitle2-bold-16px mb-2 ${labelColor}`}>{label}</label>
-      <div className={`border rounded w-full p-4 ${borderColor}`}>
+      <div className={`border rounded-lg w-full p-4 ${borderColor}`}>
         <input
           type={type}
           value={value}

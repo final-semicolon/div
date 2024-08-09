@@ -70,11 +70,11 @@ const PasswordFields = ({
     placeholder: string,
     valid: boolean | null
   ) => {
-    const borderColor = value && !valid ? 'border-red' : isFocused[type] ? 'border-main-400' : 'border-gray-300';
+    const borderColor = value && !valid ? 'border-red' : isFocused[type] ? 'border-main-400' : 'border-gray-900';
 
     return (
       <div className="relative mb-2">
-        <div className={`border rounded w-full p-4 ${borderColor}`}>
+        <div className={`border rounded-lg w-full p-4 ${borderColor}`}>
           <input
             type={
               type === 'password' ? (showPassword ? 'text' : 'password') : showConfirmPassword ? 'text' : 'password'

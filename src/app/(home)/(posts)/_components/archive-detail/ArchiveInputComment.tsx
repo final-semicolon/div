@@ -75,7 +75,7 @@ const ArchiveInputComments = () => {
   return (
     <div className="flex justify-start items-center  py-6 px-5  ">
       <form className=" w-full" onSubmit={handleSubmit}>
-        <div className=" flex justify-center items-center gap-6" data-color-mode="light">
+        <div className=" flex justify-center items-center gap-6">
           <Image
             src={userData?.profile_image ?? ''}
             alt="user profile image"

@@ -5,20 +5,21 @@ import React from 'react';
 
 type OAuthButtonsProps = {
   handleLogin: (provider: 'google' | 'kakao' | 'github') => void;
+  title?: string;
 };
 
-const OAuthButtons = ({ handleLogin }: OAuthButtonsProps) => {
+const OAuthButtons = ({ handleLogin, title }: OAuthButtonsProps) => {
   return (
-    <div className="mt-4 text-center">
-      <p className="subtitle1-medium-18px text-gray-600">SNS 계정으로 로그인/회원가입</p>
-      <div className="flex justify-center mt-2 space-x-4">
-        <button onClick={() => handleLogin('google')} className=" p-2 rounded-full flex items-center justify-center ">
+    <div className="mb-5 text-center">
+      <p className="subtitle1-medium-18px mt-5 mb-6 text-gray-600">{title}</p>
+      <div className="flex justify-center gap-6">
+        <button onClick={() => handleLogin('google')} className=" rounded-full flex items-center justify-center ">
           <Google />
         </button>
-        <button onClick={() => handleLogin('kakao')} className="p-2 rounded-full flex items-center justify-center ">
+        <button onClick={() => handleLogin('kakao')} className=" rounded-full flex items-center justify-center ">
           <Kakao />
         </button>
-        <button onClick={() => handleLogin('github')} className="p-2 rounded-full flex items-center justify-center ">
+        <button onClick={() => handleLogin('github')} className="rounded-full flex items-center justify-center ">
           <Github />
         </button>
       </div>

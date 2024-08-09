@@ -10,6 +10,7 @@ import { createClient } from '@/supabase/client';
 import Logo from '@/assets/images/header/Logo';
 import ReverseExclamation from '@/assets/images/common/ReverseExclamation';
 import LoginInputField from './LoginInputField';
+import BackClick from '../../(posts)/_components/archive-detail/BackClick';
 
 function LoginForm() {
   const router = useRouter();
@@ -131,6 +132,7 @@ function LoginForm() {
   return (
     <div className="flex items-center justify-center min-h-full">
       <div className="bg-white w-full max-w-sm">
+        <BackClick />
         <div className="flex items-center justify-center mt-40 mb-16">
           <Logo />
         </div>
@@ -187,7 +189,7 @@ function LoginForm() {
           </p>
         </div>
         <div className="border-t-2 mt-8">
-          <OAuthButtons handleLogin={handleOAuthLogin} />
+          <OAuthButtons handleLogin={handleOAuthLogin} title="SNS 계정으로 로그인/회원가입" />
         </div>
       </div>
     </div>

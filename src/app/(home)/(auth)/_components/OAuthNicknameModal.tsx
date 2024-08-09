@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import Vector from '@/assets/images/auth/Vector';
 import CheckVector from '@/assets/images/auth/CheckVector';
 import RedX from '@/assets/images/auth/RedX';
+import { isNicknameValid } from '@/utils/validateBannedWords';
 
 type ModalProps = {
   isOpen: boolean;
@@ -52,6 +53,12 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
         setNicknameValid(false);
         setIsCheckedNickname(false);
         setNicknameMessage('2자~12자 이하');
+        return;
+      }
+      if (!isNicknameValid(nickname)) {
+        setNicknameMessage('사용할 수 없는 닉네임입니다.');
+        setIsCheckedNickname(false);
+        setNicknameValid(false);
         return;
       }
 
