@@ -5,6 +5,7 @@ import Modal from '@/components/modal/Modal';
 import { toast } from 'react-toastify';
 import NewPassword from './NewPassword';
 import CheckCurrentPassword from './CheckCurrentPassword';
+import Chip from '@/components/common/Chip';
 
 type PasswordModalProps = {
   isOpen: boolean;
@@ -12,14 +13,13 @@ type PasswordModalProps = {
 };
 
 const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
-  const [newPassword, setNewPassword] = useState<string>(''); // 새 비밀번호
-  const [confirmPassword, setConfirmPassword] = useState<string>(''); // 확인 비밀번호
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // 확인 모달 열기
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [validationMessage, setValidationMessage] = useState<string>('');
 
   const handlePassword = async () => {
-    if (validationMessage === '현재 비밀번호가 확인되었습니다.') {
-      // 비밀번호 변경 요청
+    if (validationMessage === '기존 비밀번호가 확인되었습니다.') {
       const updateResponse = await fetch('/api/profile/reset-password', {
         method: 'POST',
         headers: {
@@ -38,28 +38,21 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
   };
 
   const handleNoPassword = () => {
-    if (validationMessage !== '현재 비밀번호가 확인되었습니다.') {
-      toast.error('기존 비밀번호 확인해주세요.');
-    } else if (validationMessage === '현재 비밀번호가 확인되었습니다.' && newPassword !== confirmPassword) {
-      toast.error('새로운 비밀번호를 확인해주세요.');
+    if (validationMessage !== '기존 비밀번호가 확인되었습니다.') {
+      toast.error('기존 비밀번호를 확인해 주세요.');
+    } else if (newPassword !== confirmPassword) {
+      toast.error('새 비밀번호를 확인해 주세요.');
     }
   };
-  // 모달을 닫으려고 할 때 호출되는 함수
+
   const handleClose = () => {
-    if (newPassword.length > 0) {
-      setIsConfirmModalOpen(true);
-    } else {
-      onClose();
-    }
-
-    if (validationMessage.length > 0) {
+    if (newPassword.length > 0 || validationMessage.length > 0) {
       setIsConfirmModalOpen(true);
     } else {
       onClose();
     }
   };
 
-  // 확인 모달에서 확인을 클릭했을 때 호출되는 함수
   const handleConfirmClose = () => {
     setIsConfirmModalOpen(false);
     setNewPassword('');
@@ -67,10 +60,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
     onClose();
   };
 
-  // 확인 모달에서 취소를 클릭했을 때 호출되는 함수
-  const handleCancelClose = () => {
-    setIsConfirmModalOpen(false);
-  };
+  const handleCancelClose = () => setIsConfirmModalOpen(false);
 
   return (
     <>
@@ -91,13 +81,15 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
           />
           <div className="absolute bottom-[40px] right-[64px] flex justify-end gap-2 mt-4 px-4">
             {validationMessage === '현재 비밀번호가 확인되었습니다.' && newPassword === confirmPassword ? (
-              <button onClick={handlePassword} className="border py-2 px-4 rounded bg-main-400 text-white">
-                변경하기
-              </button>
+              <Chip type="button" intent={'primary'} size={'large'} label="변경하기" onClick={handlePassword} />
             ) : (
-              <button onClick={handleNoPassword} className="border py-2 px-4 rounded bg-main-100 text-white">
-                변경하기
-              </button>
+              <Chip
+                type="button"
+                intent={'primary_disabled'}
+                size={'large'}
+                label="변경하기"
+                onClick={handleNoPassword}
+              />
             )}
           </div>
         </div>
