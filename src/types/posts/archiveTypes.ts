@@ -24,4 +24,4 @@ export type FetchResult = {
   nextPage: number | null;
 };
 
-export type SortOption = 'latest' | 'mostComments' | 'mostLikes';
+export type SortOption = 'latest' | 'oldest' | 'mostLikes';
