@@ -9,7 +9,7 @@ import Share from '@/assets/images/common/Share';
 import CommentBubble from '@/assets/images/common/CommentBubble';
 import Star from '@/assets/images/main-page_image/Star';
 import MDEditor from '@uiw/react-md-editor';
-import { processMarkdown } from '@/utils/markdownCut';
+import { cutText, processMarkdown } from '@/utils/markdownCut';
 import { useEffect, useState } from 'react';
 import SwiperCore from 'swiper';
 import CarouselLeftHover from '@/assets/images/common/CarouselLeftHover';
@@ -67,12 +67,12 @@ const BestForum = () => {
   });
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <div className="flex justify-start items-center mb-5">
         <h1 className="text-h4 font-bold ">오늘의 인기 포럼이에요</h1>
         <Star />
       </div>
-      <div className=" relative">
+      <div className=" relative h-[570px]">
         <Swiper
           onSwiper={setSwiperInstance}
           loop={true}
@@ -83,7 +83,7 @@ const BestForum = () => {
         >
           {forumList?.map((forum) => (
             <SwiperSlide key={forum.id}>
-              <div className="w-90% border rounded-xl ml-1 px-4 ">
+              <div className="flex flex-col w-full border rounded-xl gap-6 p-5  ">
                 <div className="flex justify-start items-center gap-4  border-b-[1px]">
                   <Image
                     src={forum.users.profile_image}
@@ -92,9 +92,9 @@ const BestForum = () => {
                     height={48}
                     className=" w-[48px] h-[48px] rounded-full"
                   />
-                  <div className=" flex flex-col justify-start gap-1 py-4">
+                  <div className=" flex flex-col justify-start gap-1 ">
                     <h2>{forum.users.nickname}</h2>
-                    <div className="flex justify-start items-center gap-1">
+                    <div className="flex justify-start items-center gap-1 pb-5">
                       <p className="text-body font-regular text-neutral-300">{forum.forum_category}</p>
                       <span className="text-body font-regular text-neutral-300">▪</span>
                       <p className="text-body font-regular text-neutral-300">
@@ -105,11 +105,11 @@ const BestForum = () => {
                   </div>
                 </div>
                 <Link href={`/forum/${forum.id}`}>
-                  <div className=" flex flex-col gap-1 h-80 mt-4 ">
+                  <div className=" flex flex-col gap-2 h-80 ">
                     {forum.thumbnail ? (
                       <Image src={forum.thumbnail} alt="forumThumbnail" width={210} height={210} />
                     ) : null}
-                    <h1 className="text-h5 font-bold ">{forum.title}</h1>
+                    <h1 className="text-h5 font-bold truncate ">{forum.title}</h1>
                     {forum.thumbnail ? (
                       <div
                         className="text-body2 font-regular normal whitespace-pre-wrap break-words  "
@@ -135,7 +135,7 @@ const BestForum = () => {
                     {forum.created_at.slice(0, 10).replace(/-/g, '.')}
                   </p>
                 </Link>
-                <div className="flex justify-between items-center py-2 text-sm">
+                <div className="flex justify-between items-center ">
                   <div className="flex justify-start items-center gap-4">
                     <LikeButton id={forum.id} type="forum" />
                     <button onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/forum/${forum.id}`)}>
