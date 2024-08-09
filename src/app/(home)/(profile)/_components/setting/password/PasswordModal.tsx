@@ -106,7 +106,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
         isOpen={isConfirmModalOpen}
         onClose={handleCancelClose}
         onConfirm={handleConfirmClose}
-        message={`정말 닫으시겠습니까?`}
+        message={`작성을 중단할까요?`}
       />
     </>
   );

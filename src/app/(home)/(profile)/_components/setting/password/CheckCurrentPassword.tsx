@@ -55,17 +55,20 @@ const CheckCurrentPassword = ({ onValidationChange }: CheckCurrentPasswordProps)
       setValidationMessage('');
     }
     onValidationChange(validationMessage);
-  }, [currentPassword, handleValidatePassword, onValidationChange, validationMessage]);
+  }, [currentPassword, validationMessage]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       setIsCapsLockOn(event.getModifierState('CapsLock'));
     };
-
+    const handleKeyUp = (event: KeyboardEvent) => {
+      setIsCapsLockOn(event.getModifierState('CapsLock'));
+    };
     window.addEventListener('keydown', handleKeyDown);
-
+    window.addEventListener('keyup', handleKeyUp);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
 
@@ -89,12 +92,16 @@ const CheckCurrentPassword = ({ onValidationChange }: CheckCurrentPasswordProps)
         )}
       </div>
 
-      <div className="ml-1 my-2 flex items-center">
-        <span>{isCapsLockOn ? <ReverseExclamation /> : <ReverseExclamation stroke="#423edf" />}</span>
-        <span className={`ml-1 text-body2 font-regular ${isCapsLockOn ? 'text-red' : 'text-main-400'}`}>
-          Caps Lock on
-        </span>
-      </div>
+      {isCapsLockOn ? (
+        <div className="ml-1 my-2 flex items-center">
+          <span>
+            <ReverseExclamation stroke="#423edf" />
+          </span>
+          <span className="ml-1 text-body2 font-regular text-main-400">Caps Lock on</span>
+        </div>
+      ) : (
+        ''
+      )}
 
       {currentPassword.length > 3 && (
         <>
@@ -104,11 +111,11 @@ const CheckCurrentPassword = ({ onValidationChange }: CheckCurrentPasswordProps)
               {validationMessage}
             </span>
           </div>
-          {/* {isValidating && (
+          {isValidating && (
             <div className="flex items-center h-6 ">
               <p className="text-body2 font-regular text-gray-700">검증 중...</p>
             </div>
-          )} */}
+          )}
         </>
       )}
     </div>

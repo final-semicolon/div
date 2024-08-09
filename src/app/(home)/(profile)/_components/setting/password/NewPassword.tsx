@@ -20,6 +20,7 @@ const NewPassword = ({
   const [showPassword, setShowPassword] = useState<boolean>(false); // 비밀번호 표시 여부
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false); // 비밀번호 표시 여부
   const [isCapsLockOn, setIsCapsLockOn] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   // 비밀번호 유효성 검사 함수
   const validatePassword = (password: string): boolean => {
@@ -44,14 +45,16 @@ const NewPassword = ({
     const handleKeyDown = (event: KeyboardEvent) => {
       setIsCapsLockOn(event.getModifierState('CapsLock'));
     };
-
+    const handleKeyUp = (event: KeyboardEvent) => {
+      setIsCapsLockOn(event.getModifierState('CapsLock'));
+    };
     window.addEventListener('keydown', handleKeyDown);
-
+    window.addEventListener('keyup', handleKeyUp);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
-
   // 비밀번호 유효성 검사 결과 상태
   const isPasswordValid = validatePassword(newPassword);
   const isConfirmPasswordValid = newPassword === confirmPassword && confirmPassword.length > 0;
@@ -72,6 +75,7 @@ const NewPassword = ({
           type={showPassword ? 'text' : 'password'}
           value={newPassword}
           onChange={(e) => onNewPasswordChange(e.target.value)}
+          onFocus={() => setIsFocused(true)}
           className="w-[353px] outline-transparent"
           placeholder="새 비밀번호를 입력해 주세요."
         />
@@ -84,13 +88,13 @@ const NewPassword = ({
             <X />
           </button>
         )}
-        {/* <button
+        <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+          className="absolute right-12 text-gray-600"
         >
           {showPassword ? '숨기기' : '보기'}
-        </button> */}
+        </button>
       </div>
       <div
         className={`relative block w-[421px] h-[56px] p-[16px] border rounded ${
@@ -105,10 +109,11 @@ const NewPassword = ({
           type={showConfirmPassword ? 'text' : 'password'}
           value={confirmPassword}
           onChange={(e) => onConfirmPasswordChange(e.target.value)}
+          onBlur={() => setIsFocused(false)}
           className="w-[353px] outline-transparent"
           placeholder="비밀번호를 한 번 더 입력해 주세요"
         />
-        {confirmPassword && (
+        {(isFocused || confirmPassword) && (
           <button
             type="button"
             onClick={() => onConfirmPasswordChange('')}
@@ -117,22 +122,26 @@ const NewPassword = ({
             <X />
           </button>
         )}
-        {/* <button
+        <button
           type="button"
           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          className="absolute right-9 text-gray-600"
+          className="absolute right-12 text-gray-600"
         >
           {showConfirmPassword ? '숨기기' : '보기'}
-        </button> */}
+        </button>
       </div>
+      {isCapsLockOn ? (
+        <div className="ml-1 my-2 flex items-center">
+          <span>{isCapsLockOn ? <ReverseExclamation /> : <ReverseExclamation stroke="#423edf" />}</span>
+          <span className={`ml-1 text-body2 font-regular ${isCapsLockOn ? 'text-red' : 'text-main-400'}`}>
+            Caps Lock on
+          </span>
+        </div>
+      ) : (
+        ''
+      )}
 
-      <div className="ml-1 my-2 flex items-center">
-        <span>{isCapsLockOn ? <ReverseExclamation /> : <ReverseExclamation stroke="#423edf" />}</span>
-        <span className={`ml-1 text-body2 font-regular ${isCapsLockOn ? 'text-red' : 'text-main-400'}`}>
-          Caps Lock on
-        </span>
-      </div>
-
+      {confirmPasswordMessage && <p className="text-red my-2">{confirmPasswordMessage}</p>}
       {newPassword.length > 0 && (
         <div className="flex items-center">
           <span>{isPasswordValid ? <CircleX fill="#423EDF" /> : <CircleX fill="#f66161" />}</span>
@@ -141,7 +150,6 @@ const NewPassword = ({
           </span>
         </div>
       )}
-      {confirmPasswordMessage && <p className="text-red my-2">{confirmPasswordMessage}</p>}
     </div>
   );
 };
