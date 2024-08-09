@@ -30,10 +30,10 @@ const PopularQnaPosts = () => {
   const endIndex = startIndex + pageSize;
 
   return (
-    <div className="max-w-screen-lg mx-auto p-4">
-      <div className="flex justify-start items-center relative gap-1.5 mb-4">
-        <p className="flex items-center text-2xl font-bold text-left text-neutral-900 ">
-          인기 Q&A
+    <div className="w-[1204px] mx-auto p-4">
+      <div className="flex justify-start items-center relative gap-1.5 mb-8">
+        <p className="flex items-center text-h4 font-bold text-left text-neutral-900 ">
+          인기 QnA
           <div className="ml-1">
             <GradCap />
           </div>
@@ -45,13 +45,13 @@ const PopularQnaPosts = () => {
             <Link key={post.id} href={`/qna/${post.id}`}>
               <li
                 key={post.id}
-                className={`border-t border-b border-neutral-50 p-4 flex flex-col min-h-[158px] ${
+                className={`border-t border-b border-neutral-100 p-4 flex flex-col min-h-[158px] ${
                   index % 2 === 0 ? 'border-r' : 'border-l'
                 }`}
               >
-                <div className="flex justify-start items-center mb-2">
+                <div className="flex justify-start items-center mb-5">
                   <p className="text-xl font-bold text-left text-main-500">{startIndex + index + 1}</p>
-                  <p className="ml-2 text-xl font-bold text-left text-neutral-900">{cutText(post.title, 30)}</p>
+                  <p className="ml-2 text-xl font-bold text-left text-neutral-900">{cutText(post.title, 40)}</p>
                 </div>
                 <div className="text-lg font-medium text-left text-neutral-300 mb-5" data-color-mode="light">
                   <MDEditor.Markdown source={processMarkdown(post.content, 30)} />
@@ -76,7 +76,7 @@ const PopularQnaPosts = () => {
       ) : (
         <div>게시물이 없습니다.</div>
       )}
-      <div className="flex justify-center items-center gap-4 mt-4">
+      <div className="flex justify-center items-center gap-4 mt-8">
         {Array.from({ length: popularTotalPages }, (_, index) => (
           <button
             key={index}
