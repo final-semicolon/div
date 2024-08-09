@@ -5,12 +5,12 @@ import Chip from '../common/Chip';
 
 const UserMenu = ({ isLoggedIn, userData }: UserMenuProps) => {
   return (
-    <div className="flex items-center">
+    <>
       {isLoggedIn ? (
-        <div className="ml-[198px]">
+        <div className="ml-[198px] flex items-center">
           <Link href={'/profile'}>
             {userData && userData.profile_image && (
-              <div className=" flex relative w-10 h-10 mr-4">
+              <div className="items-center relative w-10 h-10 mr-4">
                 <Image
                   src={userData.profile_image}
                   alt="Profile"
@@ -23,7 +23,7 @@ const UserMenu = ({ isLoggedIn, userData }: UserMenuProps) => {
             )}
           </Link>
           <Link href={'/posting'}>
-            <div>
+            <div className="items-center">
               <Chip intent={'primary'} size={'small'} label="글쓰기" />
             </div>
           </Link>
@@ -42,7 +42,7 @@ const UserMenu = ({ isLoggedIn, userData }: UserMenuProps) => {
           </Link>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
