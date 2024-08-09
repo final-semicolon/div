@@ -124,6 +124,7 @@ function LoginForm() {
               placeholder="이메일"
               valid={emailValid}
               message={emailMessage}
+              label="이메일"
             />
           </div>
           <div className="mb-4">
@@ -134,14 +135,20 @@ function LoginForm() {
               placeholder="비밀번호"
               valid={passwordValid}
               message={passwordMessage}
+              label="비밀번호"
             />
           </div>
-          <div className="ml-1 my-2 flex items-center">
-            <span>{isCapsLockOn ? <ReverseExclamation /> : <ReverseExclamation stroke="#423edf" />}</span>
-            <span className={`ml-1 text-body2 font-regular ${isCapsLockOn ? 'text-red' : 'text-main-400'}`}>
-              Caps Lock on
-            </span>
-          </div>
+          {isCapsLockOn ? (
+            <div className="ml-1 my-2 flex items-center">
+              <span>
+                {' '}
+                <ReverseExclamation stroke="#423EDF" />{' '}
+              </span>
+              <span className="ml-1 text-body2 font-regular text-main-400">Caps Lock on</span>
+            </div>
+          ) : (
+            ''
+          )}
           <button type="submit" className="w-full p-3 bg-main-100 hover:bg-main-400 text-white rounded-md">
             로그인
           </button>
@@ -149,7 +156,7 @@ function LoginForm() {
         <div className="mt-4 text-center">
           <p className="mt-4 text-center">
             혹시 계정이 없으신가요?
-            <Link className="text-blue-600 hover:underline" href="/signup">
+            <Link className="body2-medium-16px underline" href="/signup">
               회원가입
             </Link>
           </p>

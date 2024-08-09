@@ -129,7 +129,7 @@ const SignupForm = () => {
 
   return (
     <div className="flex items-center justify-center min-h-full">
-      <div className="bg-white w-full max-w-sm">
+      <div className="bg-white  w-full max-w-[420px]">
         <div className="flex items-center justify-center mb-8">
           <Logo />
         </div>

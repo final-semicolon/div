@@ -173,7 +173,7 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
           <button
             onClick={handleSubmit}
             disabled={!isCheckedNickname}
-            className="border bg-main-400 text-white py-4 px-6 rounded disabled:bg-main-100"
+            className="border bg-main-400 text-white py-4 px-6 hover:bg-main-500 rounded disabled:bg-main-100"
           >
             설정하기
           </button>
