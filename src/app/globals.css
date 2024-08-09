@@ -76,6 +76,7 @@ body .w-md-editor-text-input {
   font-size: 18px !important;
   font-weight: 400 !important;
   background-color: transparent !important;
+  color-scheme: white;
 }
 
 #select-tag-list::-webkit-scrollbar {
