@@ -31,7 +31,9 @@ const ThumbNailBox = ({ prevUrl, setisThumbnailUrlDeleted, setThumbnail }: Thumb
   const MAX_SIZE = 50 * 1024 * 1024; //50MB 사이즈 제한
 
   const handleThumbnailChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    if (!event.target.files) return;
+    if (event.target.files?.length === 0) return;
+    else if (!event.target.files) return;
+    else if (event.target.files[0].name === '') return;
     setIsLoading(true);
     if (event.target.files[0].size > MAX_SIZE) {
       setIsValidSize(false);
