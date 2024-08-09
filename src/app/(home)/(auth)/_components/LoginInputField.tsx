@@ -1,33 +1,30 @@
-import CheckVector from '@/assets/images/auth/CheckVector';
 import RedX from '@/assets/images/auth/RedX';
-import Vector from '@/assets/images/auth/Vector';
 import X from '@/assets/images/common/X';
 import React, { useState, useRef, useEffect } from 'react';
 
-type InputFieldProps = {
+type LoginInputFieldProps = {
   type: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
   valid: boolean;
   message: string;
-  label: string; // 라벨 텍스트를 추가하기 위한 필드
+  label: string;
 };
 
-const InputField = ({ type, value, onChange, placeholder, valid, message, label }: InputFieldProps) => {
+const LoginInputField = ({ type, value, onChange, placeholder, valid, message, label }: LoginInputFieldProps) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [hasInput, setHasInput] = useState<boolean>(false);
 
-  // 라벨 색상 설정
-  const labelColor = !value
-    ? 'text-gray-900' // 기본 회색
-    : valid
-      ? 'text-main-400' // 유효성 충족
-      : 'text-red'; // 유효성 실패
+  const borderColor = !value
+    ? 'border-gray-900'
+    : !valid
+      ? 'border-red'
+      : isFocused
+        ? 'border-main-400'
+        : 'border-gray-900';
 
-  const messageColor = value ? (valid ? 'text-main-400' : 'text-red') : 'text-gray-900';
-  const borderColor = value && !valid ? 'border-red' : isFocused ? 'border-main-400' : 'border-gray-900';
+  const labelColor = !value ? 'text-gray-900' : !valid ? 'text-red' : isFocused ? 'text-main-400' : 'text-gray-900';
 
   const handleClearInput = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -35,14 +32,10 @@ const InputField = ({ type, value, onChange, placeholder, valid, message, label 
     inputRef.current?.focus();
   };
 
-  useEffect(() => {
-    setHasInput(value.length > 0);
-  }, [value]);
-
   return (
     <div className="relative mb-6">
-      <label className={`block subtitle2-bold-16px mb-2 ${labelColor}`}>{label}</label>
-      <div className={`border rounded w-full p-4 ${borderColor}`}>
+      <label className={`block mb-2 ${labelColor}`}>{label}</label>
+      <div className={`border rounded w-full p-4 ${borderColor} relative`}>
         <input
           type={type}
           value={value}
@@ -51,7 +44,7 @@ const InputField = ({ type, value, onChange, placeholder, valid, message, label 
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           ref={inputRef}
-          className={`outline-transparent placeholder:body2-regular-16px`}
+          className="outline-none w-full placeholder:body2-regular-16px pr-10"
         />
         {(isFocused || value) && (
           <button
@@ -64,12 +57,14 @@ const InputField = ({ type, value, onChange, placeholder, valid, message, label 
           </button>
         )}
       </div>
-      <div className="ml-1 my-2 flex items-center">
-        {!hasInput ? <Vector /> : valid === true ? <CheckVector /> : valid === false ? <RedX /> : null}
-        <span className={`mt-1 body2-regular-16px ml-2 ${messageColor}`}>{message}</span>
-      </div>
+      {!valid && message && (
+        <div className="ml-1 my-2 flex items-center">
+          <RedX />
+          <span className="mt-1 body2-regular-16px ml-2 text-red">{message}</span>
+        </div>
+      )}
     </div>
   );
 };
 
-export default InputField;
+export default LoginInputField;

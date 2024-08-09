@@ -9,7 +9,8 @@ import OAuthButtons from './OAuthButtons';
 import { createClient } from '@/supabase/client';
 import Logo from '@/assets/images/header/Logo';
 import ReverseExclamation from '@/assets/images/common/ReverseExclamation';
-import InputField from './InputField';
+import LoginInputField from './LoginInputField';
+
 function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState<string>('');
@@ -17,35 +18,58 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const { logIn } = useAuth();
 
-  const [emailValid, setEmailValid] = useState<boolean>(true);
+  const [emailValid, setEmailValid] = useState<boolean>(false); // 초기값 false로 설정
   const [emailMessage, setEmailMessage] = useState<string>('');
 
-  const [passwordValid, setPasswordValid] = useState<boolean>(true);
+  const [passwordValid, setPasswordValid] = useState<boolean>(false); // 초기값 false로 설정
   const [passwordMessage, setPasswordMessage] = useState<string>('');
   const [isCapsLockOn, setIsCapsLockOn] = useState<boolean>(false);
+
+  // 이메일 유효성 검사 함수
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // 비밀번호 유효성 검사 함수
+  const validatePassword = (password: string): boolean => {
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{10,}$/;
+    return passwordRegex.test(password);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const emailValue = e.target.value;
+    setEmail(emailValue);
+
+    if (!validateEmail(emailValue)) {
+      setEmailValid(false);
+      setEmailMessage('이메일 형식을 확인해 주세요');
+    } else {
+      setEmailValid(true);
+      setEmailMessage('');
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const passwordValue = e.target.value;
+    setPassword(passwordValue);
+
+    if (!validatePassword(passwordValue)) {
+      setPasswordValid(false);
+      setPasswordMessage('비밀번호를 확인해 주세요');
+    } else {
+      setPasswordValid(true);
+      setPasswordMessage('');
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setError(null);
 
-    if (!validateEmail(email)) {
-      setEmailValid(false);
-      setEmailMessage('유효하지 않은 이메일 형식이에요.');
-      toast.error('유효하지 않은 이메일 형식이에요.');
+    if (!emailValid || !passwordValid) {
+      toast.error('입력한 내용을 확인해주세요.');
       return;
-    } else {
-      setEmailValid(true);
-      setEmailMessage('');
-    }
-
-    if (password.length < 6) {
-      setPasswordValid(false);
-      setPasswordMessage('비밀번호는 6자 이상 입력해주세요.');
-      toast.error('비밀번호는 6자 이상 입력해주세요.');
-      return;
-    } else {
-      setPasswordValid(true);
-      setPasswordMessage('');
     }
 
     try {
@@ -66,16 +90,11 @@ function LoginForm() {
     }
   };
 
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const handleOAuthLogin = async (provider: 'google' | 'kakao' | 'github') => {
     setError(null);
     try {
       const supabase = createClient();
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
           redirectTo: process.env.NEXT_PUBLIC_BASE_URL
@@ -93,6 +112,7 @@ function LoginForm() {
       toast.error('OAuth 로그인 중 에러가 발생했습니다.');
     }
   };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       setIsCapsLockOn(event.getModifierState('CapsLock'));
@@ -109,18 +129,18 @@ function LoginForm() {
   }, []);
 
   return (
-    <div className="flex items-center justify-center min-h-full ">
+    <div className="flex items-center justify-center min-h-full">
       <div className="bg-white w-full max-w-sm">
         <div className="flex items-center justify-center mt-40 mb-16">
           <Logo />
         </div>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error && <p className="text-red mb-4">{error}</p>}
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <InputField
+            <LoginInputField
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               placeholder="이메일"
               valid={emailValid}
               message={emailMessage}
@@ -128,37 +148,42 @@ function LoginForm() {
             />
           </div>
           <div className="mb-4">
-            <InputField
+            <LoginInputField
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               placeholder="비밀번호"
               valid={passwordValid}
               message={passwordMessage}
               label="비밀번호"
             />
+            {isCapsLockOn && (
+              <div className="ml-1 my-2 flex items-center">
+                <ReverseExclamation stroke="#423EDF" />
+                <span className="ml-1 text-body2 font-regular text-main-400">Caps Lock on</span>
+              </div>
+            )}
           </div>
-          {isCapsLockOn ? (
-            <div className="ml-1 my-2 flex items-center">
-              <span>
-                {' '}
-                <ReverseExclamation stroke="#423EDF" />{' '}
-              </span>
-              <span className="ml-1 text-body2 font-regular text-main-400">Caps Lock on</span>
-            </div>
-          ) : (
-            ''
-          )}
-          <button type="submit" className="w-full p-3 bg-main-100 hover:bg-main-400 text-white rounded-md">
+          <button
+            type="submit"
+            className={`w-full p-3 text-white rounded-md ${emailValid && passwordValid ? 'bg-main-400 hover:bg-main-500' : 'bg-main-100 cursor-not-allowed'}`}
+            disabled={!emailValid || !passwordValid}
+          >
             로그인
           </button>
         </form>
         <div className="mt-4 text-center">
           <p className="mt-4 text-center">
-            혹시 계정이 없으신가요?
-            <Link className="body2-medium-16px underline" href="/signup">
-              회원가입
-            </Link>
+            <span className="mr-4">
+              <Link className="body2-medium-16px " href="/signup">
+                비밀번호 재설정
+              </Link>
+            </span>
+            <span>
+              <Link className="body2-medium-16px " href="/signup">
+                회원가입
+              </Link>
+            </span>
           </p>
         </div>
         <div className="border-t-2 mt-8">

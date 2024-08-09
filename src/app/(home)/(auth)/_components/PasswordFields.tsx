@@ -93,7 +93,8 @@ const PasswordFields = ({
               <button
                 type="button"
                 onClick={(e) => handleClearInput(e, type)}
-                className="absolute right-4 top-5 text-gray-400 hover:text-black z-10"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-black z-10"
+                style={{ right: '1rem', top: '50%', transform: 'translateY(-50%)' }}
               >
                 <X />
               </button>
