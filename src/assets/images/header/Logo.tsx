@@ -1,6 +1,6 @@
 const Logo = () => {
   return (
-    <svg width="92" height="66" viewBox="0 0 92 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="92" height="65" viewBox="0 0 92 65" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M23.3695 39.9385L14.418 45.7223L23.3695 51.6238V49.492L17.516 45.7812L23.3695 41.8348V39.9385Z"
         fill="black"
