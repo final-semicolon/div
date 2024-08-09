@@ -53,7 +53,7 @@ const PostingCategoryBox = () => {
   return (
     <div className="flex flex-col ">
       <div
-        className={`w-[339px] h-[51px] flex items-center justify-between text-body1 px-6  py-3 border  rounded-lg ${categoryOpen || categoryGroup.category === '' || subCategory === SUB_CATEGORY_TEXT ? 'border-neutral-100' : 'border-main-400 text-main-400'}  ${isValidCategory === false ? 'text-red border-red' : ''} shadow-[2px_2px_8px_0px_rgba(0,0,0,0.25)]`}
+        className={`w-[339px] h-[51px] flex items-center justify-between text-body1 px-6 py-3 border cursor-pointer rounded-lg ${categoryOpen || categoryGroup.category === '' || subCategory === SUB_CATEGORY_TEXT ? 'border-neutral-100' : 'border-main-400 text-main-400'}  ${isValidCategory === false ? 'text-red border-red' : ''} shadow-[2px_2px_8px_0px_rgba(0,0,0,0.25)]`}
         onClick={handleCategoryDivClick}
       >
         <span className="w-[257px]">
@@ -99,7 +99,7 @@ const PostingCategoryBox = () => {
           {FORUM_SUB_CATEGORY_LIST.map((SUB_CATEGORY, index) => {
             return (
               <li
-                className={`z-10 pl-6 pr-14 py-3 h-[51px]  ${index === 0 ? 'rounded-t-lg' : index === FORUM_SUB_CATEGORY_LIST.length - 1 ? 'rounded-b-lg' : ''} ${
+                className={`z-10 pl-6 pr-14 py-3 h-[51px] cursor-pointer  ${index === 0 ? 'rounded-t-lg' : index === FORUM_SUB_CATEGORY_LIST.length - 1 ? 'rounded-b-lg' : ''} ${
                   SUB_CATEGORY === subCategory ? 'bg-main-100 text-main-400' : 'bg-white'
                 } hover:bg-main-100 hover:text-main-400`}
                 key={SUB_CATEGORY}
