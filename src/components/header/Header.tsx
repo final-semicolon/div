@@ -14,22 +14,28 @@ const Header = () => {
   const pathname = usePathname();
 
   const getLinkClasses = (path: string) => {
-    return pathname === path ? 'text-main-500' : 'text-neutral-900';
+    return pathname === path ? 'text-h4 font-bold text-main-400' : 'text-h4 font-bold text-neutral-900';
   };
 
   return (
-    <header className="bg-transparent w-full mt-5">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="flex items-center space-x-8 ml-40">
-          <div className="mt-3">
+    <header className="bg-transparent h-[120px] w-full mt-[76px]">
+      <div className="container mx-auto flex items-center">
+        <div className="flex items-center ml-40">
+          <div className="mt-[27.5px] mb-[27.5px] mr-2">
             <Link href={'/'}>
               <Logo />
             </Link>
           </div>
-          <NavLinks getLinkClasses={getLinkClasses} />
+          <div className="my-8">
+            <NavLinks getLinkClasses={getLinkClasses} />
+          </div>
+          <div className="mx-2">
+            <SearchBar />
+          </div>
         </div>
-        <SearchBar />
-        <UserMenu isLoggedIn={isLoggedIn} userData={userData} />
+        <div className="w-[333px]">
+          <UserMenu isLoggedIn={isLoggedIn} userData={userData} />
+        </div>
       </div>
     </header>
   );
