@@ -10,7 +10,7 @@ const getSelectedQnaPosts = async (page: number, limit: number) => {
   const { data: posts, error } = await supabase
     .from('qna_posts')
     .select(
-      `*, qna_like: qna_likes(count), qna_comment:qna_comments!qna_comments_post_id_fkey(count), qna_tags(*), user:users(*)`
+      `*, qna_like: qna_likes(count), qna_comment:qna_comments!qna_comments_post_id_fkey(count), qna_reply:qna_post_reply(count),qna_tags(*), user:users(*)`
     )
     .not('selected_comment', 'is', null)
     .order('updated_at', { ascending: false })
@@ -42,7 +42,7 @@ const getWaitingQnaPosts = async (page: number, limit: number) => {
   const { data: posts, error } = await supabase
     .from('qna_posts')
     .select(
-      `*, qna_like: qna_likes(count), qna_comment:qna_comments!qna_comments_post_id_fkey(count), qna_tags(*), user:users(*)`
+      `*, qna_like: qna_likes(count), qna_comment:qna_comments!qna_comments_post_id_fkey(count), qna_reply:qna_post_reply(count), qna_tags(*), user:users(*)`
     )
     .is('selected_comment', null)
     .order('updated_at', { ascending: false })
@@ -74,7 +74,9 @@ const getPopularQnaPost = async (page: number, limit: number) => {
 
   const { data: posts, error } = await supabase
     .from('qna_posts')
-    .select(`*, qna_like:qna_likes(count), qna_comment:qna_comments!qna_comments_post_id_fkey(count), user:users(*)`)
+    .select(
+      `*, qna_like:qna_likes(count), qna_comment:qna_comments!qna_comments_post_id_fkey(count), qna_reply:qna_post_reply(count), user:users(*)`
+    )
     .gte('updated_at', oneYearAgo)
     .order('updated_at', { ascending: false });
 

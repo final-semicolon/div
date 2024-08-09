@@ -38,15 +38,6 @@ const ResentQnaPosts = () => {
     goToPage: goToSelectedPage
   } = useFetchQnaPosts('selected');
 
-  // const handleTabClick = (newStatus: string) => {
-  //   setStatus(newStatus);
-  //   if (newStatus === 'waiting') {
-  //     goToWaitingPage(waitingPage);
-  //   } else {
-  //     goToSelectedPage(selectedPage);
-  //   }
-  // };
-
   useEffect(() => {
     if (status === 'waiting') {
       goToWaitingPage(waitingPage);
@@ -102,7 +93,7 @@ const ResentQnaPosts = () => {
 
   return (
     <div>
-      <div className="flex flex-col justify-center items-start w-full">
+      <div className="flex flex-col justify-center items-start w-full mb-5">
         <div className="flex justify-center items-center w-full">
           <button
             onClick={() => setStatus('waiting')}
@@ -115,16 +106,16 @@ const ResentQnaPosts = () => {
           <button
             onClick={() => setStatus('selected')}
             className={`flex justify-center items-center flex-grow py-6 ${
-              status === 'selected' ? 'bg-sub-50 text-neutral-800' : 'bg-white text-neutral-300'
+              status === 'selected' ? 'bg-sub-50 text-neutral-700' : 'bg-white text-neutral-400'
             } rounded-tr-3xl rounded-tl-3xl transition-colors duration-300`}
           >
             <p className="text-body1 font-bold"> 채택된 질문글</p>
           </button>
         </div>
         <div
-          className={`w-full h-[88px] bg-sub-50 border-t-0 border-r-0 border-b border-l-0 border-[#c7dcf5] flex justify-end items-center pr-6`}
+          className={`w-full h-[88px] bg-sub-50 border-t-0 border-r-0 border-b border-l-0 border-sub-100 flex justify-end items-center pr-6`}
         >
-          <label>
+          <label className="my-6 mr-6">
             <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
           </label>
         </div>
@@ -133,9 +124,9 @@ const ResentQnaPosts = () => {
       {sortedPosts && sortedPosts.length > 0 ? (
         <ul>
           {sortedPosts.map((post: Post) => (
-            <li key={post.id} className="border-b border-neutral-100 p-4">
+            <li key={post.id} className="border-b border-neutral-100 p-5">
               <Link href={`/qna/${post.id}`} className="block">
-                <div className="flex items-center mb-2">
+                <div className="flex items-center mb-5">
                   <div className="relative w-10 h-10">
                     <Image
                       src={post.user.profile_image}
@@ -146,36 +137,42 @@ const ResentQnaPosts = () => {
                     />
                   </div>
                   <div className="ml-2 flex items-center">
-                    <p className="text-body1 font-medium text-neutral-900 mr-1">{post.user.nickname}</p>
+                    <p className="text-body1 font-medium text-neutral-900 mr-2">{post.user.nickname}</p>
                     <Dot />
-                    <p className="text-body1 font-regular text-neutral-500 ml-1"> {timeForToday(post.created_at)}</p>
+                    <p className="text-body1 font-regular text-neutral-500 ml-2"> {timeForToday(post.created_at)}</p>
                     <div className="ml-2">{post.selected_comment !== null && <BlueCheck />}</div>
                   </div>
                 </div>
-                <h2 className="text-h5 font-bold text-neutral-900">{cutText(post.title, 50)}</h2>
-                <div className="mt-2 text-neutral-700 mb-4" data-color-mode="light">
+                <div className="mb-5">
+                  <h2 className="text-h5 font-bold text-neutral-900">{cutText(post.title, 50)}</h2>
+                </div>
+                <div className="mt-2 text-neutral-700 mb-5" data-color-mode="light">
                   <MDEditor.Markdown source={processMarkdown(post.content, 300)} />
                 </div>
-                <div className="flex flex-wrap gap-1.5 mb-4 max-h-[40px] overflow-hidden">
+                <div className="flex flex-wrap gap-1.5 mb-5 max-h-[40px] overflow-hidden">
                   {post.qna_tags.map((tag) => (
                     <span
                       key={tag.id}
-                      className="bg-neutral-50 px-3 py-1 rounded text-base font-medium text-neutral-700"
+                      className="bg-neutral-50 px-3 py-1 rounded text-subtitle2 font-medium text-neutral-700"
                       style={{ maxWidth: '100%' }}
                     >
                       #{tag.tag}
                     </span>
                   ))}
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mb-5">
                   <div className="flex items-center gap-2">
-                    <p className="text-body1 font-regular text-main-500">좋아요 {post.qna_like[0]?.count || 0}</p>
-                    <div className="w-0.5 h-[18px] bg-neutral-200" />
-                    <p className="text-body1 font-regular next-neutral-500">답변 {post.qna_comment[0]?.count || 0}</p>
+                    <p className="text-body1 font-regular text-main-400">좋아요 {post.qna_like[0]?.count || 0}</p>
+                    <div className="w-0.5 h-[18px] bg-neutral-100" />
+                    <p className="text-body1 font-regular next-neutral-300">답변 {post.qna_comment[0]?.count || 0}</p>
                   </div>
                 </div>
-                <div className="post-date mt-1 text-sm text-neutral-300">
-                  {dayjs(post.created_at).format('YYYY-MM-DD HH:mm')}
+                <div className="flex items-center justify-between text-body1 mt-1 font-regular text-neutral-400">
+                  <div className="flex items-center">{dayjs(post.created_at).format('YYYY-MM-DD')}</div>
+                  <div className="flex items-center">
+                    <CommentBubble />
+                    {post.qna_reply[0]?.count || 0}
+                  </div>
                 </div>
               </Link>
             </li>
