@@ -60,12 +60,11 @@ const SignupForm = () => {
     const isValidNickname = validateNickname(nickname);
     setNicknameValid(isValidNickname);
 
-    // setPasswordMessage(
-    //   validatePassword(password) ? '사용 가능한 비밀번호에요.' : '영문/숫자/특수문자 혼합 (10자 이상).'
-    // );
-    setConfirmPasswordMessage(
-      password === confirmPassword ? '영문/숫자/특수문자 혼합 (10자 이상)' : '영문/숫자/특수문자 혼합 (10자 이상)'
+    setPasswordMessage(
+      validatePassword(password) ? '영문/숫자/특수문자 혼합 (10자 이상)' : '영문/숫자/특수문자 혼합 (10자 이상)'
     );
+
+    setConfirmPasswordMessage(password === confirmPassword ? '비밀번호가 일치해요.' : '비밀번호가 일치하지 않아요.');
     setNicknameMessage(isValidNickname ? '사용 가능한 닉네임이에요.' : '2~12자 이하');
   }, [password, confirmPassword, nickname]);
 

@@ -1,4 +1,7 @@
-import ReverseExclamation from '@/assets/images/common/ReverseExclamation';
+import CheckError from '@/assets/images/auth/CheckError';
+import CheckVector from '@/assets/images/auth/CheckVector';
+import RedX from '@/assets/images/auth/RedX';
+import Vector from '@/assets/images/auth/Vector';
 import X from '@/assets/images/common/X';
 import React, { useState, useRef, useEffect } from 'react';
 
@@ -11,13 +14,12 @@ type InputFieldProps = {
   message: string;
 };
 
-const SigninInputField = ({ type, value, onChange, placeholder, valid, message }: InputFieldProps) => {
+const InputField = ({ type, value, onChange, placeholder, valid, message }: InputFieldProps) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const [hasInput, setHasInput] = useState<boolean>(false);
   const messageColor = value ? (valid ? 'text-main-400' : 'text-red') : 'text-gray-900';
   const borderColor = value && !valid ? 'border-red' : isFocused ? 'border-main-400' : 'border-gray-300';
-  const [isCapsLockOn, setIsCapsLockOn] = useState<boolean>(false);
 
   const handleClearInput = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -25,20 +27,8 @@ const SigninInputField = ({ type, value, onChange, placeholder, valid, message }
     inputRef.current?.focus();
   };
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      setIsCapsLockOn(event.getModifierState('CapsLock'));
-    };
-    const handleKeyUp = (event: KeyboardEvent) => {
-      setIsCapsLockOn(event.getModifierState('CapsLock'));
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
-
+    setHasInput(value.length > 0);
+  }, [value]);
   return (
     <div className="relative mb-2">
       <div className={`border rounded w-full p-4 ${borderColor}`}>
@@ -56,23 +46,18 @@ const SigninInputField = ({ type, value, onChange, placeholder, valid, message }
           <button
             type="button"
             onClick={handleClearInput}
-            className="absolute right-3 top-5 text-gray-400 hover:text-black z-10"
+            className="absolute right-4 top-5 text-gray-400 hover:text-black z-10"
           >
             <X />
           </button>
         )}
       </div>
-      {(isFocused || value) && placeholder === '비밀번호를 한 번 더 입력해 주세요.' && (
-        <div className="ml-1 my-2 flex items-center">
-          <span>{isCapsLockOn ? <ReverseExclamation /> : <ReverseExclamation stroke="#423edf" />}</span>
-          <span className={`ml-1 text-body2 font-regular ${isCapsLockOn ? 'text-red' : 'text-main-400'}`}>
-            Caps Lock on
-          </span>
-        </div>
-      )}
-      <p className={`mt-1 body2-regular-16px ml-2 ${messageColor}`}>{message}</p>
+      <div className="ml-1 my-2 flex items-center">
+        {!hasInput ? <Vector /> : valid === true ? <CheckVector /> : valid === false ? <RedX /> : <CheckError />}
+        <span className={`mt-1 body2-regular-16px ml-2 ${messageColor}`}>{message}</span>
+      </div>
     </div>
   );
 };
 
-export default SigninInputField;
+export default InputField;

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -8,7 +8,8 @@ import { useAuth } from '@/context/auth.context';
 import OAuthButtons from './OAuthButtons';
 import { createClient } from '@/supabase/client';
 import Logo from '@/assets/images/header/Logo';
-import LoginInputField from './LoginInputField';
+import ReverseExclamation from '@/assets/images/common/ReverseExclamation';
+import InputField from './InputField';
 function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState<string>('');
@@ -21,6 +22,7 @@ function LoginForm() {
 
   const [passwordValid, setPasswordValid] = useState<boolean>(true);
   const [passwordMessage, setPasswordMessage] = useState<string>('');
+  const [isCapsLockOn, setIsCapsLockOn] = useState<boolean>(false);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -28,8 +30,8 @@ function LoginForm() {
 
     if (!validateEmail(email)) {
       setEmailValid(false);
-      setEmailMessage('유효하지 않은 이메일 형식입니다.');
-      toast.error('유효하지 않은 이메일 형식입니다.');
+      setEmailMessage('유효하지 않은 이메일 형식이에요.');
+      toast.error('유효하지 않은 이메일 형식이에요.');
       return;
     } else {
       setEmailValid(true);
@@ -38,8 +40,8 @@ function LoginForm() {
 
     if (password.length < 6) {
       setPasswordValid(false);
-      setPasswordMessage('비밀번호는 6자 이상이어야 합니다.');
-      toast.error('비밀번호는 6자 이상이어야 합니다.');
+      setPasswordMessage('비밀번호는 6자 이상 입력해주세요.');
+      toast.error('비밀번호는 6자 이상 입력해주세요.');
       return;
     } else {
       setPasswordValid(true);
@@ -50,17 +52,17 @@ function LoginForm() {
       const response = await logIn(email, password);
 
       if (response.status === 200) {
-        toast.success('로그인 성공!', {
+        toast.success('로그인이 완료되었어요', {
           autoClose: 2000,
           onClose: () => router.replace('/')
         });
       } else {
         setError('로그인 실패');
-        toast.error('로그인 중 에러가 발생했습니다.');
+        toast.error('로그인 중 에러가 발생했어요.');
       }
     } catch (err) {
       setError('로그인 실패');
-      toast.error('로그인 중 에러가 발생했습니다.');
+      toast.error('로그인 중 에러가 발생했어요.');
     }
   };
 
@@ -91,6 +93,20 @@ function LoginForm() {
       toast.error('OAuth 로그인 중 에러가 발생했습니다.');
     }
   };
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      setIsCapsLockOn(event.getModifierState('CapsLock'));
+    };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      setIsCapsLockOn(event.getModifierState('CapsLock'));
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-full ">
@@ -101,7 +117,7 @@ function LoginForm() {
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <LoginInputField
+            <InputField
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -111,7 +127,7 @@ function LoginForm() {
             />
           </div>
           <div className="mb-4">
-            <LoginInputField
+            <InputField
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -119,6 +135,12 @@ function LoginForm() {
               valid={passwordValid}
               message={passwordMessage}
             />
+          </div>
+          <div className="ml-1 my-2 flex items-center">
+            <span>{isCapsLockOn ? <ReverseExclamation /> : <ReverseExclamation stroke="#423edf" />}</span>
+            <span className={`ml-1 text-body2 font-regular ${isCapsLockOn ? 'text-red' : 'text-main-400'}`}>
+              Caps Lock on
+            </span>
           </div>
           <button type="submit" className="w-full p-3 bg-main-100 hover:bg-main-400 text-white rounded-md">
             로그인

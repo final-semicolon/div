@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
-import SigninInputField from './SigninInputField';
+import InputField from './InputField';
 
 type NicknameCheckProps = {
   nickname: string;
@@ -62,7 +62,7 @@ const NicknameCheck = ({
   return (
     <div className="mb-3 flex items-center">
       <div className="flex-grow">
-        <SigninInputField
+        <InputField
           type="text"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}

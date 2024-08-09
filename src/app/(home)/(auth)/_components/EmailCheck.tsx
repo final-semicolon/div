@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
-import SigninInputField from './SigninInputField';
+import InputField from './InputField';
 
 type EmailCheckProps = {
   email: string;
@@ -78,7 +78,7 @@ const EmailCheck = ({
   return (
     <div className="mb-3 flex items-center space-x-2">
       <div className="flex-grow">
-        <SigninInputField
+        <InputField
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
