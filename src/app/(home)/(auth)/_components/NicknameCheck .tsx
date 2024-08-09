@@ -69,6 +69,7 @@ const NicknameCheck = ({
           placeholder="닉네임 (2~12자)를 입력해 주세요."
           valid={nicknameValid}
           message={nicknameMessage}
+          label="닉네임"
         />
       </div>
     </div>

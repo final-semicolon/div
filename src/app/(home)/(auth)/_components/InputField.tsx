@@ -12,9 +12,10 @@ type InputFieldProps = {
   placeholder: string;
   valid: boolean;
   message: string;
+  label: string; // 라벨 텍스트를 추가하기 위한 필드
 };
 
-const InputField = ({ type, value, onChange, placeholder, valid, message }: InputFieldProps) => {
+const InputField = ({ type, value, onChange, placeholder, valid, message, label }: InputFieldProps) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [hasInput, setHasInput] = useState<boolean>(false);
@@ -26,11 +27,14 @@ const InputField = ({ type, value, onChange, placeholder, valid, message }: Inpu
     onChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>);
     inputRef.current?.focus();
   };
+
   useEffect(() => {
     setHasInput(value.length > 0);
   }, [value]);
+
   return (
-    <div className="relative mb-2">
+    <div className="relative mb-6">
+      <label className="block text-gray-700 subtitle2-bold-16px font-bold mb-2">{label}</label>
       <div className={`border rounded w-full p-4 ${borderColor}`}>
         <input
           type={type}
@@ -46,7 +50,7 @@ const InputField = ({ type, value, onChange, placeholder, valid, message }: Inpu
           <button
             type="button"
             onClick={handleClearInput}
-            className="absolute right-4 top-5 text-gray-400 hover:text-black z-10"
+            className="absolute right-4 top-1/5 text-gray-400 hover:text-black z-10"
           >
             <X />
           </button>
