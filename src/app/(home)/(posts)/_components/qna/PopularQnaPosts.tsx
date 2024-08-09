@@ -30,7 +30,7 @@ const PopularQnaPosts = () => {
   const endIndex = startIndex + pageSize;
 
   return (
-    <div className="w-[1204px] max-w-[1204px] mx-auto p-4">
+    <div className="w-[1204px] mx-auto p-4">
       <div className="flex justify-start items-center relative gap-1.5 mb-8">
         <p className="flex items-center text-h4 font-bold text-left text-neutral-900 ">
           인기 QnA
