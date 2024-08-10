@@ -8,7 +8,7 @@ const QnaBackground = () => {
   const [isQnaPage, setIsQnaPage] = useState(false);
 
   useEffect(() => {
-    setIsQnaPage(pathname === '/qna');
+    setIsQnaPage(pathname === '/qna' || pathname.startsWith('/qna'));
   }, [pathname]);
 
   if (!isQnaPage) return null;
