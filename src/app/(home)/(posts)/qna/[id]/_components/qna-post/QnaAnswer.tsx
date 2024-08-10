@@ -51,6 +51,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
   };
 
   const handleEditClick = () => {
+    if (content.length === 0) return;
     setIsEditModalOpen(true);
   };
 
@@ -176,7 +177,11 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
                   <Tag intent="primary" label="채택된 답변" />
                   {qnaComment.user_id === me?.id ? <Tag intent="primary" label="내가 쓴 글" /> : null}
                 </div>
-              ) : null}
+              ) : (
+                <div className="flex gap-2 items-center">
+                  {qnaComment.user_id === me?.id ? <Tag intent="primary" label="내가 쓴 글" /> : null}
+                </div>
+              )}
             </div>
             <div className="flex gap-5 h-[42px] items-center">
               <span className="text-subtitle1 text-neutral-900">{qnaComment.users.nickname}</span>
@@ -216,6 +221,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
               }}
               onConfirm={() => {
                 setIsEdit(false);
+                setContent(qnaComment.comment);
               }}
               message={EDIT_CANCLE_TEXT}
             />
@@ -228,7 +234,12 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
             </div>
             <div className="flex gap-4 ml-auto">
               <Chip intent={'gray'} size={'medium'} label="취소하기" onClick={handleCancleClick} />
-              <Chip intent={'secondary'} size={'medium'} label="수정하기" onClick={handleEditClick} />
+              <Chip
+                intent={`${content.length === 0 ? 'secondary_disabled' : 'secondary'}`}
+                size={'medium'}
+                label="수정하기"
+                onClick={handleEditClick}
+              />
             </div>
           </div>
         ) : (

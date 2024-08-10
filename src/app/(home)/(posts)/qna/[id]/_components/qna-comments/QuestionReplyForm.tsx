@@ -26,6 +26,7 @@ const QuestionReplyForm = ({ setReplyCount }: QuestionReplyFormProps) => {
   };
 
   const handleOpenCancleModal = () => {
+    if (content.length === 0) return;
     setIsSelectModalOpen(true);
   };
 
@@ -128,7 +129,13 @@ const QuestionReplyForm = ({ setReplyCount }: QuestionReplyFormProps) => {
       </div>
       {me?.id ? (
         <div className="ml-auto flex gap-4 ">
-          <Chip type="button" intent={`gray`} size={'medium'} label="취소" onClick={handleOpenCancleModal} />
+          <Chip
+            type="button"
+            intent={`${content.length === 0 ? 'gray_disabled' : 'gray'}`}
+            size={'medium'}
+            label="취소"
+            onClick={handleOpenCancleModal}
+          />
           <Chip
             type="button"
             intent={`${content.length === 0 ? 'primary_disabled' : 'primary'}`}

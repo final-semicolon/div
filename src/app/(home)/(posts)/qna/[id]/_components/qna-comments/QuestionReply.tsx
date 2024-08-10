@@ -32,6 +32,7 @@ const QuestionReply = ({ reply, setReplyCount }: QuestionReplyProps) => {
 
   const handleCancleClick = () => {
     setIsEdit(false);
+    setContent(reply.post_reply_content);
   };
 
   const handleEditQuestionReply: MouseEventHandler<HTMLButtonElement> = async () => {
