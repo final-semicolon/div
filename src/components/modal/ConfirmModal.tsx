@@ -27,7 +27,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, message }: ConfirmModalProps
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="w-[352px] h-[191px] p-[40px]">
         <p className="h-[77px] text-h5 font-bold text-center">
-          {message.split('\n').map((line, index) => (
+          {message?.split('\n').map((line, index) => (
             <React.Fragment key={index}>
               {line}
               <br />

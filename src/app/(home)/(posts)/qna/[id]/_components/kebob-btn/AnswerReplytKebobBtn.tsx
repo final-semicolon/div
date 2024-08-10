@@ -1,7 +1,7 @@
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import KebabButton from '@/assets/images/common/KebabButton';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { POST_COMMENT_DELETE_TEXT } from '@/constants/upsert';
+import { COMMENT_DELETE_MODAL_TEXT, COMMENT_DELETE_ALRERT_TEXT } from '@/constants/comment';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
@@ -27,7 +27,7 @@ const AnswerReplytKebobBtn = ({ commentId, replyId, setReplyCount, setIsEdit }: 
   const deleteReply = async (): Promise<void> => {
     if (!replyId) return;
     const data = await deleteMutate({ replyId });
-    toast.success('댓글 삭제 완료', { autoClose: 1500, hideProgressBar: true });
+    toast.success(COMMENT_DELETE_ALRERT_TEXT, { autoClose: 3000, hideProgressBar: true });
     setOpenKebab(false);
     setReplyCount((prev) => prev - 1);
     await revalidatePostTag(`qna-detail-${postId}`);
@@ -54,9 +54,9 @@ const AnswerReplytKebobBtn = ({ commentId, replyId, setReplyCount, setIsEdit }: 
 
   return (
     <>
-      <div className="mr-[10px] relative">
+      <div className=" relative">
         <button
-          className="w-10 h-10 flex items-center text-center content-center px-4"
+          className=" mb-[6px] flex items-center text-center content-center "
           onClick={() => {
             setOpenKebab((prev) => !prev);
           }}
@@ -64,10 +64,10 @@ const AnswerReplytKebobBtn = ({ commentId, replyId, setReplyCount, setIsEdit }: 
           <KebabButton />
         </button>
         <ul
-          className={`${openKebab ? 'border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute w-[105px] h-[88px] right-0 text-center hover:border-main-400 text-body2`}
+          className={`${openKebab ? 'border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute  -right-[6px] text-center z-20 hover:border-main-400 text-body2`}
         >
           <li
-            className={`h-[44px] content-center ${openKebab ? '' : 'hidden'} hover:bg-main-100 hover:text-main-400 rounded-t-lg cursor-pointer`}
+            className={` content-center ${openKebab ? '' : 'hidden'}px-[23px] py-[10px] box-content w-[59px] h-6 hover:bg-main-100 hover:text-main-400 rounded-t-lg cursor-pointer`}
             onClick={() => {
               setIsEdit(true);
               setOpenKebab(false);
@@ -81,10 +81,10 @@ const AnswerReplytKebobBtn = ({ commentId, replyId, setReplyCount, setIsEdit }: 
               setIsDeleteModalOpen(false);
             }}
             onConfirm={deleteReply}
-            message={POST_COMMENT_DELETE_TEXT}
+            message={COMMENT_DELETE_MODAL_TEXT}
           />
           <li
-            className={`h-[44px]  content-center ${openKebab ? '' : 'hidden'}  hover:bg-main-100 hover:text-main-400 rounded-b-lg cursor-pointer`}
+            className={`  content-center ${openKebab ? '' : 'hidden'}px-[23px] py-[10px] box-content w-[59px] h-6 hover:bg-main-100 hover:text-main-400 rounded-b-lg cursor-pointer`}
             onClick={handleDeleteClick}
           >
             댓글 삭제

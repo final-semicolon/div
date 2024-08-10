@@ -55,20 +55,14 @@ export const EDIT_CANCLE_TEXT = '게시글 수정을 중단할까요?';
 //작성 페이지 삭제 확인 메세지
 export const POST_DELETE_TEXT = '게시글을 삭제하시겠습니까?';
 
-//댓글 작성 확인 메세지
-export const POST_COMMENT_APPROVE_TEXT = '댓글을 등록할까요?';
-
-//댓글 작성 취소 메세지
-export const POST_COMMENT_CANCLE_TEXT = '댓글 작성을 중단할까요?';
-
-//댓글 수정 확인 메세지
-export const EDIT_COMMENT_APPROVE_TEXT = '댓글을 수정할까요?';
-
-//댓글 수정 취소 메세지
-export const EDIT_COMMENT_CANCLE_TEXT = '댓글 수정을 중단할까요?';
-
-//댓글 삭제 확인 메세지
-export const POST_COMMENT_DELETE_TEXT = '댓글을 삭제 하시겠습니까?';
-
 //채택 메세지
 export const SELECT_COMMENT_TEXT = '채택하시겠습니까?';
+
+//게시글 등록 Alert 메세지
+export const POST_ALERT_TEXT = '게시글을 등록했어요.';
+
+//게시글 삭제 Alert 메세지
+export const DELETE_ALERT_TEXT = '게시글을 삭제했어요';
+
+//게시글 수정 Alert 메세지
+export const EDIT_ALERT_TEXT = '게시글을 수정했어요';

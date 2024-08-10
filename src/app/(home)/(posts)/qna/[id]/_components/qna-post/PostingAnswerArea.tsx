@@ -8,7 +8,7 @@ import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { TAG_LIST } from '@/constants/tags';
 import SelectTagInput from '@/components/common/SelectTagInput';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { POST_CANCLE_TEXT, POST_APPROVE_TEXT } from '@/constants/upsert';
+import { POST_CANCLE_TEXT, POST_APPROVE_TEXT, POST_ALERT_TEXT } from '@/constants/upsert';
 import Chip from '@/components/common/Chip';
 
 type PostingAnswerAreaProps = {
@@ -36,7 +36,7 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaComment
   const postingAnswer = async (): Promise<void> => {
     if (!me?.id) return;
     await addMutate({ user_id: me.id, content, tags: tagList.filter((tag) => tag.selected) });
-    toast.success('답변 작성 완료!', { autoClose: 1500, hideProgressBar: true });
+    toast.success(POST_ALERT_TEXT, { autoClose: 3000, hideProgressBar: true });
     setQnaCommentsCount((prev) => prev + 1);
     await revalidatePostTag(`qna-detail-${postId}`);
     return;
@@ -103,7 +103,9 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaComment
           message={POST_APPROVE_TEXT}
         />
         <h2 className="h-[27px] text-h5 font-bold mb-4">본문</h2>
-        <CustomMDEditor content={content} setContent={setContent} />
+        <div className="border rounded-2xl border-neutral-100">
+          <CustomMDEditor content={content} setContent={setContent} />
+        </div>
       </div>
       <div className="h-[182px] mt-12 flex flex-col gap-4">
         <h5 className="text-h5 font-bold text-neutral-900">태그</h5>

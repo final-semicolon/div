@@ -26,7 +26,7 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
   };
 
   return (
-    <div className="w-[1204px]  mb-6 px-6 py-12 border rounded-2xl ">
+    <div className="w-[1204px]  mb-6 px-6 py-12 border rounded-2xl bg-white">
       <div className="mb-6">
         <div className="w-[1156px] mb-4 flex justify-between">
           <div>
