@@ -121,7 +121,6 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
   };
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 입력값에서 공백 제거
     const value = e.target.value.replace(/\s/g, '');
     setNickname(value);
   };
