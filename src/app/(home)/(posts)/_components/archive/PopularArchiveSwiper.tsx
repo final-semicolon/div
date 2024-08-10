@@ -6,16 +6,15 @@ import { usePopularArchivePosts } from '@/hooks/archive/useFetchArchivePosts';
 import { Post } from '@/types/posts/archiveTypes';
 import Image from 'next/image';
 import BookmarkButton from '@/components/common/BookmarkButton';
-import { PostCardProps } from '@/types/posts/forumTypes';
 import { useEffect, useState } from 'react';
 import SwiperCore from 'swiper';
 import CarouselLeftHover from '@/assets/images/common/CarouselLeftHover';
 import CarouselLeft from '@/assets/images/common/CarouselLeft';
 import CarouselRightHover from '@/assets/images/common/CarouselRightHover';
 import CarouselRight from '@/assets/images/common/CarouselRight';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { cutText, filterSlang } from '@/utils/markdownCut';
+import { cutText } from '@/utils/markdownCut';
+import DefaultThumbnail from '../../../../../../public/images/archive/default_thumbnail.png';
 
 const PopularArchiveSwiper = () => {
   const { data, error, isLoading } = usePopularArchivePosts();
@@ -79,44 +78,44 @@ const PopularArchiveSwiper = () => {
         {data.data.map((post: Post) => (
           <SwiperSlide key={post.id}>
             <div
-              className="flex flex-col justify-start items-start relative gap-4 rounded-xl"
+              className="flex flex-col justify-start items-start w-[388px] h-[414px] relative rounded-xl bg-white mb-[60px]"
               onClick={() => handlePostClick(post.id)}
             >
-              <div className="flex-grow-0 flex-shrink-0 relative rounded-xl">
+              <div className="flex-grow-0 flex-shrink-0 relative border rounded-xl mb-2">
                 <Image
-                  src={post.thumbnail || '/images/archive/default_thumbnail.webp'}
+                  src={post.thumbnail || DefaultThumbnail}
                   alt="Post Thumbnail"
-                  width={388}
-                  height={280}
-                  className="w-[366px] h-[264px] object-cover rounded-xl"
+                  width={1552}
+                  height={1120}
+                  className="w-[388px] h-[280px] object-cover rounded-xl"
                 />
                 <div className="absolute top-4 right-4">
                   <BookmarkButton id={post.id} type="archive" />
                 </div>
               </div>
-              <div className="flex flex-col justify-center items-start self-stretch flex-grow-0 flex-shrink-0 relative gap-2 px-5 py-2">
-                <h2 className="text-body1 font-bold text-neutral-900">{cutText(post.title, 20)}</h2>
-                <p className="text-base text-body2 font-regular text-neutral-700">
+              <div className="flex flex-col justify-center items-start self-stretch relative h-[126px]">
+                <div className="text-body1 font-bold text-neutral-900 mx-5 my-2">{cutText(post.title, 20)}</div>
+                <div className="text-base text-body2 font-regular text-neutral-700 mx-5 mb-2">
                   {post.user.nickname
                     ? post.user.nickname.length > 20
                       ? `${post.user.nickname.slice(0, 20)}...`
                       : post.user.nickname
                     : 'unknown user'}
-                </p>
+                </div>
               </div>
-              <div className="tags flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-2 py-2 flex-wrap max-h-[40px] overflow-hidden">
+              <div className="flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 flex-wrap h-[46px] overflow-hidden mx-5 mb-2">
                 {post.archive_tags && post.archive_tags.length > 0 ? (
                   post.archive_tags.map((tag) => (
                     <span
                       key={tag.id}
-                      className="bg-neutral-50 px-3 py-1 rounded text-base font-medium text-neutral-700"
+                      className="bg-neutral-50 px-3 py-1 rounded text-base font-medium text-neutral-700 my-2 mr-2"
                       style={{ maxWidth: '100%' }}
                     >
                       #{tag.tag}
                     </span>
                   ))
                 ) : (
-                  <span></span>
+                  <span className="h-[46px]"></span>
                 )}
               </div>
             </div>
@@ -125,7 +124,7 @@ const PopularArchiveSwiper = () => {
       </Swiper>
       {!isBeginning && (
         <div
-          className="absolute top-1/2 transform -translate-y-1/2 left-[-32px] z-50"
+          className="absolute top-1/2 transform -translate-y-1/2 left-[-24px] z-50"
           onClick={handlePrevClick}
           onMouseEnter={() => setIsHoveringPrev(true)}
           onMouseLeave={() => setIsHoveringPrev(false)}
@@ -137,7 +136,7 @@ const PopularArchiveSwiper = () => {
       )}
       {!isEnd && (
         <div
-          className="absolute top-1/2 transform -translate-y-1/2 right-[-32px] z-50"
+          className="absolute top-1/2 transform -translate-y-1/2 right-[-24px] z-50"
           onClick={handleNextClick}
           onMouseEnter={() => setIsHoveringNext(true)}
           onMouseLeave={() => setIsHoveringNext(false)}
