@@ -101,6 +101,13 @@ const PostingForm = () => {
     router.back();
   };
 
+  // const [isValidCategory, setIsValidCategory] = useState<boolean>(false);
+  // const [isValidContent, setIsValidContent] = useState<boolean>(false);
+  // const [isValidTitle, setIsValidTitle] = useState<boolean>(false);
+  // useEffect(() => {
+  //   return () => clearCategory();
+  // }, []);
+
   return (
     <div className="w-[1204px] mx-auto flex flex-col gap-y-5 max-h-screen">
       <div className="mb-4" onClick={handleBackClick}>
