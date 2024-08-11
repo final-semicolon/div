@@ -10,7 +10,7 @@ const LoginAlertModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 center-alignment bg-black/50 z-50" onClick={onClose}>
+    <div className="fixed inset-0 center-alignment bg-black/50  z-50" onClick={onClose}>
       <div className="bg-white  w-[375px] h-[223px] flex flex-col justify-center items-center rounded-[16px] gap-10">
         <div className="flex flex-col justify-center items-center ">
           <p className="text-subtitle1 font-bold">로그인이 필요한 서비스입니다.</p>

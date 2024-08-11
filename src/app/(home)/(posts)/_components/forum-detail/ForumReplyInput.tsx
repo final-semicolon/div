@@ -31,9 +31,8 @@ const ForumReplyInput = ({ comment_id, toggle, count }: commentReplyProps) => {
       const data = await response.json();
       return data;
     },
-
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['commentReply'] });
+      queryClient.invalidateQueries({ queryKey: ['commentReply', comment_id] });
       queryClient.invalidateQueries({ queryKey: ['forumComments'] });
     }
   });

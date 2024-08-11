@@ -14,7 +14,10 @@ import CarouselRightHover from '@/assets/images/common/CarouselRightHover';
 import CarouselRight from '@/assets/images/common/CarouselRight';
 import { useQuery } from '@tanstack/react-query';
 import { cutText, filterSlang } from '@/utils/markdownCut';
-import { slangs } from '@/utils/slangs';
+import RightIconHover from '@/assets/images/common/RightIconHover';
+import RightIcon from '@/assets/images/common/RightIcon';
+import LeftIconHover from '@/assets/images/common/LeftIconHover';
+import LeftIcon from '@/assets/images/common/LeftIcon';
 
 const TodayQna = () => {
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
@@ -66,7 +69,7 @@ const TodayQna = () => {
         <p className="text-h4 font-bold mb-5 text-neutral-900">방금 올라온 질문이에요! 지식을 공유하러 가볼까요?</p>
         <Cap />
       </div>
-      <div className="relative">
+      <div className="relative h-[214px]">
         <Swiper
           onSwiper={setSwiperInstance}
           loop={true}
@@ -78,7 +81,7 @@ const TodayQna = () => {
           {todayQna?.map((post) => (
             <SwiperSlide key={post.id}>
               <Link href={`/qna/${post.id}`}>
-                <div className=" flex flex-col gap-2  rounded-2xl h-[211px] p-4 bg-indigo-50">
+                <div className=" flex flex-col gap-2  rounded-2xl h-[214px] p-4 bg-sub-50">
                   <div className="flex flex-col justify-start gap-4 items-start">
                     <Image src={qnaImage} alt="iconList" width={67} height={64} />
                     <p className="text-subtitle1 font-medium text-neutral-300">오늘의 질문</p>
@@ -93,26 +96,22 @@ const TodayQna = () => {
         </Swiper>
         {!isBeginning && (
           <div
-            className="absolute top-1/2 transform -translate-y-1/2 left-[-32px] z-50"
+            className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] left-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
             onClick={handlePrevClick}
             onMouseEnter={() => setIsHoveringPrev(true)}
             onMouseLeave={() => setIsHoveringPrev(false)}
           >
-            <button className="swiper-button-prev-custom">
-              {isHoveringPrev ? <CarouselLeftHover /> : <CarouselLeft />}
-            </button>
+            {isHoveringNext ? <LeftIconHover /> : <LeftIcon />}
           </div>
         )}
         {!isEnd && (
           <div
-            className="absolute top-1/2 transform -translate-y-1/2 right-[-32px] z-50"
+            className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] right-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
             onClick={handleNextClick}
             onMouseEnter={() => setIsHoveringNext(true)}
             onMouseLeave={() => setIsHoveringNext(false)}
           >
-            <button className="swiper-button-prev-custom">
-              {isHoveringNext ? <CarouselRightHover /> : <CarouselRight />}
-            </button>
+            {isHoveringNext ? <RightIconHover /> : <RightIcon />}
           </div>
         )}
       </div>

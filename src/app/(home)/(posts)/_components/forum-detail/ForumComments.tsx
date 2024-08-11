@@ -316,10 +316,9 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
           ))}
         </div>
       ))}
-
-      <div ref={ref}></div>
-      {!hasNextPage && !isPending && <EndOfData />}
       {loginAlertModal && <LoginAlertModal />}
+      <div ref={ref} className="h-20"></div>
+      {!hasNextPage && !isPending && <EndOfData />}
     </>
   );
 };
