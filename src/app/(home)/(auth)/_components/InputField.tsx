@@ -11,7 +11,7 @@ type InputFieldProps = {
   placeholder: string;
   valid: boolean;
   message: string;
-  label: string; // 라벨 텍스트를 추가하기 위한 필드
+  label: string;
 };
 
 const InputField = ({ type, value, onChange, placeholder, valid, message, label }: InputFieldProps) => {
@@ -19,7 +19,6 @@ const InputField = ({ type, value, onChange, placeholder, valid, message, label 
   const inputRef = useRef<HTMLInputElement>(null);
   const [hasInput, setHasInput] = useState<boolean>(false);
 
-  // 라벨 색상 설정
   const labelColor = !value ? 'text-gray-900' : valid ? 'text-main-400' : 'text-red';
 
   const messageColor = value ? (valid ? 'text-main-400' : 'text-red') : 'text-gray-900';
