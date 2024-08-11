@@ -87,6 +87,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   });
 
   const handleDelete = async (id: string, user_id: string) => {
+    toast.success('댓글이 삭제되었습니다.', { autoClose: 1500 });
     commentDelete.mutate({ id, user_id });
   };
 
@@ -161,7 +162,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   };
 
   return (
-    <div>
+    <>
       <div className=" mt-10 mb-6 px-6 text-subtitle1 font-medium ">
         {comments && comments.length > 0 && <p>댓글 {comments[0].count}</p>}
       </div>
@@ -340,7 +341,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
       ))}
       <div ref={ref}></div>
       {!hasNextPage && !isPending && <EndOfData />}
-    </div>
+    </>
   );
 };
 

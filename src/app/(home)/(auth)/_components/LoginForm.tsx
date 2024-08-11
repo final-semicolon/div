@@ -10,7 +10,6 @@ import { createClient } from '@/supabase/client';
 import Logo from '@/assets/images/header/Logo';
 import ReverseExclamation from '@/assets/images/common/ReverseExclamation';
 import LoginInputField from './LoginInputField';
-import BackClick from '../../(posts)/_components/archive-detail/BackClick';
 
 function LoginForm() {
   const router = useRouter();
@@ -132,9 +131,10 @@ function LoginForm() {
   return (
     <div className="flex items-center justify-center min-h-full">
       <div className="bg-white w-full max-w-sm">
-        <BackClick />
         <div className="flex items-center justify-center mt-40 mb-16">
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
         </div>
         {error && <p className="text-red mb-4">{error}</p>}
         <form onSubmit={handleLogin}>

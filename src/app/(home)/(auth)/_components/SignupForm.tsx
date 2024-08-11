@@ -131,7 +131,9 @@ const SignupForm = () => {
     <div className="flex items-center justify-center min-h-full">
       <div className="bg-white  w-full max-w-[420px]">
         <div className="flex items-center justify-center mb-[120px]">
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
         </div>
         <div className="border-b-2 mb-8">
           <OAuthButtons handleLogin={handleOAuthLogin} title="SNS 계정으로 회원가입" />
