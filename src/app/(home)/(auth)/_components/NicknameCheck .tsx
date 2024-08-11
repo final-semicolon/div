@@ -106,7 +106,7 @@ const NicknameCheck = ({
 
   return (
     <div className="relative mb-4">
-      <label className={`block text-sm font-medium ${labelColor}`}>닉네임</label>
+      <label className={`block subtitle2-bold-16px ${labelColor}`}>닉네임</label>
       <input
         type="text"
         value={nickname}
@@ -117,7 +117,7 @@ const NicknameCheck = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder="닉네임을 입력해 주세요."
-        className={`mt-1 block w-full p-2 border rounded-md focus:outline-none ${borderColor}`}
+        className={`mt-1 block w-full p-2 border rounded-md focus:outline-none  placeholder:body2-regular-16px ${borderColor}`}
       />
       {isFocused && nickname && (
         <button
@@ -130,7 +130,9 @@ const NicknameCheck = ({
       )}
       <div className="flex items-center mt-1 text-sm">
         {getIcon()}
-        <p className={`ml-2 ${hasInteracted ? messageColor : 'text-gray-900'}`}>{nicknameMessage}</p>
+        <p className={`ml-2  body2-regular-16px ${hasInteracted ? messageColor : 'text-gray-900'}`}>
+          {nicknameMessage}
+        </p>
       </div>
     </div>
   );

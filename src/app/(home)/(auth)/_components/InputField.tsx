@@ -46,7 +46,7 @@ const InputField = ({ type, value, onChange, placeholder, valid, message, label 
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           ref={inputRef}
-          className={`outline-transparent placeholder:body2-regular-16px`}
+          className={`outline-transparent  placeholder:body2-regular-16px`}
         />
         {(isFocused || value) && (
           <button
