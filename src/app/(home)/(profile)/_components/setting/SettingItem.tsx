@@ -1,13 +1,13 @@
 import Right24X24 from '@/assets/images/common/Right24X24';
 import React from 'react';
 
-interface DetailItemProps {
+interface SettingItemProps {
   label: string;
   value?: string;
   onClick?: () => void;
 }
 
-const DetailItem = ({ label, value, onClick }: DetailItemProps) => {
+const SettingItem = ({ label, value, onClick }: SettingItemProps) => {
   return (
     <>
       {label !== '자기소개' ? (
@@ -41,4 +41,4 @@ const DetailItem = ({ label, value, onClick }: DetailItemProps) => {
   );
 };
 
-export default DetailItem;
+export default SettingItem;

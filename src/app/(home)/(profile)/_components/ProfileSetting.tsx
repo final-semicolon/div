@@ -6,7 +6,7 @@ import { uploadImage, upDateImage } from '@/utils/imageUpload';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProfileImage from './setting/ProfileImage';
-import ProfileDetails from './setting/ProfileDetails';
+import ProfileDetails from './setting/SettingsList';
 
 const ProfileSetting = () => {
   const { userData, me, updateUserData } = useAuth();
