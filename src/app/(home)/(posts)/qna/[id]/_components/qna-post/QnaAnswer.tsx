@@ -19,11 +19,20 @@ import TagBlock from '@/components/common/TagBlock';
 import SelectTagInput from '@/components/common/SelectTagInput';
 import { TAG_LIST } from '@/constants/tags';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { EDIT_APPROVE_TEXT, EDIT_CANCLE_TEXT, SELECT_COMMENT_TEXT } from '@/constants/upsert';
 import SelectAnswer from '@/assets/images/qna/SelectAnswer';
 import Chip from '@/components/common/Chip';
 import Tag from '@/components/common/Tag';
 import { filterSlang } from '@/utils/markdownCut';
+import {
+  QNA_ANSWER_EDIT_ALERT_TEXT,
+  QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT,
+  SELECT_ANSWER_ALERT_TEXT
+} from '@/constants/alert';
+import {
+  POST_APPROVE_CONFIRM_TEXT,
+  POST_EDIT_CANCLE_CONFIRM_TEXT,
+  SELECT_ANSWER_CONFIRM_TEXT
+} from '@/constants/confirmModal';
 
 type QnaAnswerProps = {
   qnaComment: TqnaCommentsWithReplyCount;
@@ -51,6 +60,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
   };
 
   const handleEditClick = () => {
+    if (content.length === 0) return;
     setIsEditModalOpen(true);
   };
 
@@ -64,7 +74,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
 
   const selectComment = async (): Promise<void> => {
     const data = await selectMutate();
-    toast.success('채택이 완료되었습니다!', { autoClose: 1500, hideProgressBar: true });
+    toast.success(SELECT_ANSWER_ALERT_TEXT);
     await revalidatePostTag(`qna-detail-${postId}`);
     setSeletedComment(qnaComment.id);
   };
@@ -78,7 +88,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
     );
     const { data, message } = await response.json();
     if (message) {
-      toast.error(message, { autoClose: 1500, hideProgressBar: true });
+      toast.error(message);
     }
     return data;
   };
@@ -100,7 +110,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
       tags: tagList.filter((tag) => tag.selected),
       user_id: me?.id ?? ''
     });
-    toast.success('수정 완료!', { autoClose: 1500, hideProgressBar: true });
+    toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
     setIsEdit(false);
     await revalidatePostTag(`qna-detail-${postId}`);
   };
@@ -176,7 +186,11 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
                   <Tag intent="primary" label="채택된 답변" />
                   {qnaComment.user_id === me?.id ? <Tag intent="primary" label="내가 쓴 글" /> : null}
                 </div>
-              ) : null}
+              ) : (
+                <div className="flex gap-2 items-center">
+                  {qnaComment.user_id === me?.id ? <Tag intent="primary" label="내가 쓴 글" /> : null}
+                </div>
+              )}
             </div>
             <div className="flex gap-5 h-[42px] items-center">
               <span className="text-subtitle1 text-neutral-900">{qnaComment.users.nickname}</span>
@@ -206,7 +220,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
                 setIsEditModalOpen(false);
               }}
               onConfirm={editComment}
-              message={EDIT_APPROVE_TEXT}
+              message={POST_APPROVE_CONFIRM_TEXT}
             />
 
             <ConfirmModal
@@ -215,19 +229,27 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
                 setIsCancleModalOpen(false);
               }}
               onConfirm={() => {
+                toast.success(QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT);
                 setIsEdit(false);
+                setContent(qnaComment.comment);
               }}
-              message={EDIT_CANCLE_TEXT}
+              message={POST_EDIT_CANCLE_CONFIRM_TEXT}
             />
-
-            <CustomMDEditor content={content} setContent={setContent} />
+            <div className="border border-neutral-100 bg-white rounded-xl">
+              <CustomMDEditor content={content} setContent={setContent} />
+            </div>
             <div className="h-[182px] mt-12 flex flex-col gap-4">
               <h5 className="text-h5 font-bold text-neutral-900">태그</h5>
               <SelectTagInput tagList={tagList} setTagList={setTagList} />
             </div>
             <div className="flex gap-4 ml-auto">
               <Chip intent={'gray'} size={'medium'} label="취소하기" onClick={handleCancleClick} />
-              <Chip intent={'secondary'} size={'medium'} label="수정하기" onClick={handleEditClick} />
+              <Chip
+                intent={`${content.length === 0 ? 'secondary_disabled' : 'secondary'}`}
+                size={'medium'}
+                label="수정하기"
+                onClick={handleEditClick}
+              />
             </div>
           </div>
         ) : (
@@ -279,7 +301,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
             setIsSelectModalOpen(false);
           }}
           onConfirm={selectComment}
-          message={SELECT_COMMENT_TEXT}
+          message={SELECT_ANSWER_CONFIRM_TEXT}
         />
         {me?.id === questioner && seletedComment !== qnaComment.id ? (
           <button

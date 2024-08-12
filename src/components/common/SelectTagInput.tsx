@@ -20,7 +20,7 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
 
   const handleSelect = (tag: Ttag): void => {
     if (selectedCount >= 3) {
-      toast.error('태그는 3개까지만 선택이 가능합니다.', { autoClose: 1500, hideProgressBar: true });
+      toast.error('태그는 3개까지만 선택이 가능합니다.');
       return;
     }
     setTagList(
@@ -48,7 +48,7 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
       id="tag"
       onClick={handleOpenTag}
     >
-      <div className=" h-[51px] flex items-center gap-2 px-6 py-3">
+      <div className=" h-[51px] flex items-center gap-2 px-6 py-3 cursor-pointer ">
         <p className={`${selectedCount > 0 ? 'hidden' : ''} text-neutral-400 text-body1`}>
           태그를 선택하세요! (최대 3개까지 가능해요)
         </p>
@@ -58,12 +58,12 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
             return (
               <div
                 key={'selectedTag' + tag.name}
-                className="flex items-center text-subtitle2 text-neutral-700 font-medium gap-1 bg-neutral-50 px-3 py-1 rounded"
+                className="flex items-center text-subtitle2 text-neutral-700 font-medium gap-1 bg-neutral-50 px-3 py-1 rounded "
               >
                 <span>#{tag.name}</span>
                 <button
                   type="button"
-                  className="w-4 h-4 p-1 "
+                  className="w-4 h-4 p-1"
                   onClick={(event) => {
                     event.stopPropagation();
                     handleRemoveTag(tag);
@@ -89,7 +89,7 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
             .map((tag) => {
               return (
                 <li
-                  className="px-6 py-2 hover:bg-main-100 text-neutral-900 hover:text-neutral-700"
+                  className="px-6 py-2 hover:bg-main-100 text-neutral-900 hover:text-neutral-700 cursor-pointer "
                   key={tag.name}
                   onClick={() => {
                     handleSelect(tag);

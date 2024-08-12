@@ -221,7 +221,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                 </div>
               </div>
               {replyEditor[reply.id] ? (
-                <div data-color-mode="light">
+                <div>
                   <MDEditor
                     value={replyRetouch}
                     onChange={changeReplyRetouch}

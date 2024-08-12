@@ -60,9 +60,9 @@ const InputComments = () => {
 
   return (
     <div className={`flex ${me ? 'justify-start' : 'justify-center'} items-center  py-6`}>
-      {me ? (
-        <form className=" w-full" onSubmit={handleSubmit}>
-          <div className=" flex justify-center items-center gap-6" data-color-mode="light">
+      <form className=" w-full" onSubmit={handleSubmit}>
+        <div className=" flex justify-center items-center gap-6" data-color-mode="light">
+          {me && (
             <Image
               src={userData?.profile_image ?? ''}
               alt="user profile image"
@@ -70,21 +70,23 @@ const InputComments = () => {
               height={48}
               className=" rounded-full"
             />
-            <MDEditor
-              value={comment}
-              onChange={handleCommentChange}
-              preview="edit"
-              extraCommands={commands.getCommands().filter(() => false)}
-              commands={commands.getCommands().filter((command) => {
-                return command.name !== 'image';
-              })}
-              textareaProps={{
-                placeholder: '자유롭게 소통해 보세요!',
-                maxLength: 1000
-              }}
-              className="w-full "
-            />
-          </div>
+          )}
+          <MDEditor
+            value={comment}
+            onChange={handleCommentChange}
+            preview="edit"
+            extraCommands={commands.getCommands().filter(() => false)}
+            commands={commands.getCommands().filter((command) => {
+              return command.name !== 'image';
+            })}
+            textareaProps={{
+              placeholder: `${me ? '자유롭게 소통해 보세요!' : '로그인 후 자유롭게 소통해 보세요!'}`,
+              maxLength: 1000
+            }}
+            className="w-full border border-neutral-100  first-of-type:rounded-xl focus-within:border-main-400"
+          />
+        </div>
+        {me && (
           <div className=" flex justify-end items-end gap-6 mt-6">
             <button
               type="button"
@@ -103,10 +105,8 @@ const InputComments = () => {
               등록
             </button>
           </div>
-        </form>
-      ) : (
-        <p>로그인 후 이용이 가능합니다.</p>
-      )}
+        )}
+      </form>
     </div>
   );
 };

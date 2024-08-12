@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server';
 export const GET = async () => {
   const supabase = createClient();
 
-  //베스트 포럼 게시글
   const { data: forum_posts } = await supabase
     .from('forum_posts')
     .select(

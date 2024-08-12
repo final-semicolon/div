@@ -1,22 +1,12 @@
 'use client';
 import { MouseEventHandler, useEffect, useState } from 'react';
 import { TeditArchiveData, TeditForumData, TeditQnaData, TpostFormData } from '@/types/upsert';
-
-import {
-  BOARD_LIST,
-  CATEGORY_LIST_EN,
-  CATEGORY_LIST_KR,
-  FORUM_SUB_CATEGORY_LIST,
-  LOGIN_ALERT,
-  VALIDATION_SEQUENCE,
-  VALIDATION_SEQUENCE_KR
-} from '@/constants/upsert';
-
+import { BOARD_LIST, CATEGORY_LIST_EN, CATEGORY_LIST_KR, LOGIN_ALERT } from '@/constants/upsert';
 import FormTitleInput from '../FormTitleInput';
 import FormTagInput from './editform/FormTagInput';
 import FormContentArea from '../FormContentArea';
 import { useRouter } from 'next/navigation';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import FormSubmitButton from '../FormSubmitButton';
 import { useAuth } from '@/context/auth.context';
 import BackArrowIcon from '@/assets/images/upsert_image/BackArrowIcon';
@@ -27,6 +17,8 @@ import { TAG_LIST } from '@/constants/tags';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { deleteThumbnail, patchThumbnail, uploadThumbnail } from '../../_utils/thumbnail';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
+import { EDIT_SUCCESS_MASSAGE } from '@/constants/upsert.api';
+import { POST_EDIT_ALERT_TEXT } from '@/constants/alert';
 
 type UpsertFormProps = {
   data: TeditForumData | TeditQnaData | TeditArchiveData;
@@ -45,21 +37,13 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
   const [isThumbnailUrlDeleted, setisThumbnailUrlDeleted] = useState<boolean>(false);
   const [thumbnail, setThumbnail] = useState<File>();
   const [FORUM, QNA, ARCHIVE] = BOARD_LIST;
-  const {
-    isValidCategory,
-    isValidTitle,
-    isValidContent,
-    setIsValidCategory,
-    setIsValidTitle,
-    setIsValidContent,
-    clearAllValid
-  } = useUpsertValidationStore();
+  const { setIsValidTitle, setIsValidContent, clearAllValid } = useUpsertValidationStore();
 
   const handleSubmit = async (): Promise<void> => {
     const category = CATEGORY_LIST_EN[CATEGORY_LIST_KR.indexOf(categoryGroup.category)];
 
     // 폼 유효성 검사 로직
-    const isForumSubCategory = FORUM_SUB_CATEGORY_LIST.find((FORUM_SUB_CATEGORY) => subCategory === FORUM_SUB_CATEGORY);
+    // const isForumSubCategory = FORUM_SUB_CATEGORY_LIST.find((FORUM_SUB_CATEGORY) => subCategory === FORUM_SUB_CATEGORY);
 
     const validArray = [title, content];
     const invalidSequance = [() => setIsValidTitle(false), () => setIsValidContent(false)];
@@ -112,17 +96,13 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
     const { data, message } = await response.json();
 
     if (!data) {
-      toast.error(message, { autoClose: 1500, hideProgressBar: true });
+      toast.error(message);
       return;
     }
 
-    await revalidatePostTag(`edit-${path}`);
-
-    toast.success(message, {
-      autoClose: 1500,
-      hideProgressBar: true,
-      onClose: () => router.push(`/${category}`)
-    });
+    await revalidatePostTag(`${path}`);
+    router.push(`/${category}`);
+    toast.success(POST_EDIT_ALERT_TEXT);
     clearAllValid();
     return;
   };
@@ -135,9 +115,11 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
     if (!data) {
       return;
     } else if (!user) {
-      toast.error(LOGIN_ALERT, { autoClose: 1500, hideProgressBar: true, onClose: () => router.push(`/login`) });
+      router.push(`/login`);
+      toast.error(LOGIN_ALERT);
     } else if (data.user_id !== user?.id) {
-      toast.error('권한이 없습니다!', { autoClose: 1500, hideProgressBar: true, onClose: () => router.push(`/`) });
+      router.push(`/`);
+      toast.error('권한이 없습니다!');
       return;
     }
 
@@ -186,7 +168,6 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
 
   return (
     <div className="w-[1204px] mx-auto flex flex-col gap-y-5 max-h-screen">
-      <ToastContainer />
       <div className="mb-4" onClick={handleBackClick}>
         <BackArrowIcon />
       </div>

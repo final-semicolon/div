@@ -20,6 +20,7 @@
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "dayjs": "^1.11.12",
+    "lodash": "^4.17.21",
     "next": "14.2.5",
     "prettier": "^3.3.3",
     "react": "^18",
@@ -27,6 +28,7 @@
     "react-google-recaptcha": "^3.1.0",
     "react-hook-form": "^7.52.2",
     "react-intersection-observer": "^9.13.0",
+    "react-spinners": "^0.14.1",
     "react-toastify": "^10.0.5",
     "swiper": "^11.1.9",
     "tailwindcss-animate": "^1.0.7",
@@ -35,6 +37,7 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
