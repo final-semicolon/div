@@ -7,7 +7,7 @@ import TodayQna from './_components/TodayQna';
 
 const HomePage = async () => {
   return (
-    <div className="flex flex-col justify-center items-center relative">
+    <div className={`flex flex-col justify-center items-center relative`}>
       <div className="xl:w-[1200px] md:w-[800px] sm:w-96 flex flex-col gap-20">
         <PostsLink />
         <BestForum />
