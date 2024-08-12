@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Tag from '@/components/common/Tag';
 import { cutText, filterSlang } from '@/utils/markdownCut';
+import Chip from '@/components/common/Chip';
+import { useQnaDetailStore } from '@/store/qnaDetailStore';
 
 type AnswerReplyProps = {
   reply: Treply;
@@ -20,6 +22,7 @@ const AnswerReply = ({ reply, setReplyCount }: AnswerReplyProps) => {
   const [seeMore, setSeeMore] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const { me } = useAuth();
+  const { postUser } = useQnaDetailStore();
   const queryClient = useQueryClient();
 
   const handleContentChange = (value: string | undefined): void => {
@@ -28,9 +31,13 @@ const AnswerReply = ({ reply, setReplyCount }: AnswerReplyProps) => {
 
   const handleCancleClick = () => {
     setIsEdit(false);
+    setContent(reply.reply);
   };
 
   const handleEditReply: MouseEventHandler<HTMLButtonElement> = async () => {
+    if (content.length === 0) {
+      return;
+    }
     const data = await editMutate({ replyId: reply.id, reply: content });
     toast.success('수정 완료!', { autoClose: 1500, hideProgressBar: true });
     setIsEdit(false);
@@ -56,8 +63,8 @@ const AnswerReply = ({ reply, setReplyCount }: AnswerReplyProps) => {
   });
 
   return (
-    <div key={reply.id} className={`relative left-0 border-b`}>
-      <div className="flex h-[86px] my-6 items-center gap-[16px] ">
+    <div key={reply.id} className={`relative left-0 border-b py-6 px-5 ${reply.user_id === me?.id ? 'bg-sub-50' : ''}`}>
+      <div className="flex h-[86px]  items-center gap-[16px] ">
         <div className="relative w-12 h-12">
           <Image
             src={reply.users?.profile_image ?? ''}
@@ -68,12 +75,12 @@ const AnswerReply = ({ reply, setReplyCount }: AnswerReplyProps) => {
           />
         </div>
         <div className="flex flex-col gap-1">
-          {reply.user_id === me?.id ? <Tag intent="primary" label="글쓴이" /> : null}
+          {postUser === me?.id ? <Tag intent="primary" label="글쓴이" /> : null}
           <div className="text-subtitle1 text-neutral-900">{reply.users.nickname}</div>
           <div className="text-body2 text-neutral-300">{timeForToday(reply.updated_at!)}</div>
         </div>
         {me?.id === reply.user_id ? (
-          <div className="flex ml-auto ">
+          <div className=" ml-auto mb-auto">
             <AnswerReplytKebobBtn
               commentId={reply.comment_id}
               replyId={reply.id}
@@ -86,28 +93,27 @@ const AnswerReply = ({ reply, setReplyCount }: AnswerReplyProps) => {
         )}
       </div>
       {isEdit ? (
-        <div className="flex flex-col h-[200px] mb-6 mx-5  gap-[16px]">
-          <MDEditor
-            value={content}
-            onChange={handleContentChange}
-            preview="edit"
-            commands={commands.getCommands().filter((command) => {
-              return command.name !== 'image';
-            })}
-            textareaProps={{ maxLength: 1000 }}
-            extraCommands={commands.getCommands().filter(() => false)}
-          />
-          <div className="flex gap-4">
-            <button
-              type="button"
-              className="ml-auto w-[71px] h-[48px] bg-neutral-50 rounded-md text-neutral-100"
-              onClick={handleCancleClick}
-            >
-              취소
-            </button>
-            <button className="w-[71px] h-[48px] bg-main-100 rounded-md text-main-50" onClick={handleEditReply}>
-              등록
-            </button>
+        <div className="flex flex-col min-h-[200px] mb-6 mx-5 mt-4 gap-4">
+          <div className="border border-neutral-100 bg-white rounded-xl">
+            <MDEditor
+              value={content}
+              onChange={handleContentChange}
+              preview="edit"
+              commands={commands.getCommands().filter((command) => {
+                return command.name !== 'image';
+              })}
+              textareaProps={{ maxLength: 1000 }}
+              extraCommands={commands.getCommands().filter(() => false)}
+            />
+          </div>
+          <div className="flex gap-4 ml-auto">
+            <Chip intent={'gray'} size={'medium'} label="취소" onClick={handleCancleClick} />
+            <Chip
+              intent={`${content.length === 0 ? 'primary_disabled' : 'primary'}`}
+              size={'medium'}
+              label="등록"
+              onClick={handleEditReply}
+            />
           </div>
         </div>
       ) : (
