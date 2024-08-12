@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="kr" className={`${pretendard.variable}`}>
+    <html lang="kr">
       <body className={pretendard.className}>
         <Providers>{children}</Providers>
       </body>
