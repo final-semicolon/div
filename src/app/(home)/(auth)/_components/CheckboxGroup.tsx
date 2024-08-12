@@ -72,7 +72,7 @@ const CheckboxGroup = ({ showError }: CheckboxGroupProps) => {
             }}
             className={`body2-regular-16px underline cursor-pointer text-gray-900`}
           >
-            통합 서비스 이용약관 (필수)
+            통합 서비스 이용약관 <span className="text-main-400">(필수)</span>
           </label>
           <input
             type="checkbox"
@@ -91,9 +91,9 @@ const CheckboxGroup = ({ showError }: CheckboxGroupProps) => {
               e.preventDefault();
               window.open('/legal/privacy', '_blank');
             }}
-            className={`body2-regular-16px underline cursor-pointer text-gray-600`}
+            className={`body2-regular-16px underline cursor-pointer text-gray-900`}
           >
-            개인정보수집 및 이용동의 (필수)
+            개인정보수집 및 이용동의 <span className="text-main-400">(필수)</span>
           </label>
           <input
             type="checkbox"
@@ -104,7 +104,7 @@ const CheckboxGroup = ({ showError }: CheckboxGroupProps) => {
         </div>
       </div>
       {showError && (!agreeTerms || !agreePrivacy) && (
-        <div className="mt-1 text-red flex items-center">
+        <div className="mt-1 body2-regular-16px text-red flex items-center">
           <RedI />
           필수 항목에 동의해 주세요
         </div>

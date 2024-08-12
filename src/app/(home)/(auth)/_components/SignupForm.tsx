@@ -56,7 +56,6 @@ const SignupForm = () => {
   const password = watch('password', '');
   const confirmPassword = watch('confirmPassword', '');
 
-  // Caps Lock 상태 처리 함수
   const handleCapsLock = (e: React.KeyboardEvent<HTMLInputElement>) => {
     setIsCapsLockOn(e.getModifierState('CapsLock'));
   };
@@ -65,7 +64,7 @@ const SignupForm = () => {
     if (!nickname) return;
 
     if (!isNicknameValid(nickname)) {
-      setError('nickname', { type: 'manual', message: '사용할 수 없는 닉네임이에요.' });
+      setError('nickname', { type: 'manual', message: '사용할 수 없는 닉네임이에요' });
       setNicknameValid(false);
       return;
     }
@@ -82,17 +81,17 @@ const SignupForm = () => {
       const result = await response.json();
 
       if (response.status === 409) {
-        setError('nickname', { type: 'manual', message: '이미 사용 중인 닉네임이에요.' });
+        setError('nickname', { type: 'manual', message: '이미 사용 중인 닉네임이에요' });
         setNicknameValid(false);
       } else if (response.ok) {
         clearErrors('nickname');
         setNicknameValid(true);
       } else {
-        setError('nickname', { type: 'manual', message: result.error || '닉네임 확인 중 오류가 발생했어요.' });
+        setError('nickname', { type: 'manual', message: result.error || '닉네임 확인 중 오류가 발생했어요' });
         setNicknameValid(false);
       }
     } catch (error) {
-      setError('nickname', { type: 'manual', message: '닉네임 확인 중 오류가 발생했어요.' });
+      setError('nickname', { type: 'manual', message: '닉네임 확인 중 오류가 발생했어요' });
       setNicknameValid(false);
     }
   }, 500);
@@ -102,7 +101,7 @@ const SignupForm = () => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError('email', { type: 'manual', message: '유효한 이메일 주소를 입력해주세요.' });
+      setError('email', { type: 'manual', message: '유효한 이메일 주소를 입력해주세요' });
       setEmailValid(false);
       return;
     }
@@ -119,17 +118,17 @@ const SignupForm = () => {
       const result = await response.json();
 
       if (response.status === 409) {
-        setError('email', { type: 'manual', message: '이미 사용 중인 이메일이에요.' });
+        setError('email', { type: 'manual', message: '이미 사용 중인 이메일이에요' });
         setEmailValid(false);
       } else if (response.ok) {
         clearErrors('email');
         setEmailValid(true);
       } else {
-        setError('email', { type: 'manual', message: result.error || '이메일 확인 중 오류가 발생했어요.' });
+        setError('email', { type: 'manual', message: result.error || '이메일 확인 중 오류가 발생했어요' });
         setEmailValid(false);
       }
     } catch (error) {
-      setError('email', { type: 'manual', message: '이메일 확인 중 오류가 발생했어요.' });
+      setError('email', { type: 'manual', message: '이메일 확인 중 오류가 발생했어요' });
       setEmailValid(false);
     }
   }, 500);
@@ -160,12 +159,11 @@ const SignupForm = () => {
     }
 
     if (!recaptchaToken) {
-      setError('recaptcha', { type: 'manual', message: '로봇이 아님을 확인해 주세요.' });
+      setError('recaptcha', { type: 'manual', message: '로봇이 아님을 확인해 주세요' });
       return;
     }
 
     if (data.password !== data.confirmPassword) {
-      toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
     setShowError(true);
@@ -177,7 +175,6 @@ const SignupForm = () => {
         onClose: () => router.replace('/')
       });
     } else {
-      toast.error(result.message || '회원가입 중 오류가 발생했어요.');
     }
   };
 
@@ -200,13 +197,13 @@ const SignupForm = () => {
               <Logo />
             </Link>
           </div>
-          <div className="text-center border-b-2 mb-8">
+          <div className="text-center border-b-2 mb-16">
             <OAuthButtons title="SNS 계정으로 회원가입" handleLogin={handleOAuthLogin} />
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4 relative">
               <label
-                className={`block text-sm font-medium ${
+                className={`block subtitle2-bold-16px ${
                   errors.email ? 'text-red' : focusedField === 'email' ? 'text-main-400' : 'text-gray-900'
                 }`}
               >
@@ -223,7 +220,8 @@ const SignupForm = () => {
                       message: '유효한 이메일 주소를 입력해주세요.'
                     }
                   })}
-                  className={`mt-1 block w-full p-2 border rounded-md focus:outline-none ${
+                  className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
+                  body2-regular-16px ${
                     errors.email ? 'border-red' : focusedField === 'email' ? 'border-main-400' : 'border-gray-900'
                   }`}
                   onFocus={() => setFocusedField('email')}
@@ -241,7 +239,7 @@ const SignupForm = () => {
                 )}
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red flex items-center">
+                <p className="mt-1 body2-regular-16px text-red flex items-center">
                   <RedX />
                   {errors.email.message}
                 </p>
@@ -250,7 +248,7 @@ const SignupForm = () => {
 
             <div className="mb-4 relative">
               <label
-                className={`block text-sm font-medium ${
+                className={`block subtitle2-bold-16px ${
                   errors.password ? 'text-red' : focusedField === 'password' ? 'text-main-400' : 'text-gray-900'
                 }`}
               >
@@ -272,7 +270,8 @@ const SignupForm = () => {
                       return true;
                     }
                   })}
-                  className={`mt-1 block w-full p-2 border rounded-md focus:outline-none ${
+                  className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
+                  body2-regular-16px ${
                     errors.password ? 'border-red' : focusedField === 'password' ? 'border-main-400' : 'border-gray-900'
                   }`}
                   onFocus={() => setFocusedField('password')}
@@ -293,22 +292,29 @@ const SignupForm = () => {
               {isCapsLockOn && (
                 <div className="ml-1 my-2 flex items-center">
                   <ReverseExclamation stroke="#423EDF" />
-                  <span className="ml-1 text-body2 font-regular text-main-400">Caps Lock on</span>
+                  <span
+                    className="ml-1 
+body2-regular-16px text-main-400"
+                  >
+                    Caps Lock on
+                  </span>
                 </div>
               )}
               {!errors.password && (
-                <p className={`mt-1 text-sm flex items-center ${isPasswordValid ? 'text-main-400' : 'text-gray-600'}`}>
+                <p
+                  className={`mt-1 body2-regular-16px flex items-center ${isPasswordValid ? 'text-main-400' : 'text-gray-600'}`}
+                >
                   {isPasswordValid ? <CheckVector /> : <I />}
                   {isPasswordValid ? '영문/숫자/특수문자 혼합 (10자 이상)' : '영문/숫자/특수문자 혼합 (10자 이상)'}
                 </p>
               )}
               {errors.password && (
                 <>
-                  <p className="mt-1 text-sm text-red flex items-center">
+                  <p className="mt-1 body2-regular-16px text-red flex items-center">
                     <RedX />
                     필수 입력 항목이에요
                   </p>
-                  <p className="mt-1 text-sm text-red flex items:center">
+                  <p className="mt-1 body2-regular-16px text-red flex items:center">
                     <RedX />
                     영문/숫자/특수문자 혼합 (10자 이상)
                   </p>
@@ -318,7 +324,7 @@ const SignupForm = () => {
 
             <div className="mb-4 relative">
               <label
-                className={`block text-sm font-medium ${
+                className={`block subtitle2-bold-16px ${
                   errors.confirmPassword
                     ? 'text-red'
                     : focusedField === 'confirmPassword'
@@ -336,7 +342,8 @@ const SignupForm = () => {
                     required: '확인을 위해 비밀번호를 한 번 더 입력해 주세요',
                     validate: (value) => value === watch('password') || '비밀번호가 일치하지 않습니다.'
                   })}
-                  className={`mt-1 block w-full p-2 border rounded-md focus:outline-none ${
+                  className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
+                  body2-regular-16px ${
                     errors.confirmPassword
                       ? 'border-red'
                       : focusedField === 'confirmPassword'
@@ -358,13 +365,13 @@ const SignupForm = () => {
                 )}
               </div>
               {!errors.confirmPassword && isConfirmPasswordValid && (
-                <p className="mt-1 text-sm text-main-400 flex items-center">
+                <p className="mt-1 body2-regular-16px text-main-400 flex items-center">
                   <CheckVector />
                   비밀번호가 일치해요
                 </p>
               )}
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red flex items:center">
+                <p className="mt-1 body2-regular-16px text-red flex items:center">
                   <RedX />
                   {errors.confirmPassword.message}
                 </p>
@@ -373,7 +380,8 @@ const SignupForm = () => {
 
             <div className="mb-4 relative">
               <label
-                className={`block text-sm font-medium ${
+                className={`block 
+                subtitle2-bold-16px ${
                   errors.nickname ? 'text-red' : focusedField === 'nickname' ? 'text-main-400' : 'text-gray-900'
                 }`}
               >
@@ -394,7 +402,8 @@ const SignupForm = () => {
                       message: '닉네임은 12자 이하이어야 합니다.'
                     }
                   })}
-                  className={`mt-1 block w-full p-2 border rounded-md focus:outline-none ${
+                  className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
+                  body2-regular-16px ${
                     errors.nickname ? 'border-red' : focusedField === 'nickname' ? 'border-main-400' : 'border-gray-900'
                   }`}
                   onFocus={() => setFocusedField('nickname')}
@@ -413,7 +422,7 @@ const SignupForm = () => {
               </div>
               {!errors.nickname && (
                 <p
-                  className={`mt-1 text-sm flex items:center ${
+                  className={`mt-1 body2-regular-16px flex items:center ${
                     isNicknameValidLocal ? 'text-main-400' : 'text-gray-900'
                   }`}
                 >
@@ -422,7 +431,7 @@ const SignupForm = () => {
                 </p>
               )}
               {errors.nickname && (
-                <p className="mt-1 text-sm text-red flex items:center">
+                <p className="mt-1 body2-regular-16px text-red flex items:center">
                   <RedX />
                   {errors.nickname.message}
                 </p>
@@ -431,9 +440,9 @@ const SignupForm = () => {
 
             <CheckboxGroup showError={!!(errors.terms || errors.privacy)} />
 
-            <div className="mb-4 p-2 rounded flex items-center justify-center w-full">
+            <div className="mt-6 mb-10 p-2 rounded flex items-center justify-center w-full">
               <div className="w-full flex justify-center">
-                <div className="w-full max-w-[400px]">
+                <div className=" ml-4">
                   <ReCAPTCHA
                     sitekey={RECAPTCHA_SITE_KEY}
                     onChange={(token) => {
@@ -446,17 +455,20 @@ const SignupForm = () => {
               </div>
             </div>
             {errors.recaptcha && (
-              <p className="mt-1 text-sm text-red flex items:center">
+              <p className="mt-1 body2-regular-16px text-red flex items:center">
                 <RedI />
                 {errors.recaptcha?.message}
               </p>
             )}
 
-            <button type="submit" className="w-full p-3 rounded-md subtitle1-bold-18px bg-main-400 text-white">
+            <button
+              type="submit"
+              className="w-full p-3 rounded-md subtitle1-bold-18px bg-main-400 text-white hover:bg-main-500"
+            >
               가입하기
             </button>
           </form>
-          <p className="mt-3 text-center body2-regular-16px">
+          <p className="mt-4 mb-3 text-center body2-regular-16px gap-12">
             이미 아이디가 있으신가요?
             <Link href="/login" className="body2-medium-16px underline">
               로그인
