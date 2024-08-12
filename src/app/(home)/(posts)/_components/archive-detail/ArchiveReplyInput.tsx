@@ -32,12 +32,8 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
       return response.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['commentReply'] });
       queryClient.invalidateQueries({ queryKey: ['archiveCommentReply'] });
-    },
-    onError: () => {
-      toast.error('댓글 등록에 실패했습니다. 다시 시도해 주세요.', {
-        autoClose: 2000
-      });
     }
   });
 
@@ -83,7 +79,7 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
 
   return (
     <div className="border-l-4 border-[#C7DCF5] border-b-[1px] p-6">
-      <div className="flex justify-center items-center gap-6" data-color-mode="light">
+      <div className="flex justify-center items-center gap-6">
         <Image
           src={userData?.profile_image ?? ''}
           alt="user profile image"

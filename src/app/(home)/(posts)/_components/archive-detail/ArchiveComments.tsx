@@ -18,7 +18,8 @@ import ArchiveReply from './ArchiveReply';
 import { archiveCommentsType, commentRetouch } from '@/types/posts/archiveDetailTypes';
 import EndOfData from '@/components/common/EndOfData';
 import { cutText, filterSlang } from '@/utils/markdownCut';
-
+import { useLoginAlertStore } from '@/store/loginAlertModal';
+import LoginAlertModal from '@/components/modal/LoginAlertModal';
 
 const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -32,6 +33,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   const [replyToggle, setReplyToggle] = useState<{ [key: string]: boolean }>({});
   const [confirmModal, setConfirmModal] = useState<{ [key: string]: boolean }>({});
   const [commentLength, setCommentLength] = useState<boolean>(false);
+  const { isOpen, loginAlertModal } = useLoginAlertStore();
 
   const COMMENT_PAGE = 5;
 
@@ -45,10 +47,6 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
           'Content-Type': 'application/json'
         }
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to update comment');
-      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
@@ -56,14 +54,9 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   });
 
   const commentRetouchHandle = async (id: string, user_id: string) => {
-    if (!mdEditorChange) {
-      toast.error('댓글을 입력해주세요!', {
-        autoClose: 2000
-      });
-      return;
-    }
     commentRetouch.mutate({ id, user_id, mdEditorChange });
-    setEditingState({ [id]: false });
+    setEditingState({ Boolean: false });
+    toast.success('댓글이 수정 되었습니다.', { autoClose: 1500 });
   };
 
   // 댓글 삭제
@@ -88,6 +81,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   });
 
   const handleDelete = async (id: string, user_id: string) => {
+    toast.success('댓글이 삭제되었습니다.', { autoClose: 1500 });
     commentDelete.mutate({ id, user_id });
   };
 
@@ -150,12 +144,15 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
     return <div>로딩..</div>;
   }
   const handleInputReplyToggle = (id: string, count: number) => {
+    if (!me) {
+      isOpen();
+      return;
+    }
     setInputReplyToggle({ [id]: !inputReplyToggle[id] });
     if (count === 0) {
       setReplyToggle({ [id]: !replyToggle[id] });
     }
   };
-
   const replyOpenToggle = (id: string) => {
     setReplyToggle({ [id]: !replyToggle[id] });
     setInputReplyToggle({ [id]: false });
@@ -233,7 +230,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
                   </div>
                 </div>
                 {editingState[comment.id] ? (
-                  <div className=" flex flex-col " data-color-mode="light">
+                  <div className=" flex flex-col ">
                     <MDEditor
                       value={mdEditorChange}
                       onChange={changEditor}
@@ -339,6 +336,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
           ))}
         </div>
       ))}
+      {loginAlertModal && <LoginAlertModal />}
       <div ref={ref}></div>
       {!hasNextPage && !isPending && <EndOfData />}
     </div>
