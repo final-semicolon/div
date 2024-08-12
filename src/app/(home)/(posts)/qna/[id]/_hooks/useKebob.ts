@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { InvalidateQueryFilters } from '@tanstack/react-query';
-import deleteMutation from '../_utils/deleteMutation';
+import useDeleteMutation from './useDeleteMutation';
 
 type useReplyKebobProps = {
   replyId?: string;
@@ -24,7 +24,7 @@ const useKebob = ({ commentId, replyId, setIsEdit, category }: useReplyKebobProp
   const path = deleteMutationObj[`${category}`].path;
   const querykey = deleteMutationObj[`${category}`].querykey;
 
-  const { deleteQnaData } = deleteMutation({ path, querykey, postId });
+  const { deleteQnaData } = useDeleteMutation({ path, querykey, postId });
 
   const openModal = () => {
     setIsModalOpen(true);

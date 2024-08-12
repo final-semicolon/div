@@ -9,7 +9,7 @@ type replyMutationProps = {
   postId: string;
 };
 
-const deleteMutation = ({ path, querykey, postId }: replyMutationProps) => {
+const useDeleteMutation = ({ path, querykey, postId }: replyMutationProps) => {
   const queryClient = useQueryClient();
   const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail`;
 
@@ -41,4 +41,4 @@ const deleteMutation = ({ path, querykey, postId }: replyMutationProps) => {
   return { deleteQnaData };
 };
 
-export default deleteMutation;
+export default useDeleteMutation;
