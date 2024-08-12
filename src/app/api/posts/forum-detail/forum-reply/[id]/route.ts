@@ -11,7 +11,7 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
     .select('*, user:users(*)')
     .eq('comment_id', params.id)
     .order('created_at', { ascending: false })
-    .range(page * 5, (page + 1) * 5 - 1);
+    .range((page - 1) * 5, page * 5 - 1);
 
   const { count, error } = await supabase
     .from('forum_reply')

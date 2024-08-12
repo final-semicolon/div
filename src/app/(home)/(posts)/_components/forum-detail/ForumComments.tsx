@@ -99,7 +99,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
     isError
   } = useInfiniteQuery({
     queryKey: ['forumComments', param.id],
-    initialPageParam: 0,
+    initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       const response = await fetch(`/api/posts/forum-detail/forum-comments/${param.id}?page=${pageParam}`);
       const data = await response.json();
