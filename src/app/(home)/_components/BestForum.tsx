@@ -9,7 +9,7 @@ import Share from '@/assets/images/common/Share';
 import CommentBubble from '@/assets/images/common/CommentBubble';
 import Star from '@/assets/images/main-page_image/Star';
 import MDEditor from '@uiw/react-md-editor';
-import { processMarkdown } from '@/utils/markdownCut';
+import { cutText, processMarkdown } from '@/utils/markdownCut';
 import { useEffect, useState } from 'react';
 import SwiperCore from 'swiper';
 import CarouselLeftHover from '@/assets/images/common/CarouselLeftHover';
@@ -21,6 +21,10 @@ import TagBlock from '@/components/common/TagBlock';
 import { BestForumType } from '@/types/mainpage';
 import { useQuery } from '@tanstack/react-query';
 import { handleLinkCopy } from '@/utils/handleLinkCopy';
+import LeftIconHover from '@/assets/images/common/LeftIconHover';
+import LeftIcon from '@/assets/images/common/LeftIcon';
+import RightIconHover from '@/assets/images/common/RightIconHover';
+import RightIcon from '@/assets/images/common/RightIcon';
 
 const BestForum = () => {
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
@@ -67,34 +71,34 @@ const BestForum = () => {
   });
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <div className="flex justify-start items-center mb-5">
         <h1 className="text-h4 font-bold ">오늘의 인기 포럼이에요</h1>
         <Star />
       </div>
-      <div className=" relative">
+      <div className=" relative h-[570px]">
         <Swiper
           onSwiper={setSwiperInstance}
           loop={true}
           modules={[Navigation]}
           slidesPerView={3}
-          spaceBetween={20}
+          spaceBetween={15}
           className="mySwiper"
         >
           {forumList?.map((forum) => (
             <SwiperSlide key={forum.id}>
-              <div className="w-90% border rounded-xl ml-1 px-4 ">
+              <div className="flex flex-col border rounded-xl gap-6 p-5 h-[570px]  ">
                 <div className="flex justify-start items-center gap-4  border-b-[1px]">
                   <Image
                     src={forum.users.profile_image}
                     alt="userImage"
-                    width={48}
-                    height={48}
+                    width={60}
+                    height={60}
                     className=" w-[48px] h-[48px] rounded-full"
                   />
-                  <div className=" flex flex-col justify-start gap-1 py-4">
+                  <div className=" flex flex-col justify-start gap-1 ">
                     <h2>{forum.users.nickname}</h2>
-                    <div className="flex justify-start items-center gap-1">
+                    <div className="flex justify-start items-center gap-1 pb-5">
                       <p className="text-body font-regular text-neutral-300">{forum.forum_category}</p>
                       <span className="text-body font-regular text-neutral-300">▪</span>
                       <p className="text-body font-regular text-neutral-300">
@@ -105,17 +109,23 @@ const BestForum = () => {
                   </div>
                 </div>
                 <Link href={`/forum/${forum.id}`}>
-                  <div className=" flex flex-col gap-1 h-80 mt-4 ">
+                  <div className=" flex flex-col gap-2 h-[340px] ">
                     {forum.thumbnail ? (
-                      <Image src={forum.thumbnail} alt="forumThumbnail" width={210} height={210} />
+                      <Image
+                        src={forum.thumbnail}
+                        alt="forumThumbnail"
+                        width={210}
+                        height={210}
+                        className="w-[210px] h-[210px]"
+                      />
                     ) : null}
-                    <h1 className="text-h5 font-bold ">{forum.title}</h1>
+                    <h1 className="text-h5 font-bold truncate ">{forum.title}</h1>
                     {forum.thumbnail ? (
                       <div
                         className="text-body2 font-regular normal whitespace-pre-wrap break-words  "
                         data-color-mode="light"
                       >
-                        <MDEditor.Markdown source={processMarkdown(forum.content, 100)} />
+                        <MDEditor.Markdown source={processMarkdown(forum.content, 45)} />
                       </div>
                     ) : (
                       <div
@@ -125,17 +135,18 @@ const BestForum = () => {
                         <MDEditor.Markdown source={processMarkdown(forum.content, 200)} />
                       </div>
                     )}
-                    <div className="flex justify-start items-start gap-2">
+                    <div className="flex justify-start items-start gap-2 mt-4 ">
                       {forum.tags.map((tag) => (
                         <div key={tag.id}>{tag && <TagBlock tag={tag.tag} />}</div>
                       ))}
                     </div>
                   </div>
+
                   <p className=" text-right text-body font-regular text-neutral-400 mt-4">
                     {forum.created_at.slice(0, 10).replace(/-/g, '.')}
                   </p>
                 </Link>
-                <div className="flex justify-between items-center py-2 text-sm">
+                <div className="flex justify-between items-center ">
                   <div className="flex justify-start items-center gap-4">
                     <LikeButton id={forum.id} type="forum" />
                     <button onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/forum/${forum.id}`)}>
@@ -154,26 +165,22 @@ const BestForum = () => {
 
         {!isBeginning && (
           <div
-            className="absolute top-1/2 transform -translate-y-1/2 left-[-32px] z-50"
+            className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] left-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
             onClick={handlePrevClick}
             onMouseEnter={() => setIsHoveringPrev(true)}
             onMouseLeave={() => setIsHoveringPrev(false)}
           >
-            <button className="swiper-button-prev-custom">
-              {isHoveringPrev ? <CarouselLeftHover /> : <CarouselLeft />}
-            </button>
+            {isHoveringNext ? <LeftIconHover /> : <LeftIcon />}
           </div>
         )}
         {!isEnd && (
           <div
-            className="absolute top-1/2 transform -translate-y-1/2 right-[-32px] z-50"
+            className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] right-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
             onClick={handleNextClick}
             onMouseEnter={() => setIsHoveringNext(true)}
             onMouseLeave={() => setIsHoveringNext(false)}
           >
-            <button className="swiper-button-prev-custom">
-              {isHoveringNext ? <CarouselRightHover /> : <CarouselRight />}
-            </button>
+            {isHoveringNext ? <RightIconHover /> : <RightIcon />}
           </div>
         )}
       </div>

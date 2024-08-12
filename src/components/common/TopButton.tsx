@@ -1,10 +1,12 @@
 'use client';
 
-import UpButton from '@/assets/images/common/UpButton';
+import Top from '@/assets/images/common/Top';
+import TopHover from '@/assets/images/common/TopHover';
 import { useEffect, useState } from 'react';
 
 const TopButton = () => {
   const [topScroll, setTopScroll] = useState<boolean>(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,11 +26,16 @@ const TopButton = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   return (
-    <div className=" fixed right-16 bottom-5">
+    <div className=" fixed right-[190px] bottom-5 ">
       {topScroll && (
-        <button type="button" onClick={MoveTop} className=" py-2 px-4  ">
-          <UpButton />
-        </button>
+        <div
+          onClick={MoveTop}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className=" w-[68px] h-[68px] flex justify-center items-center  rounded-full bg-neutral-50 shadow-button hover:bg-neutral-100"
+        >
+          {isHovered ? <TopHover /> : <Top />}
+        </div>
       )}
     </div>
   );
