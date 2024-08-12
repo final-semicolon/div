@@ -63,7 +63,7 @@ const CheckCurrentPassword = ({ onValidationChange }: CheckCurrentPasswordProps)
       <PasswordInput
         value={currentPassword}
         onChange={setCurrentPassword}
-        placeholder={PASSWORD.PASSWORD_PLACEHOLDER}
+        placeholder={PASSWORD.PASSWORD_EDIT_PLACEHOLDER}
         showPassword={showCurrentPassword}
         onToggleShowPassword={() => setShowCurrentPassword(!showCurrentPassword)}
         onClear={() => setCurrentPassword('')}

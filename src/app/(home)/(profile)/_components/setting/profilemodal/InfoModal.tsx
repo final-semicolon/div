@@ -102,7 +102,7 @@ const InfoModal = ({ isOpen, onClose, currentInfo, onInfoUpdate }: InfoModalProp
             onChange={onInputHandler}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            placeholder={INFO.INFO_PLACEHOLDER}
+            placeholder={INFO.INFO_EDIT_PLACEHOLDER}
             maxLength={INFO.MAX_LENGTH}
             className={`border text-body1 font-regular rounded-lg p-4 w-full h-[167px] my-2 resize-none ${borderColor}`}
           />

@@ -9,6 +9,7 @@ import Chip from '@/components/common/Chip';
 import X from '@/assets/images/common/X';
 import Check from '@/assets/images/common/Check';
 import useDebounce from '@/hooks/common/useDebounce';
+import useNicknameValidation from '@/hooks/common/useNicknameValidation';
 
 type NicknameModalProps = {
   isOpen: boolean;
@@ -19,48 +20,10 @@ type NicknameModalProps = {
 
 const NicknameModal = ({ isOpen, onClose, currentNickname, onNicknameUpdate }: NicknameModalProps) => {
   const [newNickname, setNewNickname] = useState('');
-  const [nicknameMessage, setNicknameMessage] = useState('');
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-
   const debouncedNickname = useDebounce(newNickname, 300);
-
-  useEffect(() => {
-    const validateNickname = async (nickname: string) => {
-      if (nickname.length > 12) {
-        setNicknameMessage(NICKNAME.MISMATCH);
-        return;
-      }
-
-      if (!isNicknameValid(nickname)) {
-        setNicknameMessage(NICKNAME.MISMATCH);
-        return;
-      }
-
-      try {
-        const response = await fetch('/api/auth/check-nickname', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ nickname })
-        });
-
-        const result = await response.json();
-
-        if (response.status === 409) {
-          setNicknameMessage(NICKNAME.MISMATCH);
-        } else if (response.ok) {
-          setNicknameMessage(NICKNAME.MATCH);
-        } else if (result.error) {
-          console.error('닉네임 확인 중 오류:', result.error);
-        }
-      } catch (error) {
-        console.error('닉네임 확인 중 오류:', error);
-      }
-    };
-    validateNickname(debouncedNickname);
-  }, [debouncedNickname, nicknameMessage]);
+  const { nicknameMessage } = useNicknameValidation(debouncedNickname);
 
   const onNicknameHandler = (e: ChangeEvent<HTMLInputElement>) => {
     // 띄어쓰기를 제거한 입력값을 설정
@@ -97,8 +60,6 @@ const NicknameModal = ({ isOpen, onClose, currentNickname, onNicknameUpdate }: N
     ) {
       onNicknameUpdate(newNickname);
       onClose();
-    } else {
-      toast.error(NICKNAME.CONFIRM_MISMATCH_RULE);
     }
   };
 
@@ -139,7 +100,7 @@ const NicknameModal = ({ isOpen, onClose, currentNickname, onNicknameUpdate }: N
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               className="w-[353px] outline-transparent"
-              placeholder={NICKNAME.NICKNAME_PLACEHOLDER}
+              placeholder={NICKNAME.NICKNAME_EDIT_PLACEHOLDER}
             />
             {newNickname && (
               <button

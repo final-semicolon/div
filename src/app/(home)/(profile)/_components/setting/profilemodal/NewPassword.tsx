@@ -68,7 +68,7 @@ const NewPassword = ({
       <PasswordInput
         value={newPassword}
         onChange={onNewPasswordChange}
-        placeholder={PASSWORD.PASSWORD_PLACEHOLDER}
+        placeholder={PASSWORD.PASSWORD_EDIT_PLACEHOLDER}
         showPassword={showPassword}
         onToggleShowPassword={() => setShowPassword(!showPassword)}
         onClear={() => onNewPasswordChange('')}
@@ -79,7 +79,7 @@ const NewPassword = ({
       <PasswordInput
         value={confirmPassword}
         onChange={onConfirmPasswordChange}
-        placeholder={PASSWORD.CONFIRM_PASSWORD_PLACEHOLDER}
+        placeholder={PASSWORD.CONFIRM_PASSWORD_EDIT_PLACEHOLDER}
         showPassword={showConfirmPassword}
         onToggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
         onClear={() => onConfirmPasswordChange('')}
