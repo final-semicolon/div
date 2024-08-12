@@ -51,7 +51,7 @@ const ProfileSetting = () => {
         toast.error('이미지 업로드에 실패했습니다.');
       }
     } catch (error) {
-      console.error('이미지 업로드 실패:', (error as Error).message);
+      console.error('이미지 업로드 실패:', error);
     }
   };
 
@@ -66,12 +66,27 @@ const ProfileSetting = () => {
       });
 
       if (response.ok) {
-        toast.success('프로필이 성공적으로 수정되었습니다.');
+        if (updates.nickname && updates.nickname !== nickname) {
+          toast.success('닉네임이 변경되었습니다.');
+          setNickname(updates.nickname);
+        }
+
+        if (updates.info && updates.info !== info) {
+          toast.success('자기 소개가 변경되었습니다.');
+          setInfo(updates.info);
+        }
+
+        if (updates.profile_image && updates.profile_image !== profileImage) {
+          toast.success('프로필 이미지가 변경되었습니다.');
+        }
+
+        await updateUserData(updates);
       } else {
-        toast.error('프로필 수정에 실패했습니다.');
+        toast.error('프로필 업데이트에 실패했습니다.');
       }
     } catch (error) {
       console.error('프로필 업데이트 실패:', (error as Error).message);
+      toast.error('프로필 업데이트 중 오류가 발생했습니다.');
     }
   };
 
@@ -96,12 +111,10 @@ const ProfileSetting = () => {
           email={me?.email}
           info={info}
           onNicknameUpdate={(newNickname) => {
-            setNickname(newNickname);
             updateProfile({ nickname: newNickname });
             updateUserData({ nickname: newNickname });
           }}
           onInfoUpdate={(newInfo) => {
-            setInfo(newInfo);
             updateProfile({ info: newInfo });
             updateUserData({ info: newInfo });
           }}

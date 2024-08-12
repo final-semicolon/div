@@ -1,6 +1,11 @@
+import ReverseExclamation from '@/assets/images/common/ReverseExclamation';
 import { useEffect, useState } from 'react';
 
-const useCapsLock = (isFocused: boolean) => {
+type CapsLockProps = {
+  isFocused: boolean;
+};
+
+const CapsLock = ({ isFocused }: CapsLockProps) => {
   const [isCapsLockOn, setIsCapsLockOn] = useState<boolean>(false);
 
   useEffect(() => {
@@ -24,7 +29,18 @@ const useCapsLock = (isFocused: boolean) => {
     };
   }, [isFocused]);
 
-  return isCapsLockOn;
+  return (
+    <>
+      {isCapsLockOn && (
+        <div className="ml-1 my-2 flex items-center">
+          <span>
+            <ReverseExclamation stroke="#423edf" />
+          </span>
+          <span className="ml-1 text-body2 font-regular text-main-400">Caps Lock on</span>
+        </div>
+      )}
+    </>
+  );
 };
 
-export default useCapsLock;
+export default CapsLock;
