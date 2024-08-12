@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import X from '@/assets/images/common/X';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import Modal from '@/components/modal/Modal';
@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import NewPassword from './NewPassword';
 import CheckCurrentPassword from './CheckCurrentPassword';
 import Chip from '@/components/common/Chip';
+import { PASSWORD, MODAL_MESSAGES } from '@/constants/auth';
 
 type PasswordModalProps = {
   isOpen: boolean;
@@ -19,7 +20,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
   const [validationMessage, setValidationMessage] = useState<string>('');
 
   const handlePassword = async () => {
-    if (validationMessage === '기존 비밀번호가 확인되었습니다.') {
+    if (validationMessage === PASSWORD.CONFIRMED) {
       const updateResponse = await fetch('/api/profile/reset-password', {
         method: 'POST',
         headers: {
@@ -29,22 +30,25 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
       });
 
       if (updateResponse.ok) {
-        toast.success('비밀번호가 성공적으로 변경되었습니다.');
+        toast.success(PASSWORD.SUCCESS);
+        setNewPassword('');
+        setConfirmPassword('');
         onClose();
       } else {
-        toast.error('비밀번호 변경에 실패했습니다.');
+        toast.error(PASSWORD.FAILURE);
       }
     }
   };
 
   const handleNoPassword = () => {
-    if (validationMessage !== '기존 비밀번호가 확인되었습니다.') {
-      toast.error('기존 비밀번호를 확인해 주세요.');
+    if (validationMessage !== PASSWORD.CONFIRMED) {
+      toast.error(PASSWORD.CONFIRM_CURRENT_PASSWORD);
     } else if (newPassword !== confirmPassword) {
-      toast.error('새 비밀번호를 확인해 주세요.');
+      toast.error(PASSWORD.CONFIRM_NEW_PASSWORD);
     }
   };
 
+  // 모달을 닫으려고 할 때 호출되는 함수
   const handleClose = () => {
     if (newPassword.length > 0 || validationMessage.length > 0) {
       setIsConfirmModalOpen(true);
@@ -53,6 +57,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
     }
   };
 
+  // 확인 모달에서 확인을 클릭했을 때 호출되는 함수
   const handleConfirmClose = () => {
     setIsConfirmModalOpen(false);
     setNewPassword('');
@@ -60,11 +65,14 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
     onClose();
   };
 
+  // 확인 모달에서 취소를 클릭했을 때 호출되는 함수
   const handleCancelClose = () => setIsConfirmModalOpen(false);
+
+  const validation = validationMessage === PASSWORD.CONFIRMED && newPassword === confirmPassword;
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={handleClose}>
+      <Modal isOpen={isOpen} onClose={handleClose} type="myPage">
         <div className="relative  w-[581px] h-[632px] p-[40px_80px]">
           <div className="flex justify-between">
             <h2 className="mb-10 text-h4 font-bold text-neutral-900">비밀번호 변경</h2>
@@ -80,17 +88,13 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
             onConfirmPasswordChange={setConfirmPassword}
           />
           <div className="absolute bottom-[40px] right-[64px] flex justify-end gap-2 mt-4 px-4">
-            {validationMessage === '현재 비밀번호가 확인되었습니다.' && newPassword === confirmPassword ? (
-              <Chip type="button" intent={'primary'} size={'large'} label="변경하기" onClick={handlePassword} />
-            ) : (
-              <Chip
-                type="button"
-                intent={'primary_disabled'}
-                size={'large'}
-                label="변경하기"
-                onClick={handleNoPassword}
-              />
-            )}
+            <Chip
+              type="button"
+              intent={`${validation ? 'primary' : 'primary_disabled'}`}
+              size={'large'}
+              label="변경하기"
+              onClick={validation ? handlePassword : handleNoPassword}
+            />
           </div>
         </div>
       </Modal>
@@ -98,7 +102,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
         isOpen={isConfirmModalOpen}
         onClose={handleCancelClose}
         onConfirm={handleConfirmClose}
-        message={`작성을 중단할까요?`}
+        message={MODAL_MESSAGES}
       />
     </>
   );
