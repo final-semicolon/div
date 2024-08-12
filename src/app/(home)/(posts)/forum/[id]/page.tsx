@@ -1,3 +1,4 @@
+import TopButton from '@/components/common/TopButton';
 import BackClick from '../../_components/archive-detail/BackClick';
 import ForumComments from '../../_components/forum-detail/ForumComments';
 import ForumDetailPost from '../../_components/forum-detail/ForumDetailPost';
@@ -17,6 +18,7 @@ const ForumDetailPage = async ({ params }: { params: { id: string } }) => {
         <InputComments />
       </div>
       <ForumComments post_user_id={data[0].user_id} />
+      <TopButton />
     </div>
   );
 };

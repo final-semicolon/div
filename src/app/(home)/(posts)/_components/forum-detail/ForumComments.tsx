@@ -20,6 +20,7 @@ import EndOfData from '@/components/common/EndOfData';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { useLoginAlertStore } from '@/store/loginAlertModal';
+import LoginAlertModal from '@/components/modal/LoginAlertModal';
 
 const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -34,7 +35,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const [deleteConfirmModal, setDeleteConfirmModal] = useState<boolean>(false);
   const [retouchConfirmModal, setRetouchConfirmModal] = useState<boolean>(false);
   const [commentLength, setCommentLength] = useState<boolean>(false);
-
+  const { isOpen, loginAlertModal } = useLoginAlertStore();
   const COMMENT_PAGE = 5;
   //댓글 수정
   const commentRetouch = useMutation({
@@ -123,6 +124,10 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
 
   //reply 입력창 toggle
   const handleInputReplyToggle = (id: string, count: number) => {
+    if (!me) {
+      isOpen();
+      return;
+    }
     setInputReplyToggle({ [id]: !inputReplyToggle[id] });
     if (count === 0) {
       setReplyToggle({ [id]: !replyToggle[id] });
@@ -298,6 +303,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                   </div>
                 </div>
               </div>
+
               {inputReplyToggle[comment.id] ? (
                 <ForumReplyInput
                   comment_id={comment.id}
@@ -310,7 +316,8 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
           ))}
         </div>
       ))}
-      <div ref={ref}></div>
+      {loginAlertModal && <LoginAlertModal />}
+      <div ref={ref} className="h-20"></div>
       {!hasNextPage && !isPending && <EndOfData />}
     </>
   );

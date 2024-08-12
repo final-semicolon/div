@@ -9,7 +9,6 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import LoginAlertModal from '@/components/modal/LoginAlertModal';
 
 const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps) => {
   const { me, userData } = useAuth();
@@ -17,7 +16,6 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
   const queryClient = useQueryClient();
   const [reply, setReply] = useState(''); //
   const [showModal, setShowModal] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const handleReply = useMutation({
     mutationFn: async (userReply: userReply) => {
@@ -38,9 +36,7 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
       queryClient.invalidateQueries({ queryKey: ['archiveCommentReply'] });
     }
   });
-  const handleLoginModal = () => {
-    setIsLoginModalOpen(true);
-  };
+
   //
   const changeReply = (value?: string) => {
     setReply(value ?? '');
@@ -82,50 +78,42 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
   };
 
   return (
-    <div className="py-6  w-[1156px]  flex flex-col border-y " onClick={me?.id ? () => {} : handleLoginModal}>
-      {isLoginModalOpen ? <LoginAlertModal /> : null}
-      {me ? (
-        <div>
-          <p>댓글 {count}</p>
-          <div className="flex justify-center items-center gap-6">
-            <Image
-              src={userData?.profile_image ?? ''}
-              alt="user profile image"
-              width={48}
-              height={48}
-              className="rounded-full"
-            />
-            <MDEditor
-              value={reply}
-              onChange={changeReply}
-              preview="edit"
-              extraCommands={commands.getCommands().filter(() => false)}
-              commands={commands.getCommands().filter((command) => {
-                return command.name !== 'image';
-              })}
-              textareaProps={{ maxLength: 500 }}
-              className="w-full "
-            />
-          </div>
-          <div className="flex justify-end items-end gap-4 mt-4">
-            <button
-              onClick={handleCancelClick}
-              disabled={!reply}
-              className={`${reply ? 'bg-neutral-50 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-500' : 'bg-neutral-50 text-neutral-100'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-            >
-              취소
-            </button>
-            <button
-              onClick={onClickReply}
-              className={`${reply ? 'bg-main-400 text-white hover:bg-main-500 hover:text-white' : 'bg-main-100 text-main-50'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-            >
-              등록
-            </button>
-          </div>
-        </div>
-      ) : (
-        <p className=" text-center">로그인 후 이용이 가능합니다.</p>
-      )}
+    <div className="border-l-4 border-[#C7DCF5] border-b-[1px] p-6">
+      <div className="flex justify-center items-center gap-6">
+        <Image
+          src={userData?.profile_image ?? ''}
+          alt="user profile image"
+          width={48}
+          height={48}
+          className="rounded-full"
+        />
+        <MDEditor
+          value={reply}
+          onChange={changeReply}
+          preview="edit"
+          extraCommands={[]}
+          commands={commands.getCommands().filter((command) => command.name !== 'image')}
+          textareaProps={{ maxLength: 500 }}
+          className="w-full"
+        />
+      </div>
+      <div className="flex justify-end items-end gap-4 mt-4">
+        <button
+          onClick={handleCancelClick}
+          className="bg-neutral-50 hover:bg-neutral-100 hover:text-neutral-600 text-neutral-100 px-5 py-3 rounded-lg"
+        >
+          취소
+        </button>
+        <button
+          onClick={onClickReply}
+          className={`px-5 py-3 rounded-lg ${
+            reply ? 'bg-main-500 hover:bg-main-600 text-main-50' : 'bg-main-100 text-main-50'
+          }`}
+          disabled={!reply}
+        >
+          등록
+        </button>
+      </div>
       {showModal && (
         <ConfirmModal
           isOpen={showModal}
