@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,74 +10,63 @@ import OAuthButtons from './OAuthButtons';
 import { createClient } from '@/supabase/client';
 import Logo from '@/assets/images/header/Logo';
 import ReverseExclamation from '@/assets/images/common/ReverseExclamation';
-import LoginInputField from './LoginInputField';
+import X from '@/assets/images/common/X';
+
+type LoginFormInputs = {
+  email: string;
+  password: string;
+};
 
 function LoginForm() {
-  const router = useRouter();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
   const { logIn } = useAuth();
-
-  const [emailValid, setEmailValid] = useState<boolean>(false); // 초기값 false로 설정
-  const [emailMessage, setEmailMessage] = useState<string>('');
-
-  const [passwordValid, setPasswordValid] = useState<boolean>(false); // 초기값 false로 설정
-  const [passwordMessage, setPasswordMessage] = useState<string>('');
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
   const [isCapsLockOn, setIsCapsLockOn] = useState<boolean>(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  // 이메일 유효성 검사 함수
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    setValue,
+    watch,
+    setFocus,
+    formState: { errors }
+  } = useForm<LoginFormInputs>();
 
-  // 비밀번호 유효성 검사 함수
-  const validatePassword = (password: string): boolean => {
-    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{10,}$/;
-    return passwordRegex.test(password);
-  };
+  const email = watch('email');
+  const password = watch('password');
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const emailValue = e.target.value;
-    setEmail(emailValue);
-
-    if (!validateEmail(emailValue)) {
-      setEmailValid(false);
-      setEmailMessage('이메일 형식을 확인해 주세요');
+  const handleCapsLock = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.getModifierState && event.getModifierState('CapsLock')) {
+      setIsCapsLockOn(true);
     } else {
-      setEmailValid(true);
-      setEmailMessage('');
+      setIsCapsLockOn(false);
     }
   };
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const passwordValue = e.target.value;
-    setPassword(passwordValue);
-
-    if (!validatePassword(passwordValue)) {
-      setPasswordValid(false);
-      setPasswordMessage('비밀번호를 확인해 주세요');
-    } else {
-      setPasswordValid(true);
-      setPasswordMessage('');
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === ' ') {
+      event.preventDefault();
     }
   };
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     setError(null);
 
-    if (!emailValid || !passwordValid) {
-      toast.error('입력한 내용을 확인해주세요.');
+    const isValid = await trigger();
+    if (!isValid) {
+      const firstErrorKey = Object.keys(errors)[0];
+      setFocusedField(firstErrorKey);
+      setFocus(firstErrorKey as keyof LoginFormInputs);
       return;
     }
 
     try {
-      const response = await logIn(email, password);
+      const response = await logIn(data.email, data.password);
 
       if (response.status === 200) {
-        toast.success('로그인이 완료되었어요', {
+        toast.success('로그인이 완료되었어요.', {
           autoClose: 2000,
           onClose: () => router.replace('/')
         });
@@ -115,11 +105,19 @@ function LoginForm() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      setIsCapsLockOn(event.getModifierState('CapsLock'));
+      if (event.getModifierState('CapsLock')) {
+        setIsCapsLockOn(true);
+      } else {
+        setIsCapsLockOn(false);
+      }
     };
+
     const handleKeyUp = (event: KeyboardEvent) => {
-      setIsCapsLockOn(event.getModifierState('CapsLock'));
+      if (!event.getModifierState('CapsLock')) {
+        setIsCapsLockOn(false);
+      }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     return () => {
@@ -136,29 +134,94 @@ function LoginForm() {
             <Logo />
           </Link>
         </div>
+        <div className="text-center border-b-2 mb-16">
+          <OAuthButtons handleLogin={handleOAuthLogin} title="SNS 계정으로 로그인/회원가입" />
+        </div>
         {error && <p className="text-red mb-4">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <LoginInputField
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              placeholder="이메일"
-              valid={emailValid}
-              message={emailMessage}
-              label="이메일"
-            />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mb-4 relative">
+            <label
+              className={`block subtitle2-bold-16px ${
+                errors.email ? 'text-red' : focusedField === 'email' ? 'text-main-400' : 'text-gray-900'
+              }`}
+            >
+              이메일
+            </label>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="이메일을 입력해 주세요"
+                {...register('email', {
+                  required: '이메일을 입력해주세요.',
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: '유효한 이메일 주소를 입력해주세요.'
+                  }
+                })}
+                className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
+                  errors.email
+                    ? 'border-red'
+                    : focusedField === 'email' || email
+                      ? 'border-main-400'
+                      : 'border-gray-900'
+                }`}
+                onFocus={() => setFocusedField('email')}
+                onBlur={() => setFocusedField(null)}
+                onKeyDown={handleKeyDown}
+              />
+              {(email || focusedField === 'email') && (
+                <button
+                  type="button"
+                  onMouseDown={() => setValue('email', '')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                >
+                  <X />
+                </button>
+              )}
+            </div>
           </div>
-          <div className="mb-4">
-            <LoginInputField
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              placeholder="비밀번호"
-              valid={passwordValid}
-              message={passwordMessage}
-              label="비밀번호"
-            />
+          <div className="mb-4 relative">
+            <label
+              className={`block subtitle2-bold-16px ${
+                errors.password ? 'text-red' : focusedField === 'password' ? 'text-main-400' : 'text-gray-900'
+              }`}
+            >
+              비밀번호
+            </label>
+            <div className="relative">
+              <input
+                type="password"
+                placeholder="비밀번호를 입력해 주세요"
+                {...register('password', {
+                  required: '비밀번호를 입력해주세요.',
+                  pattern: {
+                    value: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{10,}$/,
+                    message: '비밀번호는 영문, 숫자, 특수문자를 포함한 10자 이상이어야 합니다.'
+                  }
+                })}
+                className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
+                  errors.password
+                    ? 'border-red'
+                    : focusedField === 'password' || password
+                      ? 'border-main-400'
+                      : 'border-gray-900'
+                }`}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
+                onKeyDown={handleCapsLock}
+                onKeyUp={handleCapsLock}
+                onKeyDownCapture={handleKeyDown}
+              />
+              {(password || focusedField === 'password') && (
+                <button
+                  type="button"
+                  onMouseDown={() => setValue('password', '')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                >
+                  <X />
+                </button>
+              )}
+            </div>
             {isCapsLockOn && (
               <div className="ml-1 my-2 flex items-center">
                 <ReverseExclamation stroke="#423EDF" />
@@ -166,30 +229,23 @@ function LoginForm() {
               </div>
             )}
           </div>
-          <button
-            type="submit"
-            className={`w-full p-3 text-white rounded-md ${emailValid && passwordValid ? 'bg-main-400 hover:bg-main-500' : 'bg-main-100 cursor-not-allowed'}`}
-            disabled={!emailValid || !passwordValid}
-          >
+          <button type="submit" className="w-full p-3 text-white rounded-md bg-main-400 hover:bg-main-500">
             로그인
           </button>
         </form>
         <div className="mt-4 text-center">
           <p className="mt-4 text-center">
             <span className="mr-4">
-              <Link className="body2-medium-16px " href="/signup">
+              <Link className="body2-medium-16px" href="/signup">
                 비밀번호 재설정
               </Link>
             </span>
             <span>
-              <Link className="body2-medium-16px " href="/signup">
+              <Link className="body2-medium-16px" href="/signup">
                 회원가입
               </Link>
             </span>
           </p>
-        </div>
-        <div className="border-t-2 mt-8">
-          <OAuthButtons handleLogin={handleOAuthLogin} title="SNS 계정으로 로그인/회원가입" />
         </div>
       </div>
     </div>

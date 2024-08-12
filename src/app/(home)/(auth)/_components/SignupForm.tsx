@@ -468,7 +468,7 @@ body2-regular-16px text-main-400"
               가입하기
             </button>
           </form>
-          <p className="mt-4 mb-3 text-center body2-regular-16px gap-12">
+          <p className="mt-4 mb-64 text-center body2-regular-16px gap-12">
             이미 아이디가 있으신가요?
             <Link href="/login" className="body2-medium-16px underline">
               로그인
