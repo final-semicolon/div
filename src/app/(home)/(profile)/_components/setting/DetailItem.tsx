@@ -1,4 +1,4 @@
-import Right from '@/assets/images/common/Right';
+import Right24X24 from '@/assets/images/common/Right24X24';
 import React from 'react';
 
 interface DetailItemProps {
@@ -11,25 +11,25 @@ const DetailItem = ({ label, value, onClick }: DetailItemProps) => {
   return (
     <>
       {label !== '자기소개' ? (
-        <>
-          <div className="flex justify-between p-[16px_0] cursor-pointer" onClick={onClick}>
+        <div className=" mt-4  " onClick={onClick}>
+          <div className="flex justify-between  p-[16px_0] border-b border-neutral-50">
             <span className="text-neutral-900 text-subtitle1 font-medium">{label}</span>
-            <div className="flex">
-              <span className="text-neutral-800 text-body1 font-regular">{value}</span>
+            <div className="flex cursor-pointer">
+              <span className="text-neutral-800 text-body1 font-regular ">{value}</span>
               {onClick && (
-                <div className="mt-1 ml-3">
-                  <Right width={10} height={18} />
+                <div className="w-6 h-6 mt-[1px] center-alignment ">
+                  <Right24X24 />
                 </div>
               )}
             </div>
           </div>
-        </>
+        </div>
       ) : (
         <>
-          <div onClick={onClick} className="flex justify-between p-[16px_0]">
+          <div onClick={onClick} className="flex justify-between  p-[16px_0]">
             <span className="text-neutral-900 text-subtitle1 font-medium">{label}</span>
-            <div className="mt-[5px] cursor-pointer">
-              <Right width={10} height={18} />
+            <div className="w-6 h-6 mt-[1px] center-alignment ">
+              <Right24X24 />
             </div>
           </div>
           <p className="text-neutral-700 h-[135px] text-body1 font-regular line-clamp-5 whitespace-pre-wrap ">
@@ -37,7 +37,6 @@ const DetailItem = ({ label, value, onClick }: DetailItemProps) => {
           </p>
         </>
       )}
-      <p className="border-b border-neutral-50 " />
     </>
   );
 };

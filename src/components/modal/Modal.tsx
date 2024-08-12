@@ -4,9 +4,10 @@ type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  type?: string;
 };
 
-const Modal = ({ isOpen, onClose, children }: ModalProps) => {
+const Modal = ({ isOpen, onClose, children, type }: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -20,7 +21,10 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 
   return (
     <div className="fixed inset-0 center-alignment bg-black bg-opacity-50 z-50" onClick={onClose}>
-      <div className="bg-white p-6 rounded-2xl relative" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`bg-white ${type === 'myPage' ? 'rounded-[32px]' : 'rounded-2xl'} relative`}
+        onClick={(e) => e.stopPropagation()}
+      >
         {children}
       </div>
     </div>
