@@ -83,7 +83,7 @@ const InputComments = () => {
               placeholder: `${me ? '자유롭게 소통해 보세요!' : '로그인 후 자유롭게 소통해 보세요!'}`,
               maxLength: 1000
             }}
-            className="w-full "
+            className="w-full border border-neutral-100  first-of-type:rounded-[12px] focus-within:border-main-400"
           />
         </div>
         {me && (

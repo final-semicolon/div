@@ -55,7 +55,7 @@ body .w-md-editor-text-input {
   font-family: 'Pretendard' !important ;
   font-size: 18px !important;
   font-weight: 400 !important;
-  background-color: transparent !important;
+  /* background-color: transparent !important; */
   color-scheme: white;
 }
 

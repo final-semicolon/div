@@ -82,7 +82,7 @@ const ForumReplyInput = ({ comment_id, toggle, count }: commentReplyProps) => {
               return command.name !== 'image';
             })}
             textareaProps={{ maxLength: 500 }}
-            className="w-full "
+            className="w-full border border-neutral-100  first-of-type:rounded-[12px] focus-within:border-main-400"
           />
         </div>
         <div className="flex justify-end items-end gap-4 mt-4">

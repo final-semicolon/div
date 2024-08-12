@@ -209,7 +209,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                   </div>
                 </div>
                 {editingState[comment.id] ? (
-                  <div className=" flex flex-col " data-color-mode="light">
+                  <div className=" flex flex-col  ">
                     <MDEditor
                       value={mdEditorChange}
                       onChange={changEditor}
@@ -220,6 +220,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                       })}
                       textareaProps={{ maxLength: 1000 }}
                       height={'auto'}
+                      className="border border-neutral-100  first-of-type:rounded-[12px] bg-white"
                     />
                     <div className="flex justify-end items-end mt-4 gap-6">
                       <button
