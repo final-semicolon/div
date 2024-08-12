@@ -21,7 +21,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
 
   const handlePassword = async () => {
     console.log('확인용');
-    if (validationMessage === PASSWORD.CONFIRMED && validationMessage === PASSWORD.MATCH) {
+    if (validation) {
       const updateResponse = await fetch('/api/profile/reset-password', {
         method: 'POST',
         headers: {
