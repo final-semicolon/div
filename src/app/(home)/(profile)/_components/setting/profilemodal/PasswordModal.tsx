@@ -20,7 +20,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
   const [validationMessage, setValidationMessage] = useState<string>('');
 
   const handlePassword = async () => {
-    if (validationMessage === PASSWORD.CONFIRMED) {
+    if (validationMessage === PASSWORD.CONFIRMED && validationMessage === PASSWORD.MATCH) {
       const updateResponse = await fetch('/api/profile/reset-password', {
         method: 'POST',
         headers: {
@@ -37,14 +37,6 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
       } else {
         toast.error(PASSWORD.FAILURE);
       }
-    }
-  };
-
-  const handleNoPassword = () => {
-    if (validationMessage !== PASSWORD.CONFIRMED) {
-      toast.error(PASSWORD.CONFIRM_CURRENT_PASSWORD);
-    } else if (newPassword !== confirmPassword) {
-      toast.error(PASSWORD.CONFIRM_NEW_PASSWORD);
     }
   };
 
@@ -93,7 +85,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
               intent={`${validation ? 'primary' : 'primary_disabled'}`}
               size={'large'}
               label="변경하기"
-              onClick={validation ? handlePassword : handleNoPassword}
+              onClick={handlePassword}
             />
           </div>
         </div>
