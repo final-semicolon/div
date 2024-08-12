@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import X from '@/assets/images/common/X';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import Modal from '@/components/modal/Modal';
 import { toast } from 'react-toastify';
 import NewPassword from './NewPassword';
 import CheckCurrentPassword from './CheckCurrentPassword';
+import Chip from '@/components/common/Chip';
+import { PASSWORD, MODAL_MESSAGES } from '@/constants/auth';
 
 type PasswordModalProps = {
   isOpen: boolean;
@@ -12,14 +14,14 @@ type PasswordModalProps = {
 };
 
 const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
-  const [newPassword, setNewPassword] = useState<string>(''); // 새 비밀번호
-  const [confirmPassword, setConfirmPassword] = useState<string>(''); // 확인 비밀번호
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // 확인 모달 열기
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
   const [validationMessage, setValidationMessage] = useState<string>('');
 
   const handlePassword = async () => {
-    if (validationMessage === '현재 비밀번호가 확인되었습니다.') {
-      // 비밀번호 변경 요청
+    console.log('확인용');
+    if (validation) {
       const updateResponse = await fetch('/api/profile/reset-password', {
         method: 'POST',
         headers: {
@@ -29,30 +31,19 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
       });
 
       if (updateResponse.ok) {
-        toast.success('비밀번호가 성공적으로 변경되었습니다.');
+        toast.success(PASSWORD.SUCCESS);
+        setNewPassword('');
+        setConfirmPassword('');
         onClose();
       } else {
-        toast.error('비밀번호 변경에 실패했습니다.');
+        toast.error(PASSWORD.FAILURE);
       }
     }
   };
 
-  const handleNoPassword = () => {
-    if (validationMessage !== '현재 비밀번호가 확인되었습니다.') {
-      toast.error('기존 비밀번호 확인해주세요.');
-    } else if (validationMessage === '현재 비밀번호가 확인되었습니다.' && newPassword !== confirmPassword) {
-      toast.error('새로운 비밀번호를 확인해주세요.');
-    }
-  };
   // 모달을 닫으려고 할 때 호출되는 함수
   const handleClose = () => {
-    if (newPassword.length > 0) {
-      setIsConfirmModalOpen(true);
-    } else {
-      onClose();
-    }
-
-    if (validationMessage.length > 0) {
+    if (newPassword.length > 0 || validationMessage.length > 0) {
       setIsConfirmModalOpen(true);
     } else {
       onClose();
@@ -68,13 +59,13 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
   };
 
   // 확인 모달에서 취소를 클릭했을 때 호출되는 함수
-  const handleCancelClose = () => {
-    setIsConfirmModalOpen(false);
-  };
+  const handleCancelClose = () => setIsConfirmModalOpen(false);
+
+  const validation = validationMessage === PASSWORD.CONFIRMED && newPassword === confirmPassword;
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={handleClose}>
+      <Modal isOpen={isOpen} onClose={handleClose} type="myPage">
         <div className="relative  w-[581px] h-[632px] p-[40px_80px]">
           <div className="flex justify-between">
             <h2 className="mb-10 text-h4 font-bold text-neutral-900">비밀번호 변경</h2>
@@ -90,15 +81,13 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
             onConfirmPasswordChange={setConfirmPassword}
           />
           <div className="absolute bottom-[40px] right-[64px] flex justify-end gap-2 mt-4 px-4">
-            {validationMessage === '현재 비밀번호가 확인되었습니다.' && newPassword === confirmPassword ? (
-              <button onClick={handlePassword} className="border py-2 px-4 rounded bg-main-400 text-white">
-                변경하기
-              </button>
-            ) : (
-              <button onClick={handleNoPassword} className="border py-2 px-4 rounded bg-main-100 text-white">
-                변경하기
-              </button>
-            )}
+            <Chip
+              type="button"
+              intent={`${validation ? 'primary' : 'primary_disabled'}`}
+              size={'large'}
+              label="변경하기"
+              onClick={handlePassword}
+            />
           </div>
         </div>
       </Modal>
@@ -106,7 +95,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
         isOpen={isConfirmModalOpen}
         onClose={handleCancelClose}
         onConfirm={handleConfirmClose}
-        message={`정말 닫으시겠습니까?`}
+        message={MODAL_MESSAGES}
       />
     </>
   );

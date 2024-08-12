@@ -33,7 +33,7 @@ const ProfileSidebar = () => {
                 fill
                 priority
                 className="w-full h-full object-cover bg-white"
-                sizes="120px"
+                sizes="200px"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-200">
@@ -41,7 +41,7 @@ const ProfileSidebar = () => {
               </div>
             )}
           </div>
-          <p className="text-lg font-semibold mb-[40px]">{userData?.nickname || 'Anonymous'}</p>
+          <p className="text-lg font-semibold mb-[40px]">{userData?.nickname || '로그인후 이용부탁드립니다.'}</p>
         </div>
         <nav>
           <ul>
