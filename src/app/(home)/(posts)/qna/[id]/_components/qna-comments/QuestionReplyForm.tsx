@@ -2,7 +2,7 @@ import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import Chip from '@/components/common/Chip';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import LoginAlertModal from '@/components/modal/LoginAlertModal';
-import { COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
+import { ALERT_AUTO_CLOSE_TIME, COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
 import { COMMENT_CANCLE_CONFIRM_TEXT } from '@/constants/confirmModal';
 import { useAuth } from '@/context/auth.context';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
@@ -70,7 +70,7 @@ const QuestionReplyForm = ({ setReplyCount }: QuestionReplyFormProps) => {
       return toast.error('내용을 입력해주세요!');
     }
     const data = await addQuestionReply({ user_id: me?.id, post_reply_content: content });
-    toast.success(COMMENT_POST_ALERT_TEXT, { hideProgressBar: true });
+    toast.success(COMMENT_POST_ALERT_TEXT, { autoClose: ALERT_AUTO_CLOSE_TIME, hideProgressBar: true });
     setContent('');
     setReplyCount((prev) => prev + 1);
     await revalidatePostTag(`qna-detail-${postId}`);
@@ -106,27 +106,27 @@ const QuestionReplyForm = ({ setReplyCount }: QuestionReplyFormProps) => {
           onConfirm={handleCancleModalApprove}
           message={COMMENT_CANCLE_CONFIRM_TEXT}
         />
-        {me?.id ? (
-          <MDEditor
-            value={content}
-            onChange={handleChangeContent}
-            height={176}
-            style={{ width: '1092px' }}
-            preview="edit"
-            extraCommands={commands.getCommands().filter(() => false)}
-            textareaProps={{ maxLength: 1000, placeholder: '자유롭게 소통해 보세요!' }}
-            className={`w-full border border-neutral-100 first-of-type:rounded-2xl focus-within:border-main-400 rounded-xl`}
-          />
-        ) : (
-          <MDEditor
-            height={176}
-            style={{ width: '1156px' }}
-            preview="edit"
-            extraCommands={commands.getCommands().filter(() => false)}
-            textareaProps={{ maxLength: 0, placeholder: '로그인 후 자유롭게 소통해 보세요!' }}
-            className={`w-full border border-neutral-100 first-of-type:rounded-2xl focus-within:border-main-400 rounded-xl`}
-          />
-        )}
+        <div className="border border-neutral-100 rounded-xl focus-within:border-main-400">
+          {me?.id ? (
+            <MDEditor
+              value={content}
+              onChange={handleChangeContent}
+              height={176}
+              style={{ width: '1092px' }}
+              preview="edit"
+              extraCommands={commands.getCommands().filter(() => false)}
+              textareaProps={{ maxLength: 1000, placeholder: '자유롭게 소통해 보세요!' }}
+            />
+          ) : (
+            <MDEditor
+              height={176}
+              style={{ width: '1156px' }}
+              preview="edit"
+              extraCommands={commands.getCommands().filter(() => false)}
+              textareaProps={{ maxLength: 0, placeholder: '로그인 후 자유롭게 소통해 보세요!' }}
+            />
+          )}
+        </div>
       </div>
       {me?.id ? (
         <div className="ml-auto flex gap-4 ">
