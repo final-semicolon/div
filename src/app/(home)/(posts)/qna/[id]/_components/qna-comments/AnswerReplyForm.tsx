@@ -2,7 +2,9 @@ import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import Chip from '@/components/common/Chip';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import LoginAlertModal from '@/components/modal/LoginAlertModal';
-import { COMMENT_CANCLE_MODAL_TEXT, COMMENT_POST_ALERT_TEXT } from '@/constants/comment';
+import { COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
+import { COMMENT_CANCLE_CONFIRM_TEXT } from '@/constants/confirmModal';
+
 import { useAuth } from '@/context/auth.context';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -38,7 +40,7 @@ const AnswerReplyForm = ({ commentId, setReplyCount }: AnswerRepliesFormProps) =
       return toast.error('내용을 입력해주세요!');
     }
     const data = await addAnswerReply({ user_id: me?.id, reply: content });
-    toast.success(COMMENT_POST_ALERT_TEXT, { autoClose: 3000, hideProgressBar: true });
+    toast.success(COMMENT_POST_ALERT_TEXT);
     setContent('');
     setReplyCount((prev) => prev + 1);
     await revalidatePostTag(`qna-detail-${postId}`);
@@ -95,7 +97,7 @@ const AnswerReplyForm = ({ commentId, setReplyCount }: AnswerRepliesFormProps) =
           </div>
         ) : null}
 
-        <div className="border border-neutral-100 rounded-xl">
+        <div className="border border-neutral-100 rounded-xl focus-within:border-main-400">
           {me?.id ? (
             <MDEditor
               value={content}
@@ -122,7 +124,7 @@ const AnswerReplyForm = ({ commentId, setReplyCount }: AnswerRepliesFormProps) =
           isOpen={isSelectModalOpen}
           onClose={handleCancleModalCancle}
           onConfirm={handleCancleModalApprove}
-          message={COMMENT_CANCLE_MODAL_TEXT}
+          message={COMMENT_CANCLE_CONFIRM_TEXT}
         />
 
         {me?.id ? (

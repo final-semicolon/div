@@ -1,5 +1,5 @@
 import SelectTagInput from '@/components/common/SelectTagInput';
-import React, { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 type FormTagInputProps = {
   tagList: Ttag[];

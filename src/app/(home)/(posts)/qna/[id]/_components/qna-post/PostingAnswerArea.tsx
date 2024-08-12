@@ -8,8 +8,14 @@ import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { TAG_LIST } from '@/constants/tags';
 import SelectTagInput from '@/components/common/SelectTagInput';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { POST_CANCLE_TEXT, POST_APPROVE_TEXT, POST_ALERT_TEXT } from '@/constants/upsert';
 import Chip from '@/components/common/Chip';
+import { POST_ALERT_TEXT, QNA_ANSWER_ALERT_TEXT, QNA_ANSWER_CANCLE_ALRERT_TEXT } from '@/constants/alert';
+import {
+  ANSWER_APPROVE_CONFIRM_TEXT,
+  ANSWER_CANCLE_CONFIRM_TEXT,
+  POST_APPROVE_CONFIRM_TEXT,
+  POST_CANCLE_CONFIRM_TEXT
+} from '@/constants/confirmModal';
 
 type PostingAnswerAreaProps = {
   content: string;
@@ -36,7 +42,7 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaComment
   const postingAnswer = async (): Promise<void> => {
     if (!me?.id) return;
     await addMutate({ user_id: me.id, content, tags: tagList.filter((tag) => tag.selected) });
-    toast.success(POST_ALERT_TEXT, { autoClose: 3000, hideProgressBar: true });
+    toast.success(QNA_ANSWER_ALERT_TEXT);
     setQnaCommentsCount((prev) => prev + 1);
     await revalidatePostTag(`qna-detail-${postId}`);
     return;
@@ -89,10 +95,11 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaComment
             setIsCancleModalOpen(false);
           }}
           onConfirm={() => {
+            toast.success(QNA_ANSWER_CANCLE_ALRERT_TEXT);
             setToggleAnswer(false);
             setContent('');
           }}
-          message={POST_CANCLE_TEXT}
+          message={POST_CANCLE_CONFIRM_TEXT}
         />
         <ConfirmModal
           isOpen={isApproveModalOpen}
@@ -100,7 +107,7 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaComment
             setIsApproveModalOpen(false);
           }}
           onConfirm={postingAnswer}
-          message={POST_APPROVE_TEXT}
+          message={POST_APPROVE_CONFIRM_TEXT}
         />
         <h2 className="h-[27px] text-h5 font-bold mb-4">본문</h2>
         <div className="border rounded-2xl border-neutral-100">

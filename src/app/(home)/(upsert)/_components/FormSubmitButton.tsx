@@ -1,9 +1,15 @@
 import Chip from '@/components/common/Chip';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { POST_CANCLE_TEXT, POST_APPROVE_TEXT, EDIT_APPROVE_TEXT, EDIT_CANCLE_TEXT } from '@/constants/upsert';
+import { POST_CANCLE_ALERT_TEXT, POST_EDIT_CANCLE_ALERT_TEXT } from '@/constants/alert';
+import {
+  POST_APPROVE_CONFIRM_TEXT,
+  POST_CANCLE_CONFIRM_TEXT,
+  POST_EDIT_CANCLE_CONFIRM_TEXT
+} from '@/constants/confirmModal';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
 import { useRouter } from 'next/navigation';
 import { MouseEventHandler, useState } from 'react';
+import { toast } from 'react-toastify';
 
 type FormSubmitButtonProps = { handleSubmit: () => Promise<void>; isEdit: boolean };
 
@@ -16,18 +22,19 @@ const FormSubmitButton = ({ handleSubmit, isEdit }: FormSubmitButtonProps) => {
   const { clearAllValid } = useUpsertValidationStore();
 
   const handleCancleConfirmClick: MouseEventHandler = () => {
-    setConfirmText(isEdit ? EDIT_CANCLE_TEXT : POST_CANCLE_TEXT);
+    setConfirmText(isEdit ? POST_EDIT_CANCLE_CONFIRM_TEXT : POST_CANCLE_CONFIRM_TEXT);
     setIsCancleConfirmOpen(true);
   };
 
   const handlePostConfirmClick: MouseEventHandler = (event) => {
     event.preventDefault();
-    setConfirmText(isEdit ? EDIT_APPROVE_TEXT : POST_APPROVE_TEXT);
+    setConfirmText(POST_APPROVE_CONFIRM_TEXT);
     setIsPostConfirmOpen(true);
   };
 
   const approveCancleConfirm = (): void => {
     clearAllValid();
+    isEdit ? toast.success(POST_EDIT_CANCLE_ALERT_TEXT) : toast.success(POST_CANCLE_ALERT_TEXT);
     router.back();
   };
 
