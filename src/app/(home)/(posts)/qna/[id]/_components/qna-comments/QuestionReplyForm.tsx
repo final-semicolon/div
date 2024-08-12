@@ -9,14 +9,10 @@ import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import Image from 'next/image';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-type QuestionReplyFormProps = {
-  setReplyCount: Dispatch<SetStateAction<number>>;
-};
-
-const QuestionReplyForm = ({ setReplyCount }: QuestionReplyFormProps) => {
+const QuestionReplyForm = () => {
   const { postId } = useQnaDetailStore();
   const { me, userData } = useAuth();
   const [content, setContent] = useState<string>('');
@@ -70,17 +66,19 @@ const QuestionReplyForm = ({ setReplyCount }: QuestionReplyFormProps) => {
       return toast.error('내용을 입력해주세요!');
     }
     const data = await addQuestionReply({ user_id: me?.id, post_reply_content: content });
-    toast.success(COMMENT_POST_ALERT_TEXT);
-    setContent('');
-    setReplyCount((prev) => prev + 1);
-    await revalidatePostTag(`qna-detail-${postId}`);
+
+    // setReplyCount((prev) => prev + 1);
+
     return;
   };
 
   const { mutate: addQuestionReply } = useMutation({
     mutationFn: postingQuestionReply,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['qnaReply', postId] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['qnaReply', postId] });
+      toast.success(COMMENT_POST_ALERT_TEXT);
+      setContent('');
+      await revalidatePostTag(`qna-detail-${postId}`);
     }
   });
 

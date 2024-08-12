@@ -1,5 +1,5 @@
 import MDEditor, { commands } from '@uiw/react-md-editor';
-import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { Treply } from '@/types/posts/qnaDetailTypes';
 import Image from 'next/image';
 import { timeForToday } from '@/utils/timeForToday';
@@ -11,7 +11,7 @@ import { cutText, filterSlang } from '@/utils/markdownCut';
 import Chip from '@/components/common/Chip';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
-import ReplyKebobBtn from '../kebob-btn/ReplyKebobBtn';
+import KebobBtn from '../kebob-btn/KebobBtn';
 
 type AnswerReplyProps = {
   reply: Treply;
@@ -57,8 +57,8 @@ const AnswerReply = ({ reply }: AnswerReplyProps) => {
 
   const { mutate: editMutate } = useMutation({
     mutationFn: editReply,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['qnaReply', reply.comment_id] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['qnaReply', reply.comment_id] });
     }
   });
 
@@ -81,7 +81,7 @@ const AnswerReply = ({ reply }: AnswerReplyProps) => {
         </div>
         {me?.id === reply.user_id ? (
           <div className=" ml-auto mb-auto">
-            <ReplyKebobBtn commentId={reply.comment_id} replyId={reply.id} setIsEdit={setIsEdit} />
+            <KebobBtn commentId={reply.comment_id} replyId={reply.id} setIsEdit={setIsEdit} category={'answerReply'} />
           </div>
         ) : (
           ''

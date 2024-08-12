@@ -1,5 +1,5 @@
 import MDEditor, { commands } from '@uiw/react-md-editor';
-import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { TpostReply } from '@/types/posts/qnaDetailTypes';
 import Image from 'next/image';
 import { timeForToday } from '@/utils/timeForToday';
@@ -11,7 +11,7 @@ import Chip from '@/components/common/Chip';
 import Tag from '@/components/common/Tag';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
-import ReplyKebobBtn from '../kebob-btn/ReplyKebobBtn';
+import KebobBtn from '../kebob-btn/KebobBtn';
 
 type QuestionReplyProps = {
   reply: TpostReply;
@@ -88,7 +88,7 @@ const QuestionReply = ({ reply }: QuestionReplyProps) => {
         </div>
         {me?.id === reply.user_id ? (
           <div className="flex ml-auto mb-auto">
-            <ReplyKebobBtn replyId={reply.id} setIsEdit={setIsEdit} />
+            <KebobBtn replyId={reply.id} setIsEdit={setIsEdit} category={'questionReply'} />
           </div>
         ) : null}
       </div>
