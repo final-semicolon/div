@@ -1,5 +1,5 @@
 import MDEditor, { commands } from '@uiw/react-md-editor';
-import { Dispatch, MouseEventHandler, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
 import AnswerReplytKebobBtn from '../kebob-btn/AnswerReplytKebobBtn';
 import { Treply } from '@/types/posts/qnaDetailTypes';
 import Image from 'next/image';
@@ -11,6 +11,7 @@ import Tag from '@/components/common/Tag';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import Chip from '@/components/common/Chip';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
+import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 
 type AnswerReplyProps = {
   reply: Treply;
@@ -39,7 +40,7 @@ const AnswerReply = ({ reply, setReplyCount }: AnswerReplyProps) => {
       return;
     }
     const data = await editMutate({ replyId: reply.id, reply: content });
-    toast.success('수정 완료!', { autoClose: 1500, hideProgressBar: true });
+    toast.success(COMMENT_EDIT_ALERT_TEXT);
     setIsEdit(false);
   };
 

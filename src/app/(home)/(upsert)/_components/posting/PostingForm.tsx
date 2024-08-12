@@ -1,5 +1,5 @@
 'use client';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { TpostFormData } from '@/types/upsert';
 import FormTitleInput from '../FormTitleInput';
 import FormTagInput from './postingform/FormTagInput';
@@ -17,6 +17,7 @@ import ThumbNailBox from '../ThumbNailBox';
 import { TAG_LIST } from '@/constants/tags';
 import { uploadThumbnail } from '../../_utils/thumbnail';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
+import { POST_ALERT_TEXT } from '@/constants/alert';
 
 const PostingForm = () => {
   const router = useRouter();
@@ -29,7 +30,8 @@ const PostingForm = () => {
   const { setIsValidCategory, setIsValidContent, setIsValidTitle, clearAllValid } = useUpsertValidationStore();
 
   if (!user?.id) {
-    toast.error(LOGIN_ALERT, { hideProgressBar: false, autoClose: 1500, onClose: () => router.push(`/login`) });
+    router.push(`/login`);
+    toast.error(LOGIN_ALERT);
     return;
   }
 
@@ -90,8 +92,8 @@ const PostingForm = () => {
         body: JSON.stringify({ user_id: user.id, tags: tagsArray, category: data[0].category })
       });
     }
-
-    toast.success(message, { autoClose: 1500, onClose: () => router.push(`/${category}/${data[0].id}`) });
+    router.push(`/${category}/${data[0].id}`);
+    toast.success(POST_ALERT_TEXT);
     clearCategory();
     clearAllValid();
     return;

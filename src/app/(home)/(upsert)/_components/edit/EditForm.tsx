@@ -1,13 +1,7 @@
 'use client';
 import { MouseEventHandler, useEffect, useState } from 'react';
 import { TeditArchiveData, TeditForumData, TeditQnaData, TpostFormData } from '@/types/upsert';
-import {
-  BOARD_LIST,
-  CATEGORY_LIST_EN,
-  CATEGORY_LIST_KR,
-  FORUM_SUB_CATEGORY_LIST,
-  LOGIN_ALERT
-} from '@/constants/upsert';
+import { BOARD_LIST, CATEGORY_LIST_EN, CATEGORY_LIST_KR, LOGIN_ALERT } from '@/constants/upsert';
 import FormTitleInput from '../FormTitleInput';
 import FormTagInput from './editform/FormTagInput';
 import FormContentArea from '../FormContentArea';
@@ -23,6 +17,8 @@ import { TAG_LIST } from '@/constants/tags';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { deleteThumbnail, patchThumbnail, uploadThumbnail } from '../../_utils/thumbnail';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
+import { EDIT_SUCCESS_MASSAGE } from '@/constants/upsert.api';
+import { POST_EDIT_ALERT_TEXT } from '@/constants/alert';
 
 type UpsertFormProps = {
   data: TeditForumData | TeditQnaData | TeditArchiveData;
@@ -100,17 +96,13 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
     const { data, message } = await response.json();
 
     if (!data) {
-      toast.error(message, { autoClose: 1500, hideProgressBar: true });
+      toast.error(message);
       return;
     }
 
     await revalidatePostTag(`${path}`);
-
-    toast.success(message, {
-      autoClose: 1500,
-      hideProgressBar: true,
-      onClose: () => router.push(`/${category}`)
-    });
+    router.push(`/${category}`);
+    toast.success(POST_EDIT_ALERT_TEXT);
     clearAllValid();
     return;
   };
@@ -123,9 +115,11 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
     if (!data) {
       return;
     } else if (!user) {
-      toast.error(LOGIN_ALERT, { autoClose: 1500, hideProgressBar: true, onClose: () => router.push(`/login`) });
+      router.push(`/login`);
+      toast.error(LOGIN_ALERT);
     } else if (data.user_id !== user?.id) {
-      toast.error('권한이 없습니다!', { autoClose: 1500, hideProgressBar: true, onClose: () => router.push(`/`) });
+      router.push(`/`);
+      toast.error('권한이 없습니다!');
       return;
     }
 

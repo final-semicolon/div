@@ -19,11 +19,20 @@ import TagBlock from '@/components/common/TagBlock';
 import SelectTagInput from '@/components/common/SelectTagInput';
 import { TAG_LIST } from '@/constants/tags';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { EDIT_ALERT_TEXT, EDIT_APPROVE_TEXT, EDIT_CANCLE_TEXT, SELECT_COMMENT_TEXT } from '@/constants/upsert';
 import SelectAnswer from '@/assets/images/qna/SelectAnswer';
 import Chip from '@/components/common/Chip';
 import Tag from '@/components/common/Tag';
 import { filterSlang } from '@/utils/markdownCut';
+import {
+  QNA_ANSWER_EDIT_ALERT_TEXT,
+  QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT,
+  SELECT_ANSWER_ALERT_TEXT
+} from '@/constants/alert';
+import {
+  POST_APPROVE_CONFIRM_TEXT,
+  POST_EDIT_CANCLE_CONFIRM_TEXT,
+  SELECT_ANSWER_CONFIRM_TEXT
+} from '@/constants/confirmModal';
 
 type QnaAnswerProps = {
   qnaComment: TqnaCommentsWithReplyCount;
@@ -65,7 +74,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
 
   const selectComment = async (): Promise<void> => {
     const data = await selectMutate();
-    toast.success('채택이 완료되었습니다!', { autoClose: 1500, hideProgressBar: true });
+    toast.success(SELECT_ANSWER_ALERT_TEXT);
     await revalidatePostTag(`qna-detail-${postId}`);
     setSeletedComment(qnaComment.id);
   };
@@ -79,7 +88,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
     );
     const { data, message } = await response.json();
     if (message) {
-      toast.error(message, { autoClose: 1500, hideProgressBar: true });
+      toast.error(message);
     }
     return data;
   };
@@ -101,7 +110,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
       tags: tagList.filter((tag) => tag.selected),
       user_id: me?.id ?? ''
     });
-    toast.success(EDIT_ALERT_TEXT, { autoClose: 3000, hideProgressBar: true });
+    toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
     setIsEdit(false);
     await revalidatePostTag(`qna-detail-${postId}`);
   };
@@ -211,7 +220,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
                 setIsEditModalOpen(false);
               }}
               onConfirm={editComment}
-              message={EDIT_APPROVE_TEXT}
+              message={POST_APPROVE_CONFIRM_TEXT}
             />
 
             <ConfirmModal
@@ -220,10 +229,11 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
                 setIsCancleModalOpen(false);
               }}
               onConfirm={() => {
+                toast.success(QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT);
                 setIsEdit(false);
                 setContent(qnaComment.comment);
               }}
-              message={EDIT_CANCLE_TEXT}
+              message={POST_EDIT_CANCLE_CONFIRM_TEXT}
             />
             <div className="border border-neutral-100 bg-white rounded-xl">
               <CustomMDEditor content={content} setContent={setContent} />
@@ -291,7 +301,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
             setIsSelectModalOpen(false);
           }}
           onConfirm={selectComment}
-          message={SELECT_COMMENT_TEXT}
+          message={SELECT_ANSWER_CONFIRM_TEXT}
         />
         {me?.id === questioner && seletedComment !== qnaComment.id ? (
           <button

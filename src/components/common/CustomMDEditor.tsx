@@ -60,7 +60,7 @@ const CustomMDEditor = ({ content, setContent }: CustomMDEditorProps) => {
     if (!file) {
       return;
     } else if (!file.type.includes('image')) {
-      if (!file) return toast.error('이미지 파일을 업로드 해주세요', { autoClose: 2000 });
+      if (!file) return toast.error('이미지 파일을 업로드 해주세요');
     }
 
     //uploadPostImage시 usedImages에서 중복 이미지 검사, 처리
