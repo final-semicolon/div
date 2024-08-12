@@ -5,6 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import X from '@/assets/images/common/X';
 import { toast } from 'react-toastify';
 import Check from '@/assets/images/common/Check';
+import Chip from '@/components/common/Chip';
+import { INFO, MODAL_MESSAGES } from '@/constants/auth';
+import { getStyles } from '@/utils/profileStyles';
 
 type InfoModalProps = {
   isOpen: boolean;
@@ -14,38 +17,44 @@ type InfoModalProps = {
 };
 
 const InfoModal = ({ isOpen, onClose, currentInfo, onInfoUpdate }: InfoModalProps) => {
-  const MAX_LINES = 5; // 최대 줄 수를 설정합니다.
-  const [newInfo, setNewInfo] = useState(currentInfo); // 새로운 정보 상태
-  const [inputCount, setInputCount] = useState(currentInfo.length); // 입력된 텍스트의 길이
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // 확인 모달의 열림 여부
+  const [newInfo, setNewInfo] = useState(currentInfo);
+  const [validationMessage, setValidationMessage] = useState<string>('');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  // currentInfo가 변경될 때 상태를 업데이트합니다.
   useEffect(() => {
-    setNewInfo(currentInfo);
-    setInputCount(currentInfo.length);
-  }, [currentInfo]);
+    if (newInfo === currentInfo) {
+      setNewInfo(currentInfo);
+    } else {
+      if (newInfo.length > INFO.MAX_LENGTH) {
+        setValidationMessage(INFO.MISMATCH);
+      } else if (newInfo.length > 0) {
+        setValidationMessage(`${newInfo.length}`);
+      } else {
+        setValidationMessage(INFO.RULE);
+      }
+    }
+  }, [currentInfo, newInfo]);
 
   // 저장 버튼 클릭 시 호출되는 함수
   const handleSave = () => {
-    if (currentInfo !== newInfo && inputCount > 0 && inputCount <= 150) {
+    if (currentInfo !== newInfo && newInfo.length > 0 && newInfo.length <= INFO.MAX_LENGTH) {
       onInfoUpdate(newInfo);
       onClose();
     } else {
-      toast.error('저장할 수 없습니다. 글자 수를 확인해주세요.');
+      toast.error(INFO.FAILURE);
     }
   };
 
   // 텍스트의 줄 수를 계산하는 함수
-  const countLines = (text: string): number => {
-    return text.split('\n').length;
-  };
+  const countLines = (text: string): number => text.split('\n').length;
 
   // textarea의 입력이 변경될 때 호출되는 함수
   const onInputHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    setInputCount(value.length);
     const lines = countLines(value);
-    if (lines <= MAX_LINES) {
+
+    if (lines <= INFO.MAX_LINES) {
       setNewInfo(value);
     }
   };
@@ -67,100 +76,61 @@ const InfoModal = ({ isOpen, onClose, currentInfo, onInfoUpdate }: InfoModalProp
   };
 
   // 확인 모달에서 취소를 클릭했을 때 호출되는 함수
-  const handleCancelClose = () => {
-    setIsConfirmModalOpen(false);
-  };
+  const handleCancelClose = () => setIsConfirmModalOpen(false);
+
+  const { titleTextColor, conditionTextColor, stroke, borderColor } = getStyles({
+    isConditionsNotMetOnBlur: !isFocused && newInfo.length > INFO.MAX_LENGTH,
+    isConditionsMetOnBlur:
+      currentInfo === newInfo || (!isFocused && newInfo.length <= INFO.MAX_LENGTH && newInfo.length > 1),
+    isConditionsNotMetOnFocus: newInfo.length > INFO.MAX_LENGTH,
+    isConditionsMetOnFocus: newInfo.length > 0
+  });
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={handleClose}>
-        <div className="w-full max-w-[581px] h-auto p-4 md:p-8">
-          <div className="flex flex-row justify-between mb-4">
-            <h2 className="text-h4 font-bold text-neutral-900">자기소개</h2>
-            <div onClick={handleClose} className="mt-[4px] cursor-pointer">
+      <Modal isOpen={isOpen} onClose={handleClose} type="myPage">
+        <div className="w-[581px] h-[477px] p-[40px_80px]">
+          <div className="flex flex-row justify-between mb-10">
+            <h2 className="text-h4 font-bold  text-neutral-900">자기소개</h2>
+            <div onClick={handleClose} className=" cursor-pointer">
               <X width={20} height={20} />
             </div>
           </div>
-          <h2
-            className={`${
-              currentInfo !== newInfo
-                ? inputCount > 150
-                  ? 'text-red'
-                  : inputCount > 0
-                    ? 'text-main-400 '
-                    : 'text-neutral-300'
-                : 'text-neutral-900'
-            }`}
-          >
-            자기소개
-          </h2>
-
+          <h2 className={`text-subtitle2 font-bold ${titleTextColor}`}>자기소개</h2>
           <textarea
             value={newInfo}
             onChange={onInputHandler}
-            placeholder="자신을 소개해보세요"
-            maxLength={150}
-            className={`border rounded p-4 w-full md:w-[421px] h-auto md:h-[167px] resize-none ${
-              currentInfo !== newInfo
-                ? inputCount > 150
-                  ? 'text-red outline-red border border-red'
-                  : inputCount > 0
-                    ? 'text-neutral-900 outline-main-400 border border-main-400'
-                    : 'text-neutral-300 outline-neutral-300 border border-neutral-300'
-                : 'text-neutral-700'
-            }`}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder={INFO.INFO_PLACEHOLDER}
+            maxLength={INFO.MAX_LENGTH}
+            className={`border text-body1 font-regular rounded-lg p-4 w-full h-[167px] my-2 resize-none ${borderColor}`}
           />
-
-          {currentInfo !== newInfo ? (
-            inputCount > 150 ? (
-              <div className="flex items-center mt-2 text-red">
-                <Check stroke={'#F66161'} />
-                <span className="ml-2 text-r">글자수를 초과했어요!</span>
-              </div>
-            ) : inputCount > 0 ? (
-              <div className="flex items-center mt-2 text-main-400">
-                <Check stroke={'#423edf'} />
-                <span className="ml-2">{inputCount}</span>
+          <div className={`flex items-center mb-10 ${conditionTextColor}`}>
+            <Check stroke={stroke} />
+            <span className="ml-1">
+              {validationMessage}
+              {newInfo.length > 0 && newInfo.length <= INFO.MAX_LENGTH && (
                 <span className="text-neutral-900"> / 150</span>
-              </div>
-            ) : (
-              <div className="flex items-center mt-2 text-neutral-300">
-                <Check />
-                <span className="ml-2">150자 이하</span>
-              </div>
-            )
-          ) : (
-            <div className="flex items-center mt-2 text-main-400">
-              <Check stroke={'#423edf'} />
-              <span className="ml-2">{inputCount}</span>
-              <span className="text-neutral-900">/ 150</span>
-            </div>
-          )}
-
-          <div className="flex justify-end gap-2 mt-4">
-            <button
+              )}
+            </span>
+          </div>
+          <div className="flex justify-end ">
+            <Chip
+              type="button"
+              intent={newInfo.length > 0 && newInfo.length <= INFO.MAX_LENGTH ? 'primary' : 'primary_disabled'}
+              size={'large'}
+              label="변경하기"
               onClick={handleSave}
-              className={`border py-2 px-4 rounded ${
-                currentInfo !== newInfo
-                  ? inputCount > 150
-                    ? 'bg-main-100 text-white'
-                    : inputCount > 0
-                      ? 'bg-main-400 text-white'
-                      : 'bg-main-100 text-white'
-                  : 'bg-main-100 text-white'
-              }`}
-            >
-              변경하기
-            </button>
+            />
           </div>
         </div>
       </Modal>
-
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         onClose={handleCancelClose}
         onConfirm={handleConfirmClose}
-        message={`작성을 중단할까요?`}
+        message={MODAL_MESSAGES}
       />
     </>
   );
