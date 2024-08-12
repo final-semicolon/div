@@ -1,30 +1,40 @@
 import Chip from '@/components/common/Chip';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { POST_CANCLE_TEXT, POST_APPROVE_TEXT } from '@/constants/upsert';
+import { POST_CANCLE_ALERT_TEXT, POST_EDIT_CANCLE_ALERT_TEXT } from '@/constants/alert';
+import {
+  POST_APPROVE_CONFIRM_TEXT,
+  POST_CANCLE_CONFIRM_TEXT,
+  POST_EDIT_CANCLE_CONFIRM_TEXT
+} from '@/constants/confirmModal';
+import { useUpsertValidationStore } from '@/store/upsertValidationStore';
 import { useRouter } from 'next/navigation';
-import { MouseEventHandler, useEffect, useRef, useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
+import { toast } from 'react-toastify';
 
-type FormSubmitButtonProps = { content: string };
+type FormSubmitButtonProps = { handleSubmit: () => Promise<void>; isEdit: boolean };
 
-const FormSubmitButton = ({ content }: FormSubmitButtonProps) => {
+const FormSubmitButton = ({ handleSubmit, isEdit }: FormSubmitButtonProps) => {
   const router = useRouter();
-  const approveButton = useRef<HTMLButtonElement>(null);
+
   const [isCancleConfirmOpen, setIsCancleConfirmOpen] = useState<boolean>(false);
   const [isPostConfirmOpen, setIsPostConfirmOpen] = useState<boolean>(false);
   const [confirmText, setConfirmText] = useState<string>('');
+  const { clearAllValid } = useUpsertValidationStore();
 
   const handleCancleConfirmClick: MouseEventHandler = () => {
-    setConfirmText(POST_CANCLE_TEXT);
+    setConfirmText(isEdit ? POST_EDIT_CANCLE_CONFIRM_TEXT : POST_CANCLE_CONFIRM_TEXT);
     setIsCancleConfirmOpen(true);
   };
 
   const handlePostConfirmClick: MouseEventHandler = (event) => {
     event.preventDefault();
-    setConfirmText(POST_APPROVE_TEXT);
+    setConfirmText(POST_APPROVE_CONFIRM_TEXT);
     setIsPostConfirmOpen(true);
   };
 
   const approveCancleConfirm = (): void => {
+    clearAllValid();
+    isEdit ? toast.success(POST_EDIT_CANCLE_ALERT_TEXT) : toast.success(POST_CANCLE_ALERT_TEXT);
     router.back();
   };
 
@@ -32,8 +42,9 @@ const FormSubmitButton = ({ content }: FormSubmitButtonProps) => {
     setIsCancleConfirmOpen(false);
   };
 
-  const approvePostConfirm = (): void => {
-    approveButton.current?.click();
+  const approvePostConfirm = async (): Promise<void> => {
+    setIsCancleConfirmOpen(false);
+    await handleSubmit();
   };
 
   const closePostConfirmClose = (): void => {
@@ -41,35 +52,21 @@ const FormSubmitButton = ({ content }: FormSubmitButtonProps) => {
   };
 
   return (
-    <div className="flex gap-5 justify-end">
+    <div className="mb-[76px] flex gap-5 justify-end ">
       <ConfirmModal
         isOpen={isCancleConfirmOpen}
         message={confirmText}
         onConfirm={approveCancleConfirm}
         onClose={closeCancleConfirm}
       />
-
       <Chip type="button" intent={'gray'} size={'large'} label="취소" onClick={handleCancleConfirmClick} />
-
       <ConfirmModal
         isOpen={isPostConfirmOpen}
         message={confirmText}
         onConfirm={approvePostConfirm}
         onClose={closePostConfirmClose}
       />
-
-      {content.length === 0 ? (
-        <Chip type="button" intent={'primary_disabled'} size="large" label="등록" />
-      ) : (
-        <Chip
-          type={`${isPostConfirmOpen ? 'submit' : 'button'}`}
-          intent={'primary'}
-          size="large"
-          label="등록"
-          onClick={handlePostConfirmClick}
-        />
-      )}
-      <button ref={approveButton}></button>
+      <Chip type="button" intent={'primary'} size="large" label="등록" onClick={handlePostConfirmClick} />
     </div>
   );
 };

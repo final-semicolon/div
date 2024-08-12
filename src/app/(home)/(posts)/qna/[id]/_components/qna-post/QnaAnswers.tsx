@@ -17,7 +17,6 @@ type QnaAnswersProps = {
 const QnaAnswers = ({ qnaCommentsCount, questioner, setQnaCommentsCount }: QnaAnswersProps) => {
   const [ref, inView] = useInView({ threshold: 0.5 });
   const { postId, seletedComment } = useQnaDetailStore();
-
   const getCommentList = async ({ queryKey, pageParam }: { queryKey: string[]; pageParam: number }) => {
     const [, id] = queryKey;
     const response = await fetch(`/api/posts/qna-detail/comment/${id}?page=${pageParam}&selected=${seletedComment}`);
@@ -25,7 +24,6 @@ const QnaAnswers = ({ qnaCommentsCount, questioner, setQnaCommentsCount }: QnaAn
     if (message) {
       return <NotFound />;
     }
-
     return data;
   };
 
@@ -35,30 +33,19 @@ const QnaAnswers = ({ qnaCommentsCount, questioner, setQnaCommentsCount }: QnaAn
     isPending,
     isError,
     isFetchingNextPage,
-    hasNextPage
+    hasNextPage,
+    refetch
   } = useInfiniteQuery({
     queryKey: ['qnaComments', postId],
     initialPageParam: 0,
     queryFn: getCommentList,
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
       const nextPage = lastPageParam + 1;
-      return nextPage <= Math.ceil(qnaCommentsCount / 3) ? nextPage : undefined;
+      return nextPage <= Math.floor(qnaCommentsCount / 3) ? nextPage : undefined;
     },
+    staleTime: Infinity,
     select: ({ pages }) => pages.flat()
   });
-
-  useEffect(() => {
-    if (inView) {
-      fetchNextPage();
-    }
-  }, [inView]);
-
-  if (isPending) {
-    return <Loading />;
-  }
-  if (isError) {
-    return <NotFound />;
-  }
 
   if (qnaCommentList && seletedComment) {
     const selectedCommentIndex = qnaCommentList.findIndex((comment) => comment.id === seletedComment);
@@ -67,13 +54,28 @@ const QnaAnswers = ({ qnaCommentsCount, questioner, setQnaCommentsCount }: QnaAn
     qnaCommentList.unshift(...selectedComment);
   }
 
+  useEffect(() => {
+    if ((!seletedComment && qnaCommentsCount <= 3) || (seletedComment && qnaCommentsCount <= 4)) {
+      refetch();
+    } else if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, qnaCommentsCount]);
+
+  if (isPending) {
+    return <Loading />;
+  }
+  if (isError) {
+    return <NotFound />;
+  }
+
   return (
-    <div>
+    <div key={postId + 'commentDiv'}>
       {qnaCommentList
         ? (qnaCommentList as TqnaCommentsWithReplyCount[]).map((qnaComment, index) => {
             return index === 0 ? (
               <QnaAnswer
-                key={qnaComment.id + 'first'}
+                key={qnaComment.id + 'comment'}
                 qnaComment={qnaComment}
                 questioner={questioner}
                 index={index}
@@ -82,7 +84,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner, setQnaCommentsCount }: QnaAn
               />
             ) : (
               <QnaAnswer
-                key={qnaComment.id}
+                key={qnaComment.id + 'comment'}
                 qnaComment={qnaComment}
                 questioner={questioner}
                 setQnaCommentsCount={setQnaCommentsCount}
@@ -90,7 +92,8 @@ const QnaAnswers = ({ qnaCommentsCount, questioner, setQnaCommentsCount }: QnaAn
             );
           })
         : null}
-      <div className="h-[80px]" ref={ref}></div>
+
+      <div key={postId + 'observer'} className="h-20" ref={ref}></div>
       {!hasNextPage && !isFetchingNextPage && <EndOfData />}
     </div>
   );

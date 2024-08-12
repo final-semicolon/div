@@ -15,10 +15,12 @@ import { commentRetouch, forumCommentsType } from '@/types/posts/forumDetailType
 import LikeButton from '@/components/common/LikeButton';
 import BookmarkButton from '@/components/common/BookmarkButton';
 import KebabButton from '@/assets/images/common/KebabButton';
-import { revalidate } from '@/actions/revalidate';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import EndOfData from '@/components/common/EndOfData';
 import { cutText, filterSlang } from '@/utils/markdownCut';
+import { revalidatePostTag } from '@/actions/revalidatePostTag';
+import { useLoginAlertStore } from '@/store/loginAlertModal';
+import LoginAlertModal from '@/components/modal/LoginAlertModal';
 
 const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -33,7 +35,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const [deleteConfirmModal, setDeleteConfirmModal] = useState<boolean>(false);
   const [retouchConfirmModal, setRetouchConfirmModal] = useState<boolean>(false);
   const [commentLength, setCommentLength] = useState<boolean>(false);
-
+  const { isOpen, loginAlertModal } = useLoginAlertStore();
   const COMMENT_PAGE = 5;
   //댓글 수정
   const commentRetouch = useMutation({
@@ -51,13 +53,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const commentRetouchHandle = async (id: string, user_id: string) => {
     commentRetouch.mutate({ id, user_id, mdEditorChange });
     setEditingState({ Boolean: false });
-    if (!mdEditorChange) {
-      toast.error('댓글을 입력해주세요!', {
-        autoClose: 2000
-      });
-      toast.success('댓글이 수정 되었습니다.', { autoClose: 1500 });
-      return;
-    }
+    toast.success('댓글이 수정 되었습니다.', { autoClose: 1500 });
   };
 
   // 댓글 삭제
@@ -70,13 +66,13 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['forumComments'] });
+      revalidatePostTag(`forum-detail-${param.id}`);
     }
   });
   // 삭제 이벤트 버튼
   const handleDelete = async (id: string, user_id: string) => {
     toast.success('댓글이 삭제되었습니다.', { autoClose: 1500 });
     commentDelete.mutate({ id, user_id });
-    revalidate('/', 'page');
   };
 
   //수정 취소버튼
@@ -128,6 +124,10 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
 
   //reply 입력창 toggle
   const handleInputReplyToggle = (id: string, count: number) => {
+    if (!me) {
+      isOpen();
+      return;
+    }
     setInputReplyToggle({ [id]: !inputReplyToggle[id] });
     if (count === 0) {
       setReplyToggle({ [id]: !replyToggle[id] });
@@ -180,7 +180,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                             </div>
                           )}
                           {editingToggleState[comment.id] && (
-                            <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center border-main-400 bg-white shadow-lg border rounded-lg">
+                            <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center border-main-400 bg-white shadow-lg border rounded-lg z-50">
                               <button
                                 className="h-[44px]  w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
                                 onClick={() => toggleEditing(comment.id, comment.comment)}
@@ -209,18 +209,20 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                   </div>
                 </div>
                 {editingState[comment.id] ? (
-                  <div className=" flex flex-col " data-color-mode="light">
-                    <MDEditor
-                      value={mdEditorChange}
-                      onChange={changEditor}
-                      preview="edit"
-                      extraCommands={commands.getCommands().filter(() => false)}
-                      commands={commands.getCommands().filter((command) => {
-                        return command.name !== 'image';
-                      })}
-                      textareaProps={{ maxLength: 1000 }}
-                      height={'auto'}
-                    />
+                  <div className=" flex flex-col  ">
+                    <div className="border border-neutral-100  rounded-[12px] bg-white ">
+                      <MDEditor
+                        value={mdEditorChange}
+                        onChange={changEditor}
+                        preview="edit"
+                        extraCommands={commands.getCommands().filter(() => false)}
+                        commands={commands.getCommands().filter((command) => {
+                          return command.name !== 'image';
+                        })}
+                        textareaProps={{ maxLength: 1000 }}
+                        height={'auto'}
+                      />
+                    </div>
                     <div className="flex justify-end items-end mt-4 gap-6">
                       <button
                         onClick={() => toggleEditing(comment.id, comment.user_id)}
@@ -251,7 +253,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                 ) : (
                   <div>
                     <p className="text-body1 font-regular whitespace-pre-wrap break-words">
-                      {cutText(filterSlang(comment.comment), 370)}
+                      <MDEditor.Markdown source={cutText(filterSlang(comment.comment), 370)} />
                     </p>
                     {comment.comment.length >= 370 && (
                       <button
@@ -303,6 +305,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                   </div>
                 </div>
               </div>
+
               {inputReplyToggle[comment.id] ? (
                 <ForumReplyInput
                   comment_id={comment.id}
@@ -315,8 +318,8 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
           ))}
         </div>
       ))}
-
-      <div ref={ref}></div>
+      {loginAlertModal && <LoginAlertModal />}
+      <div ref={ref} className="h-20"></div>
       {!hasNextPage && !isPending && <EndOfData />}
     </>
   );

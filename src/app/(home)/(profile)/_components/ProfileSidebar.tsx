@@ -3,27 +3,18 @@
 import { useAuth } from '@/context/auth.context';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
 const ProfileSidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const profileId = pathname?.split('/')[2];
-  const { userData, me, logOut } = useAuth();
-
-  useEffect(() => {
-    if (me?.id === profileId) {
-      router.push('/profile');
-    }
-  }, [me, profileId, router]);
+  const currentPage = pathname?.split('/')[2] || 'profile';
+  const { userData, logOut } = useAuth();
 
   const handleLogout = async () => {
     const result = await logOut();
     if (result.status === 200) {
-      localStorage.removeItem('oauthProvider');
       router.push('/');
     } else {
       toast.error(result.message || '로그아웃에 실패했습니다.');
@@ -42,7 +33,7 @@ const ProfileSidebar = () => {
                 fill
                 priority
                 className="w-full h-full object-cover bg-white"
-                sizes="120px"
+                sizes="200px"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-200">
@@ -50,14 +41,16 @@ const ProfileSidebar = () => {
               </div>
             )}
           </div>
-          <p className="text-lg font-semibold mb-[40px]">{userData?.nickname || 'Anonymous'}</p>
+          <p className="text-lg font-semibold mb-[40px]">{userData?.nickname || '로그인후 이용부탁드립니다.'}</p>
         </div>
         <nav>
           <ul>
             <li className="mb-[40px]">
               <Link
                 href="/profile"
-                className={me?.id === '/profile' ? 'text-h5 font-bold text-main-400' : 'text-h5 font-bold text-sub-100'}
+                className={
+                  currentPage === 'profile' ? 'text-h5 font-bold text-main-400' : 'text-h5 font-bold text-sub-100'
+                }
               >
                 프로필
               </Link>
@@ -66,9 +59,7 @@ const ProfileSidebar = () => {
               <Link
                 href="/profile/activities"
                 className={
-                  me?.id === '/profile/activities'
-                    ? 'text-h5 font-bold text-main-400'
-                    : 'text-h5 font-bold text-sub-100'
+                  currentPage === 'activities' ? 'text-h5 font-bold text-main-400' : 'text-h5 font-bold text-sub-100'
                 }
               >
                 내 활동

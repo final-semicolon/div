@@ -1,79 +1,90 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '@/context/auth.context';
 import OAuthButtons from './OAuthButtons';
 import { createClient } from '@/supabase/client';
 import Logo from '@/assets/images/header/Logo';
-import LoginInputField from './LoginInputField';
+import ReverseExclamation from '@/assets/images/common/ReverseExclamation';
+import X from '@/assets/images/common/X';
+
+type LoginFormInputs = {
+  email: string;
+  password: string;
+};
+
 function LoginForm() {
-  const router = useRouter();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
   const { logIn } = useAuth();
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [isCapsLockOn, setIsCapsLockOn] = useState<boolean>(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  const [emailValid, setEmailValid] = useState<boolean>(true);
-  const [emailMessage, setEmailMessage] = useState<string>('');
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    setValue,
+    watch,
+    setFocus,
+    formState: { errors }
+  } = useForm<LoginFormInputs>();
 
-  const [passwordValid, setPasswordValid] = useState<boolean>(true);
-  const [passwordMessage, setPasswordMessage] = useState<string>('');
+  const email = watch('email');
+  const password = watch('password');
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
+  const handleCapsLock = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.getModifierState && event.getModifierState('CapsLock')) {
+      setIsCapsLockOn(true);
+    } else {
+      setIsCapsLockOn(false);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === ' ') {
+      event.preventDefault();
+    }
+  };
+
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     setError(null);
 
-    if (!validateEmail(email)) {
-      setEmailValid(false);
-      setEmailMessage('유효하지 않은 이메일 형식입니다.');
-      toast.error('유효하지 않은 이메일 형식입니다.');
+    const isValid = await trigger();
+    if (!isValid) {
+      const firstErrorKey = Object.keys(errors)[0];
+      setFocusedField(firstErrorKey);
+      setFocus(firstErrorKey as keyof LoginFormInputs);
       return;
-    } else {
-      setEmailValid(true);
-      setEmailMessage('');
-    }
-
-    if (password.length < 6) {
-      setPasswordValid(false);
-      setPasswordMessage('비밀번호는 6자 이상이어야 합니다.');
-      toast.error('비밀번호는 6자 이상이어야 합니다.');
-      return;
-    } else {
-      setPasswordValid(true);
-      setPasswordMessage('');
     }
 
     try {
-      const response = await logIn(email, password);
+      const response = await logIn(data.email, data.password);
 
       if (response.status === 200) {
-        toast.success('로그인 성공!', {
+        toast.success('로그인이 완료되었어요.', {
           autoClose: 2000,
           onClose: () => router.replace('/')
         });
       } else {
         setError('로그인 실패');
-        toast.error('로그인 중 에러가 발생했습니다.');
+        toast.error('로그인 중 에러가 발생했어요.');
       }
     } catch (err) {
       setError('로그인 실패');
-      toast.error('로그인 중 에러가 발생했습니다.');
+      toast.error('로그인 중 에러가 발생했어요.');
     }
-  };
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
   };
 
   const handleOAuthLogin = async (provider: 'google' | 'kakao' | 'github') => {
     setError(null);
     try {
       const supabase = createClient();
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
           redirectTo: process.env.NEXT_PUBLIC_BASE_URL
@@ -92,49 +103,149 @@ function LoginForm() {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.getModifierState('CapsLock')) {
+        setIsCapsLockOn(true);
+      } else {
+        setIsCapsLockOn(false);
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (!event.getModifierState('CapsLock')) {
+        setIsCapsLockOn(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
   return (
-    <div className="flex items-center justify-center min-h-screen ">
-      <ToastContainer />
+    <div className="flex items-center justify-center min-h-full">
       <div className="bg-white w-full max-w-sm">
-        <div className="flex items-center justify-center mb-16">
-          <Logo />
+        <div className="flex items-center justify-center mt-40 mb-16">
+          <Link href="/">
+            <Logo />
+          </Link>
         </div>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <LoginInputField
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="이메일"
-              valid={emailValid}
-              message={emailMessage}
-            />
+        <div className="text-center border-b-2 mb-16">
+          <OAuthButtons handleLogin={handleOAuthLogin} title="SNS 계정으로 로그인/회원가입" />
+        </div>
+        {error && <p className="text-red mb-4">{error}</p>}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mb-4 relative">
+            <label
+              className={`block subtitle2-bold-16px ${
+                errors.email ? 'text-red' : focusedField === 'email' ? 'text-main-400' : 'text-gray-900'
+              }`}
+            >
+              이메일
+            </label>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="이메일을 입력해 주세요"
+                {...register('email', {
+                  required: '이메일을 입력해주세요.',
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: '유효한 이메일 주소를 입력해주세요.'
+                  }
+                })}
+                className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
+                  errors.email
+                    ? 'border-red'
+                    : focusedField === 'email' || email
+                      ? 'border-main-400'
+                      : 'border-gray-900'
+                }`}
+                onFocus={() => setFocusedField('email')}
+                onBlur={() => setFocusedField(null)}
+                onKeyDown={handleKeyDown}
+              />
+              {(email || focusedField === 'email') && (
+                <button
+                  type="button"
+                  onMouseDown={() => setValue('email', '')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                >
+                  <X />
+                </button>
+              )}
+            </div>
           </div>
-          <div className="mb-4">
-            <LoginInputField
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호"
-              valid={passwordValid}
-              message={passwordMessage}
-            />
+          <div className="mb-4 relative">
+            <label
+              className={`block subtitle2-bold-16px ${
+                errors.password ? 'text-red' : focusedField === 'password' ? 'text-main-400' : 'text-gray-900'
+              }`}
+            >
+              비밀번호
+            </label>
+            <div className="relative">
+              <input
+                type="password"
+                placeholder="비밀번호를 입력해 주세요"
+                {...register('password', {
+                  required: '비밀번호를 입력해주세요.',
+                  pattern: {
+                    value: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{10,}$/,
+                    message: '비밀번호는 영문, 숫자, 특수문자를 포함한 10자 이상이어야 합니다.'
+                  }
+                })}
+                className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
+                  errors.password
+                    ? 'border-red'
+                    : focusedField === 'password' || password
+                      ? 'border-main-400'
+                      : 'border-gray-900'
+                }`}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
+                onKeyDown={handleCapsLock}
+                onKeyUp={handleCapsLock}
+                onKeyDownCapture={handleKeyDown}
+              />
+              {(password || focusedField === 'password') && (
+                <button
+                  type="button"
+                  onMouseDown={() => setValue('password', '')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                >
+                  <X />
+                </button>
+              )}
+            </div>
+            {isCapsLockOn && (
+              <div className="ml-1 my-2 flex items-center">
+                <ReverseExclamation stroke="#423EDF" />
+                <span className="ml-1 text-body2 font-regular text-main-400">Caps Lock on</span>
+              </div>
+            )}
           </div>
-          <button type="submit" className="w-full p-3 bg-main-100 hover:bg-main-400 text-white rounded-md">
+          <button type="submit" className="w-full p-3 text-white rounded-md bg-main-400 hover:bg-main-500">
             로그인
           </button>
         </form>
         <div className="mt-4 text-center">
           <p className="mt-4 text-center">
-            혹시 계정이 없으신가요?
-            <Link className="text-blue-600 hover:underline" href="/signup">
-              회원가입
-            </Link>
+            <span className="mr-4">
+              <Link className="body2-medium-16px" href="/signup">
+                비밀번호 재설정
+              </Link>
+            </span>
+            <span>
+              <Link className="body2-medium-16px" href="/signup">
+                회원가입
+              </Link>
+            </span>
           </p>
-        </div>
-        <div className="border-t-4 mt-8">
-          <OAuthButtons handleLogin={handleOAuthLogin} />
         </div>
       </div>
     </div>

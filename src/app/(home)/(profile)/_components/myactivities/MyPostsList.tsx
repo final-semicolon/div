@@ -6,7 +6,7 @@ import CommentCard from './common/CommentCard';
 import MyActivitiesPagination from './common/MyActivitiesPagination';
 import { useMyComments, useMyPosts } from '@/hooks/myactivities/useMyPosts';
 import { useAuth } from '@/context/auth.context';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import Check from '@/assets/images/common/Check';
 
@@ -18,7 +18,7 @@ type MyPostsListProps = {
 };
 
 const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, selectedType }: MyPostsListProps) => {
-  const { userData } = useAuth();
+  const { me, userData } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState<Map<string, { category: string; type: string }>>(new Map());
   const [combinedItems, setCombinedItems] = useState<MyCombinedItem[]>([]);
@@ -52,6 +52,8 @@ const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, 
   } = useMyComments();
 
   useEffect(() => {
+    if (me === null || !me.id) return;
+
     if (!postLoading && !commentLoading && posts && comments) {
       const combined = myCombineItems(posts, comments);
       combined.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
@@ -197,7 +199,7 @@ const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, 
           </button>
         )}
       </div>
-      <ToastContainer />
+
       {paginatedItems.length === 0 ? (
         <div>내가 쓴 글을 추가해보세요</div>
       ) : (

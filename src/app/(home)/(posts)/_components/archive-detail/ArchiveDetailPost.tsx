@@ -5,7 +5,6 @@ import MDEditor from '@uiw/react-md-editor';
 import Image from 'next/image';
 import LikeButton from '@/components/common/LikeButton';
 import BookmarkButton from '@/components/common/BookmarkButton';
-import { handleRinkCopy } from '@/utils/handleRinkCopy';
 import Share from '@/assets/images/common/Share';
 import { useAuth } from '@/context/auth.context';
 import { useParams, useRouter } from 'next/navigation';
@@ -16,6 +15,7 @@ import { archiveDetailType } from '@/types/posts/archiveDetailTypes';
 import dayjs from 'dayjs';
 import { filterSlang } from '@/utils/markdownCut';
 import TagBlock from '@/components/common/TagBlock';
+import { handleLinkCopy } from '@/utils/handleLinkCopy';
 
 const ArchiveDetailPost = () => {
   const { me } = useAuth();
@@ -47,7 +47,7 @@ const ArchiveDetailPost = () => {
   };
 
   const handlePostRetouch = () => {
-    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/edit/${param.id}?category=archive?page=0`);
+    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/edit/${param.id}?category=archive`);
   };
 
   if (!archiveDetail) return <div>Loading...</div>;
@@ -112,7 +112,7 @@ const ArchiveDetailPost = () => {
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-6 whitespace-pre-wrap break-words" data-color-mode="light">
+        <div className="flex flex-col gap-6 whitespace-pre-wrap break-words">
           <p className="text-h4 font-bold">{archiveDetail.title}</p>
 
           <MDEditor.Markdown source={filterSlang(archiveDetail.content)} className="text-body1 font-regular" />
@@ -129,7 +129,7 @@ const ArchiveDetailPost = () => {
             <BookmarkButton id={archiveDetail.id} type="archive" />
             <button
               type="button"
-              onClick={() => handleRinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/archive/${archiveDetail.id}`)}
+              onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/archive/${archiveDetail.id}`)}
             >
               <Share />
             </button>

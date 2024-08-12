@@ -21,6 +21,7 @@ const ForumReplyInput = ({ comment_id, toggle, count }: commentReplyProps) => {
   const queryClient = useQueryClient();
   const [reply, setReply] = useState('');
 
+  //대댓글 입력
   const handleReply = useMutation({
     mutationFn: async (userReply: CommentReply) => {
       const response = await fetch(`/api/posts/forum-detail/forum-reply/${params.id}`, {
@@ -31,7 +32,8 @@ const ForumReplyInput = ({ comment_id, toggle, count }: commentReplyProps) => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['commentReply'] });
+      queryClient.invalidateQueries({ queryKey: ['commentReply', comment_id] });
+      queryClient.invalidateQueries({ queryKey: ['forumComments'] });
     }
   });
 
@@ -61,41 +63,43 @@ const ForumReplyInput = ({ comment_id, toggle, count }: commentReplyProps) => {
 
   return (
     <div className=" border-l-4 border-[#C7DCF5] border-b-[1px] p-6">
-      <p>댓글 {count}</p>
-      <div className="flex justify-center items-center gap-6" data-color-mode="light">
-        <Image
-          src={userData?.profile_image ?? ''}
-          alt="user profile image"
-          width={48}
-          height={48}
-          className=" rounded-full"
-        />
-        <MDEditor
-          value={reply}
-          onChange={changReply}
-          preview="edit"
-          extraCommands={commands.getCommands().filter(() => false)}
-          commands={commands.getCommands().filter((command) => {
-            return command.name !== 'image';
-          })}
-          textareaProps={{ maxLength: 500 }}
-          className="w-full "
-        />
-      </div>
-      <div className="flex justify-end items-end gap-4 mt-4">
-        <button
-          onClick={() => toggle(comment_id, count)}
-          disabled={!reply}
-          className={`${reply ? 'bg-neutral-50 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-500' : 'bg-neutral-50 text-neutral-100'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-        >
-          취소
-        </button>
-        <button
-          onClick={onClickReply}
-          className={`${reply ? 'bg-main-400 text-white hover:bg-main-500 hover:text-white' : 'bg-main-100 text-main-50'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-        >
-          등록
-        </button>
+      <div>
+        <p>댓글 {count}</p>
+        <div className="flex justify-center items-center gap-6" data-color-mode="light">
+          <Image
+            src={userData?.profile_image ?? ''}
+            alt="user profile image"
+            width={48}
+            height={48}
+            className=" rounded-full"
+          />
+          <MDEditor
+            value={reply}
+            onChange={changReply}
+            preview="edit"
+            extraCommands={commands.getCommands().filter(() => false)}
+            commands={commands.getCommands().filter((command) => {
+              return command.name !== 'image';
+            })}
+            textareaProps={{ maxLength: 500 }}
+            className="w-full border border-neutral-100  first-of-type:rounded-[12px] focus-within:border-main-400"
+          />
+        </div>
+        <div className="flex justify-end items-end gap-4 mt-4">
+          <button
+            onClick={() => toggle(comment_id, count)}
+            disabled={!reply}
+            className={`${reply ? 'bg-neutral-50 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-500' : 'bg-neutral-50 text-neutral-100'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
+          >
+            취소
+          </button>
+          <button
+            onClick={onClickReply}
+            className={`${reply ? 'bg-main-400 text-white hover:bg-main-500 hover:text-white' : 'bg-main-100 text-main-50'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
+          >
+            등록
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -7,9 +7,9 @@ import { Post, SortOption } from '@/types/posts/archiveTypes';
 import { cutText } from '@/utils/markdownCut';
 import dayjs from 'dayjs';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import DefaultThumbnail from '../../../../../../public/images/archive/default_thumbnail.png';
 
 const ArchivePosts = () => {
   const [page, setPage] = useState(0);
@@ -28,8 +28,8 @@ const ArchivePosts = () => {
     switch (sortMethod) {
       case 'latest':
         return posts.sort((a, b) => dayjs(b.updated_at).unix() - dayjs(a.updated_at).unix());
-      case 'mostComments':
-        return posts.sort((a, b) => (b.archive_comment[0]?.count || 0) - (a.archive_comment[0]?.count || 0));
+      case 'oldest':
+        return posts.sort((a, b) => dayjs(a.updated_at).unix() - dayjs(b.updated_at).unix());
       case 'mostLikes':
         return posts.sort((a, b) => (b.archive_like[0]?.count || 0) - (a.archive_like[0]?.count || 0));
       default:
@@ -39,8 +39,8 @@ const ArchivePosts = () => {
 
   const sortOptions: { value: SortOption; label: string }[] = [
     { value: 'latest', label: '최신순' },
-    { value: 'mostComments', label: '댓글순' },
-    { value: 'mostLikes', label: '좋아요순' }
+    { value: 'oldest', label: '과거순' },
+    { value: 'mostLikes', label: '인기순' }
   ];
 
   if (isPendingArchive) {
@@ -64,41 +64,44 @@ const ArchivePosts = () => {
   };
 
   return (
-    <div>
-      <p className="text-overline1 text-neutral-400 font-regular">Level Up Course</p>
-      <p className="text-h3 text-neutral-900 font-bold">더 많은 코드를 만나보세요!</p>
-      <div className="flex items-center justify-between text-caption1 text-neutral-700 font-medium mb-11">
-        <p>전체 게시글 ({archiveResult.count})</p>
-        <label>
-          <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
-        </label>
+    <>
+      <div className="mb-9">
+        <p className="text-subtitle1 text-neutral-400 font-medium mb-3">Level Up Course</p>
+        <p className="text-h3 text-neutral-900 font-bold">더 많은 코드를 만나보세요!</p>
+        <div className="flex items-center justify-between text-subtitle1 font-medium text-neutral-700 mt-6">
+          <p className="flex items-center ">
+            전체 게시글
+            <p className="flex items-center text-subtitle1 font-bold text-neutral-800 ml-1">({archiveResult.count})</p>
+          </p>
+          <label className="flex items-center">
+            <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+          </label>
+        </div>
       </div>
 
       {sortedPosts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-5">
           {sortedPosts.map((post) => (
             <div
               key={post.id}
-              className="flex flex-col justify-start items-start relative gap-4 rounded-xl"
+              className="flex flex-col justify-start items-start relative rounded-xl w-[399px] h-[414px]"
               onClick={() => handlePostClick(post.id)}
             >
-              <div className="post-image">
-                <div className="flex-grow-0 flex-shrink-0 relative rounded-xl">
-                  <Image
-                    src={post.thumbnail || '/images/archive/default_thumbnail.webp'}
-                    alt="Post Thumbnail"
-                    width={388}
-                    height={280}
-                    className="w-[366px] h-[264px] object-cover rounded-xl"
-                  />
-                  <div className="absolute top-4 right-4">
-                    <BookmarkButton id={post.id} type="archive" />
-                  </div>
+              <div className="flex-grow-0 flex-shrink-0 relative rounded-xl mb-2">
+                <Image
+                  src={post.thumbnail || DefaultThumbnail}
+                  alt="Post Thumbnail"
+                  width={1552}
+                  height={1120}
+                  className="w-[388px] h-[280px] object-cover rounded-xl"
+                />
+                <div className="absolute top-4 right-4">
+                  <BookmarkButton id={post.id} type="archive" />
                 </div>
               </div>
-              <div className="flex flex-col justify-center items-start self-stretch flex-grow-0 flex-shrink-0 relative gap-2 px-5 py-2">
-                <h2 className="text-body1 font-bold text-neutral-900">{cutText(post.title, 20)}</h2>
-                <p className="text-base text-body2 font-regular text-neutral-700">
+              <div className="flex flex-col justify-center items-start self-stretch relative h-[126px]">
+                <h2 className="text-subtitle1 font-bold text-neutral-900 my-2 mx-5">{cutText(post.title, 20)}</h2>
+                <p className="text-base text-body2 font-regular text-neutral-700 mb-2 mx-5">
                   {post.user.nickname
                     ? post.user.nickname.length > 20
                       ? `${post.user.nickname.slice(0, 20)}...`
@@ -106,19 +109,19 @@ const ArchivePosts = () => {
                     : 'unknown user'}
                 </p>
               </div>
-              <div className="tags flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-2 py-2 flex-wrap max-h-[40px] overflow-hidden">
+              <div className="flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 flex-wrap h-[46px] overflow-hidden mx-5 mb-2">
                 {post.archive_tags.length > 0 ? (
                   post.archive_tags.map((tag) => (
                     <span
                       key={tag.id}
-                      className="bg-neutral-50 px-3 py-1 rounded text-base font-medium text-neutral-700"
+                      className="bg-neutral-50 px-3 py-1 rounded text-subtitle1 font-medium text-neutral-700 my-2 mr-2"
                       style={{ maxWidth: '100%' }}
                     >
                       #{tag.tag}
                     </span>
                   ))
                 ) : (
-                  <span></span>
+                  <span className="h-[46px]"></span>
                 )}
               </div>
             </div>
@@ -127,7 +130,7 @@ const ArchivePosts = () => {
       ) : (
         <div>No posts available.</div>
       )}
-      <div className="flex justify-center items-center gap-4 mt-4">
+      <div className="flex justify-center items-center gap-4 mt-8 mb-[76px]">
         {totalPages > 1 &&
           Array.from({ length: totalPages }, (_, index) => (
             <button
@@ -148,7 +151,7 @@ const ArchivePosts = () => {
             </button>
           ))}
       </div>
-    </div>
+    </>
   );
 };
 

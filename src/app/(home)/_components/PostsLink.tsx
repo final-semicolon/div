@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
-import qna from '/public/images/mainPageImages/postList/qna.webp';
-import forum from '/public/images/mainPageImages/postList/forum.webp';
-import library from '/public/images/mainPageImages/postList/library.webp';
+import qna from '@/assets/images/main-page_image/posts-list/qnaPostsLinkImage.svg';
+import forum from '@/assets/images/main-page_image/posts-list/forumPostsLinkImage.svg';
+import library from '@/assets/images/main-page_image/posts-list/libraryPostsLinkImage.svg';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,11 @@ import CarouselLeftHover from '@/assets/images/common/CarouselLeftHover';
 import CarouselLeft from '@/assets/images/common/CarouselLeft';
 import CarouselRightHover from '@/assets/images/common/CarouselRightHover';
 import CarouselRight from '@/assets/images/common/CarouselRight';
+import Image from 'next/image';
+import LeftIconHover from '@/assets/images/common/LeftIconHover';
+import LeftIcon from '@/assets/images/common/LeftIcon';
+import RightIconHover from '@/assets/images/common/RightIconHover';
+import RightIcon from '@/assets/images/common/RightIcon';
 
 const PostsLink = () => {
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
@@ -52,56 +57,46 @@ const PostsLink = () => {
         slidesPerView={1}
         modules={[Navigation, Autoplay]}
         autoplay={{
-          delay: 5000,
+          delay: 7000,
           disableOnInteraction: false
         }}
         loop={true}
         className="mySwiper"
       >
         <SwiperSlide>
-          <Link
-            href={'/qna'}
-            className="bg-slate-200 w-full h-[234px] flex flex-col justify-end p-5 rounded-2xl gap-1 text-white  "
-            style={{ backgroundImage: `url(${qna.src})` }}
-          ></Link>
+          <Link href={'/qna'}>
+            <Image src={qna} alt="Q&A 게시판" width={1500} height={500} className="w-[1204px] h-[234px]" />
+          </Link>
         </SwiperSlide>
         <SwiperSlide className="swiper-slide">
-          <Link
-            href={'/forum'}
-            className="bg-slate-200 w-full h-[234px] flex flex-col justify-end p-5 rounded-2xl gap-1 text-white "
-            style={{ backgroundImage: `url(${forum.src})` }}
-          ></Link>
+          <Link href={'/forum'}>
+            <Image src={forum} alt="Q&A 게시판" width={1500} height={500} className="w-[1204px] h-[234px]" />
+          </Link>
         </SwiperSlide>
         <SwiperSlide className="swiper-slide">
-          <Link
-            href={'/archive'}
-            className="bg-slate-200 w-full h-[234px] flex flex-col justify-end p-5 rounded-2xl gap-1 text-white "
-            style={{ backgroundImage: `url(${library.src})` }}
-          ></Link>
+          <Link href={'/archive'}>
+            <Image src={library} alt="Q&A 게시판" width={1500} height={500} className="w-[1204px] h-[234px]" />
+          </Link>
         </SwiperSlide>
       </Swiper>
       {!isBeginning && (
         <div
-          className="absolute top-1/2 transform -translate-y-1/2 left-[-32px] z-50"
+          className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] left-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
           onClick={handlePrevClick}
           onMouseEnter={() => setIsHoveringPrev(true)}
           onMouseLeave={() => setIsHoveringPrev(false)}
         >
-          <button className="swiper-button-prev-custom">
-            {isHoveringPrev ? <CarouselLeftHover /> : <CarouselLeft />}
-          </button>
+          {isHoveringNext ? <LeftIconHover /> : <LeftIcon />}
         </div>
       )}
       {!isEnd && (
         <div
-          className="absolute top-1/2 transform -translate-y-1/2 right-[-32px] z-50"
+          className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] right-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
           onClick={handleNextClick}
           onMouseEnter={() => setIsHoveringNext(true)}
           onMouseLeave={() => setIsHoveringNext(false)}
         >
-          <button className="swiper-button-prev-custom">
-            {isHoveringNext ? <CarouselRightHover /> : <CarouselRight />}
-          </button>
+          {isHoveringNext ? <RightIconHover /> : <RightIcon />}
         </div>
       )}
     </div>

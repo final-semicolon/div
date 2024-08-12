@@ -1,16 +1,20 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import Providers from '@/providers/Providers';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthProvider } from '@/context/auth.context';
-import TanstackQueryProvider from '@/providers/TanstackQueryProvider';
-import { BookmarkProvider } from '@/providers/BookmarkProvider';
-import LikeProvider from '@/providers/LikeProvider';
+import localFont from 'next/font/local';
 
 export const metadata: Metadata = {
   title: '<div>',
   description: '프론트엔드 개발자 커뮤니티'
 };
+
+const pretendard = localFont({
+  src: '../assets/fonts/PretendardVariable.woff2',
+  display: 'swap',
+  weight: '400 500 700',
+  variable: '--font-pretendard'
+});
 
 export default function RootLayout({
   children
@@ -18,18 +22,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <TanstackQueryProvider>
-          <AuthProvider>
-            <BookmarkProvider>
-              <LikeProvider>
-                {children}
-                <ReactQueryDevtools initialIsOpen={false} />
-              </LikeProvider>
-            </BookmarkProvider>
-          </AuthProvider>
-        </TanstackQueryProvider>
+    <html lang="kr">
+      <body className={pretendard.className}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -11,6 +11,7 @@ export type Post = QnaPost & {
   qna_comment: { count: number }[];
   qna_tags: QnaTag[];
   qna_images: QnaImage[];
+  qna_reply: { count: number }[];
   user: User;
 };
 

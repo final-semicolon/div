@@ -1,3 +1,4 @@
+import TopButton from '@/components/common/TopButton';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
@@ -9,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        main: ['Pretendard', 'sans-serif']
+        pretendard: ['var(--font-pretendard)']
       },
       colors: {
         main: {
@@ -40,22 +41,22 @@ const config: Config = {
         white: '#ffffff'
       },
       fontSize: {
-        h1: ['60px', { lineHeight: '135%', letterSpacing: '-1%' }],
-        h2: ['48px', { lineHeight: '135%', letterSpacing: '-1%' }],
-        h3: ['28px', { lineHeight: '135%', letterSpacing: '-1%' }],
-        h4: ['24px', { lineHeight: '135%', letterSpacing: '-1%' }],
-        h5: ['20px', { lineHeight: '135%', letterSpacing: '-1%' }],
-        subtitle1: ['18px', { lineHeight: '135%', letterSpacing: '-1%' }],
-        subtitle2: ['16px', { lineHeight: '135%', letterSpacing: '-1%' }],
-        subtitle3: ['14px', { lineHeight: '135%', letterSpacing: '-1%' }],
-        body1: ['18px', { lineHeight: '150%', letterSpacing: '-1%' }],
-        body2: ['16px', { lineHeight: '150%', letterSpacing: '-1%' }],
-        body3: ['14px', { lineHeight: '150%', letterSpacing: '-1%' }],
-        body4: ['13px', { lineHeight: '150%', letterSpacing: '-1%' }],
-        overline1: ['14px', { lineHeight: '150%', letterSpacing: '-1%' }],
-        overline2: ['12px', { lineHeight: '150%', letterSpacing: '-1%' }],
-        caption1: ['14px', { lineHeight: '150%', letterSpacing: '-1%' }],
-        caption2: ['12px', { lineHeight: '150%', letterSpacing: '-1%' }]
+        h1: ['60px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
+        h2: ['48px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
+        h3: ['28px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
+        h4: ['24px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
+        h5: ['20px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
+        subtitle1: ['18px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
+        subtitle2: ['16px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
+        subtitle3: ['14px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
+        body1: ['18px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
+        body2: ['16px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
+        body3: ['14px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
+        body4: ['13px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
+        overline1: ['14px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
+        overline2: ['12px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
+        caption1: ['14px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
+        caption2: ['12px', { lineHeight: '150%', letterSpacing: '-0.5px' }]
       },
       fontWeight: {
         regular: '400',
@@ -64,7 +65,8 @@ const config: Config = {
       },
       boxShadow: {
         custom: '-2px 0px 1px 0px rgba(234, 234, 234, 0.25), 2px 0px 1px 0px rgba(234, 234, 234, 0.25)',
-        'custom-light': '0px 0px 4px 0px rgba(234, 234, 234, 0.25)'
+        'custom-light': '0px 0px 4px 0px rgba(234, 234, 234, 0.25)',
+        button: '0px 2px 8px 0px rgba(0, 0, 0, 0.25)'
       }
     }
   },
