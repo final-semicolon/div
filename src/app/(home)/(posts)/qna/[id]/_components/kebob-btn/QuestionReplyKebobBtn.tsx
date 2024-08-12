@@ -1,7 +1,9 @@
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import KebabButton from '@/assets/images/common/KebabButton';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_DELETE_MODAL_TEXT } from '@/constants/comment';
+import { COMMENT_DELETE_ALRERT_TEXT } from '@/constants/alert';
+import { COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
+
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
@@ -26,7 +28,7 @@ const QuestionReplyKebobBtn = ({ replyId, setReplyCount, setIsEdit }: QuestionRe
   const deleteReply = async (): Promise<void> => {
     if (!replyId) return;
     const data = await deleteMutate({ replyId });
-    toast.success(COMMENT_DELETE_ALRERT_TEXT, { autoClose: 3000, hideProgressBar: true });
+    toast.success(COMMENT_DELETE_ALRERT_TEXT, { hideProgressBar: true });
     setOpenKebab(false);
     setReplyCount((prev) => prev - 1);
     await revalidatePostTag(`qna-detail-${postId}`);
@@ -71,7 +73,7 @@ const QuestionReplyKebobBtn = ({ replyId, setReplyCount, setIsEdit }: QuestionRe
               setIsDeleteModalOpen(false);
             }}
             onConfirm={deleteReply}
-            message={COMMENT_DELETE_MODAL_TEXT}
+            message={COMMENT_DELETE_CONFIRM_TEXT}
           />
           <li
             className={`content-center ${openKebab ? '' : 'hidden'} px-[23px] py-[10px] box-content w-[59px] h-6  hover:bg-main-100 hover:text-main-400 rounded-t-lg cursor-pointer`}

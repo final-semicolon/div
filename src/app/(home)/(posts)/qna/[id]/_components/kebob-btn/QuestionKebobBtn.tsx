@@ -1,7 +1,9 @@
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import KebabButton from '@/assets/images/common/KebabButton';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { DELETE_ALERT_TEXT, POST_DELETE_TEXT } from '@/constants/upsert';
+import { POST_DELETE_ALERT_TEXT } from '@/constants/alert';
+import { POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
+
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useRouter } from 'next/navigation';
 import { MouseEventHandler, useState } from 'react';
@@ -27,7 +29,7 @@ const QuestionKebobBtn = () => {
       return toast.error(message);
     }
     await revalidatePostTag(`qna-detail-${postId}`);
-    toast.success(DELETE_ALERT_TEXT, { autoClose: 3000, hideProgressBar: true });
+    toast.success(POST_DELETE_ALERT_TEXT, { hideProgressBar: true });
     router.push(`/qna`);
     return;
   };
@@ -69,7 +71,7 @@ const QuestionKebobBtn = () => {
               setIsDeleteModalOpen(false);
             }}
             onConfirm={deletePost}
-            message={POST_DELETE_TEXT}
+            message={POST_DELETE_CONFIRM_TEXT}
           />
 
           <li

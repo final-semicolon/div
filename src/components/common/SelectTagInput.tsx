@@ -20,7 +20,7 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
 
   const handleSelect = (tag: Ttag): void => {
     if (selectedCount >= 3) {
-      toast.error('태그는 3개까지만 선택이 가능합니다.', { autoClose: 1500, hideProgressBar: true });
+      toast.error('태그는 3개까지만 선택이 가능합니다.', { hideProgressBar: true });
       return;
     }
     setTagList(

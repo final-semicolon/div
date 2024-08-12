@@ -11,7 +11,7 @@ import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import Chip from '@/components/common/Chip';
 import Tag from '@/components/common/Tag';
 import { cutText, filterSlang } from '@/utils/markdownCut';
-import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/comment';
+import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 
 type QuestionReplyProps = {
   reply: TpostReply;
@@ -37,7 +37,7 @@ const QuestionReply = ({ reply, setReplyCount }: QuestionReplyProps) => {
 
   const handleEditQuestionReply: MouseEventHandler<HTMLButtonElement> = async () => {
     const data = await editMutate({ replyId: reply.id, post_reply_content: content });
-    toast.success(COMMENT_EDIT_ALERT_TEXT, { autoClose: 3000, hideProgressBar: true });
+    toast.success(COMMENT_EDIT_ALERT_TEXT, { hideProgressBar: true });
     setIsEdit(false);
   };
 

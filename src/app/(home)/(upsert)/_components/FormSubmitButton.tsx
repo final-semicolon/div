@@ -1,6 +1,10 @@
 import Chip from '@/components/common/Chip';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import { POST_CANCLE_TEXT, POST_APPROVE_TEXT, EDIT_APPROVE_TEXT, EDIT_CANCLE_TEXT } from '@/constants/upsert';
+import {
+  POST_APPROVE_CONFIRM_TEXT,
+  POST_CANCLE_CONFIRM_TEXT,
+  POST_EDIT_CANCLE_CONFIRM_TEXT
+} from '@/constants/confirmModal';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
 import { useRouter } from 'next/navigation';
 import { MouseEventHandler, useState } from 'react';
@@ -16,13 +20,13 @@ const FormSubmitButton = ({ handleSubmit, isEdit }: FormSubmitButtonProps) => {
   const { clearAllValid } = useUpsertValidationStore();
 
   const handleCancleConfirmClick: MouseEventHandler = () => {
-    setConfirmText(isEdit ? EDIT_CANCLE_TEXT : POST_CANCLE_TEXT);
+    setConfirmText(isEdit ? POST_EDIT_CANCLE_CONFIRM_TEXT : POST_CANCLE_CONFIRM_TEXT);
     setIsCancleConfirmOpen(true);
   };
 
   const handlePostConfirmClick: MouseEventHandler = (event) => {
     event.preventDefault();
-    setConfirmText(isEdit ? EDIT_APPROVE_TEXT : POST_APPROVE_TEXT);
+    setConfirmText(POST_APPROVE_CONFIRM_TEXT);
     setIsPostConfirmOpen(true);
   };
 

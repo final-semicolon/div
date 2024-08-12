@@ -1,5 +1,5 @@
 'use client';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { TpostFormData } from '@/types/upsert';
 import FormTitleInput from '../FormTitleInput';
 import FormTagInput from './postingform/FormTagInput';
@@ -29,7 +29,7 @@ const PostingForm = () => {
   const { setIsValidCategory, setIsValidContent, setIsValidTitle, clearAllValid } = useUpsertValidationStore();
 
   if (!user?.id) {
-    toast.error(LOGIN_ALERT, { hideProgressBar: false, autoClose: 1500, onClose: () => router.push(`/login`) });
+    toast.error(LOGIN_ALERT, { hideProgressBar: false, onClose: () => router.push(`/login`) });
     return;
   }
 
@@ -91,7 +91,7 @@ const PostingForm = () => {
       });
     }
 
-    toast.success(message, { autoClose: 1500, onClose: () => router.push(`/${category}/${data[0].id}`) });
+    toast.success(message, { onClose: () => router.push(`/${category}/${data[0].id}`) });
     clearCategory();
     clearAllValid();
     return;
