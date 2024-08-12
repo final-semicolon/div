@@ -9,8 +9,13 @@ import { TAG_LIST } from '@/constants/tags';
 import SelectTagInput from '@/components/common/SelectTagInput';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import Chip from '@/components/common/Chip';
-import { QNA_ANSWER_ALERT_TEXT } from '@/constants/alert';
-import { POST_APPROVE_CONFIRM_TEXT, POST_CANCLE_CONFIRM_TEXT } from '@/constants/confirmModal';
+import { POST_ALERT_TEXT, QNA_ANSWER_ALERT_TEXT, QNA_ANSWER_CANCLE_ALRERT_TEXT } from '@/constants/alert';
+import {
+  ANSWER_APPROVE_CONFIRM_TEXT,
+  ANSWER_CANCLE_CONFIRM_TEXT,
+  POST_APPROVE_CONFIRM_TEXT,
+  POST_CANCLE_CONFIRM_TEXT
+} from '@/constants/confirmModal';
 
 type PostingAnswerAreaProps = {
   content: string;
@@ -37,7 +42,7 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaComment
   const postingAnswer = async (): Promise<void> => {
     if (!me?.id) return;
     await addMutate({ user_id: me.id, content, tags: tagList.filter((tag) => tag.selected) });
-    toast.success(QNA_ANSWER_ALERT_TEXT, { hideProgressBar: true });
+    toast.success(QNA_ANSWER_ALERT_TEXT);
     setQnaCommentsCount((prev) => prev + 1);
     await revalidatePostTag(`qna-detail-${postId}`);
     return;
@@ -90,6 +95,7 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaComment
             setIsCancleModalOpen(false);
           }}
           onConfirm={() => {
+            toast.success(QNA_ANSWER_CANCLE_ALRERT_TEXT);
             setToggleAnswer(false);
             setContent('');
           }}

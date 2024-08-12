@@ -3,7 +3,6 @@ import KebabButton from '@/assets/images/common/KebabButton';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import { COMMENT_DELETE_ALRERT_TEXT } from '@/constants/alert';
 import { COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
-
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
@@ -28,7 +27,7 @@ const QuestionReplyKebobBtn = ({ replyId, setReplyCount, setIsEdit }: QuestionRe
   const deleteReply = async (): Promise<void> => {
     if (!replyId) return;
     const data = await deleteMutate({ replyId });
-    toast.success(COMMENT_DELETE_ALRERT_TEXT, { hideProgressBar: true });
+    toast.success(COMMENT_DELETE_ALRERT_TEXT);
     setOpenKebab(false);
     setReplyCount((prev) => prev - 1);
     await revalidatePostTag(`qna-detail-${postId}`);

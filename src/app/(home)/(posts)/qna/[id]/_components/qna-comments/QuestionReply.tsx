@@ -37,7 +37,7 @@ const QuestionReply = ({ reply, setReplyCount }: QuestionReplyProps) => {
 
   const handleEditQuestionReply: MouseEventHandler<HTMLButtonElement> = async () => {
     const data = await editMutate({ replyId: reply.id, post_reply_content: content });
-    toast.success(COMMENT_EDIT_ALERT_TEXT, { hideProgressBar: true });
+    toast.success(COMMENT_EDIT_ALERT_TEXT);
     setIsEdit(false);
   };
 

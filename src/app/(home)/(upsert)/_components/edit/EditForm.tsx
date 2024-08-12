@@ -17,6 +17,8 @@ import { TAG_LIST } from '@/constants/tags';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { deleteThumbnail, patchThumbnail, uploadThumbnail } from '../../_utils/thumbnail';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
+import { EDIT_SUCCESS_MASSAGE } from '@/constants/upsert.api';
+import { POST_EDIT_ALERT_TEXT } from '@/constants/alert';
 
 type UpsertFormProps = {
   data: TeditForumData | TeditQnaData | TeditArchiveData;
@@ -94,16 +96,13 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
     const { data, message } = await response.json();
 
     if (!data) {
-      toast.error(message, { hideProgressBar: true });
+      toast.error(message);
       return;
     }
 
     await revalidatePostTag(`${path}`);
-
-    toast.success(message, {
-      hideProgressBar: true,
-      onClose: () => router.push(`/${category}`)
-    });
+    router.push(`/${category}`);
+    toast.success(POST_EDIT_ALERT_TEXT);
     clearAllValid();
     return;
   };
@@ -116,9 +115,11 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
     if (!data) {
       return;
     } else if (!user) {
-      toast.error(LOGIN_ALERT, { hideProgressBar: true, onClose: () => router.push(`/login`) });
+      router.push(`/login`);
+      toast.error(LOGIN_ALERT);
     } else if (data.user_id !== user?.id) {
-      toast.error('권한이 없습니다!', { hideProgressBar: true, onClose: () => router.push(`/`) });
+      router.push(`/`);
+      toast.error('권한이 없습니다!');
       return;
     }
 

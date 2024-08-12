@@ -2,7 +2,7 @@ import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import Chip from '@/components/common/Chip';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import LoginAlertModal from '@/components/modal/LoginAlertModal';
-import { ALERT_AUTO_CLOSE_TIME, COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
+import { COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
 import { COMMENT_CANCLE_CONFIRM_TEXT } from '@/constants/confirmModal';
 
 import { useAuth } from '@/context/auth.context';
@@ -40,7 +40,7 @@ const AnswerReplyForm = ({ commentId, setReplyCount }: AnswerRepliesFormProps) =
       return toast.error('내용을 입력해주세요!');
     }
     const data = await addAnswerReply({ user_id: me?.id, reply: content });
-    toast.success(COMMENT_POST_ALERT_TEXT, { autoClose: ALERT_AUTO_CLOSE_TIME, hideProgressBar: true });
+    toast.success(COMMENT_POST_ALERT_TEXT);
     setContent('');
     setReplyCount((prev) => prev + 1);
     await revalidatePostTag(`qna-detail-${postId}`);

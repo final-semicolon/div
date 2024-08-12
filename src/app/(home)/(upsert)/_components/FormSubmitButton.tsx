@@ -1,5 +1,6 @@
 import Chip from '@/components/common/Chip';
 import ConfirmModal from '@/components/modal/ConfirmModal';
+import { POST_CANCLE_ALERT_TEXT, POST_EDIT_CANCLE_ALERT_TEXT } from '@/constants/alert';
 import {
   POST_APPROVE_CONFIRM_TEXT,
   POST_CANCLE_CONFIRM_TEXT,
@@ -8,6 +9,7 @@ import {
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
 import { useRouter } from 'next/navigation';
 import { MouseEventHandler, useState } from 'react';
+import { toast } from 'react-toastify';
 
 type FormSubmitButtonProps = { handleSubmit: () => Promise<void>; isEdit: boolean };
 
@@ -32,6 +34,7 @@ const FormSubmitButton = ({ handleSubmit, isEdit }: FormSubmitButtonProps) => {
 
   const approveCancleConfirm = (): void => {
     clearAllValid();
+    isEdit ? toast.success(POST_EDIT_CANCLE_ALERT_TEXT) : toast.success(POST_CANCLE_ALERT_TEXT);
     router.back();
   };
 

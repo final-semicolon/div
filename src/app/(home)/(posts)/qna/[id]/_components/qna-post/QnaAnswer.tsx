@@ -23,7 +23,11 @@ import SelectAnswer from '@/assets/images/qna/SelectAnswer';
 import Chip from '@/components/common/Chip';
 import Tag from '@/components/common/Tag';
 import { filterSlang } from '@/utils/markdownCut';
-import { POST_EDIT_ALERT_TEXT, SELECT_ANSWER_ALERT_TEXT } from '@/constants/alert';
+import {
+  QNA_ANSWER_EDIT_ALERT_TEXT,
+  QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT,
+  SELECT_ANSWER_ALERT_TEXT
+} from '@/constants/alert';
 import {
   POST_APPROVE_CONFIRM_TEXT,
   POST_EDIT_CANCLE_CONFIRM_TEXT,
@@ -70,7 +74,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
 
   const selectComment = async (): Promise<void> => {
     const data = await selectMutate();
-    toast.success(SELECT_ANSWER_ALERT_TEXT, { hideProgressBar: true });
+    toast.success(SELECT_ANSWER_ALERT_TEXT);
     await revalidatePostTag(`qna-detail-${postId}`);
     setSeletedComment(qnaComment.id);
   };
@@ -84,7 +88,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
     );
     const { data, message } = await response.json();
     if (message) {
-      toast.error(message, { hideProgressBar: true });
+      toast.error(message);
     }
     return data;
   };
@@ -106,7 +110,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
       tags: tagList.filter((tag) => tag.selected),
       user_id: me?.id ?? ''
     });
-    toast.success(POST_EDIT_ALERT_TEXT, { hideProgressBar: true });
+    toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
     setIsEdit(false);
     await revalidatePostTag(`qna-detail-${postId}`);
   };
@@ -225,6 +229,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
                 setIsCancleModalOpen(false);
               }}
               onConfirm={() => {
+                toast.success(QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT);
                 setIsEdit(false);
                 setContent(qnaComment.comment);
               }}

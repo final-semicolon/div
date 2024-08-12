@@ -40,7 +40,7 @@ const AnswerReply = ({ reply, setReplyCount }: AnswerReplyProps) => {
       return;
     }
     const data = await editMutate({ replyId: reply.id, reply: content });
-    toast.success(COMMENT_EDIT_ALERT_TEXT, { hideProgressBar: true });
+    toast.success(COMMENT_EDIT_ALERT_TEXT);
     setIsEdit(false);
   };
 

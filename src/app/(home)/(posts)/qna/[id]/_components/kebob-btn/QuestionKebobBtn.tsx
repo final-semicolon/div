@@ -2,8 +2,7 @@ import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import KebabButton from '@/assets/images/common/KebabButton';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import { POST_DELETE_ALERT_TEXT } from '@/constants/alert';
-import { POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
-
+import { EDIT_MOVE_CONFIRM_TEXT, POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useRouter } from 'next/navigation';
 import { MouseEventHandler, useState } from 'react';
@@ -29,7 +28,7 @@ const QuestionKebobBtn = () => {
       return toast.error(message);
     }
     await revalidatePostTag(`qna-detail-${postId}`);
-    toast.success(POST_DELETE_ALERT_TEXT, { hideProgressBar: true });
+    toast.success(POST_DELETE_ALERT_TEXT);
     router.push(`/qna`);
     return;
   };
@@ -56,7 +55,7 @@ const QuestionKebobBtn = () => {
             onConfirm={() => {
               router.push(`/edit/${postId}/?category=qna`);
             }}
-            message={'수정 페이지로 이동하시겠습니까?'}
+            message={EDIT_MOVE_CONFIRM_TEXT}
           />
           <li
             className={` content-center ${openKebab ? '' : 'hidden'} box-content px-4 py-[10px] w-[73px] h-6  hover:bg-main-100 hover:text-main-400 rounded-t-lg cursor-pointer`}
