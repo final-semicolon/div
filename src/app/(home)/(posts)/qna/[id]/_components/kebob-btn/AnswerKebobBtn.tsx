@@ -28,7 +28,7 @@ const AnswerKebobBtn = ({ commentId, isEdit, setIsEdit, setQnaCommentsCount }: K
   };
 
   const handleEditComment: MouseEventHandler<HTMLLIElement> = async () => {
-    isEdit ? setIsEdit(false) : setIsEdit(true);
+    setIsEdit((prev) => !prev);
     setOpenKebab(false);
   };
 

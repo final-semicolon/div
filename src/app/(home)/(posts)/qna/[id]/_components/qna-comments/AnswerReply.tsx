@@ -1,6 +1,5 @@
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
-import AnswerReplytKebobBtn from '../kebob-btn/AnswerReplytKebobBtn';
 import { Treply } from '@/types/posts/qnaDetailTypes';
 import Image from 'next/image';
 import { timeForToday } from '@/utils/timeForToday';
@@ -12,13 +11,13 @@ import { cutText, filterSlang } from '@/utils/markdownCut';
 import Chip from '@/components/common/Chip';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
+import ReplyKebobBtn from '../kebob-btn/ReplyKebobBtn';
 
 type AnswerReplyProps = {
   reply: Treply;
-  setReplyCount: Dispatch<SetStateAction<number>>;
 };
 
-const AnswerReply = ({ reply, setReplyCount }: AnswerReplyProps) => {
+const AnswerReply = ({ reply }: AnswerReplyProps) => {
   const [content, setContent] = useState<string>(reply.reply);
   const [seeMore, setSeeMore] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -82,12 +81,7 @@ const AnswerReply = ({ reply, setReplyCount }: AnswerReplyProps) => {
         </div>
         {me?.id === reply.user_id ? (
           <div className=" ml-auto mb-auto">
-            <AnswerReplytKebobBtn
-              commentId={reply.comment_id}
-              replyId={reply.id}
-              setReplyCount={setReplyCount}
-              setIsEdit={setIsEdit}
-            />
+            <ReplyKebobBtn commentId={reply.comment_id} replyId={reply.id} setIsEdit={setIsEdit} />
           </div>
         ) : (
           ''

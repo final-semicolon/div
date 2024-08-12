@@ -6,19 +6,18 @@ import { timeForToday } from '@/utils/timeForToday';
 import { useAuth } from '@/context/auth.context';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import QuestionReplyKebobBtn from '../kebob-btn/QuestionReplyKebobBtn';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import Chip from '@/components/common/Chip';
 import Tag from '@/components/common/Tag';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
+import ReplyKebobBtn from '../kebob-btn/ReplyKebobBtn';
 
 type QuestionReplyProps = {
   reply: TpostReply;
-  setReplyCount: Dispatch<SetStateAction<number>>;
 };
 
-const QuestionReply = ({ reply, setReplyCount }: QuestionReplyProps) => {
+const QuestionReply = ({ reply }: QuestionReplyProps) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [content, setContent] = useState<string>(reply.post_reply_content);
   const [seeMore, setSeeMore] = useState<boolean>(false);
@@ -89,7 +88,7 @@ const QuestionReply = ({ reply, setReplyCount }: QuestionReplyProps) => {
         </div>
         {me?.id === reply.user_id ? (
           <div className="flex ml-auto mb-auto">
-            <QuestionReplyKebobBtn replyId={reply.id} setReplyCount={setReplyCount} setIsEdit={setIsEdit} />
+            <ReplyKebobBtn replyId={reply.id} setIsEdit={setIsEdit} />
           </div>
         ) : null}
       </div>
