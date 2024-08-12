@@ -5,37 +5,29 @@ import RedX from '@/assets/images/auth/RedX';
 import CheckVector from '@/assets/images/auth/CheckVector';
 import I from '@/assets/images/common/I';
 import { isNicknameValid } from '@/utils/validateBannedWords';
+import { useFormContext } from 'react-hook-form';
 
-type NicknameCheckProps = {
-  nickname: string;
-  setNickname: React.Dispatch<React.SetStateAction<string>>;
-  nicknameValid: boolean;
-  setNicknameValid: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsCheckedNickname: React.Dispatch<React.SetStateAction<boolean>>;
-  nicknameMessage: string;
-  setNicknameMessage: React.Dispatch<React.SetStateAction<string>>;
-};
-
-const NicknameCheck = ({
-  nickname,
-  setNickname,
-  nicknameValid,
-  setNicknameValid,
-  setIsCheckedNickname,
-  nicknameMessage,
-  setNicknameMessage
-}: NicknameCheckProps) => {
+const NicknameCheck = () => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [hasInteracted, setHasInteracted] = useState<boolean>(false);
+  const {
+    register,
+    watch,
+    setValue,
+    trigger,
+    formState: { errors }
+  } = useFormContext();
+
+  const nickname = watch('nickname', '');
+  const [nicknameMessage, setNicknameMessage] = useState<string>('2~12자 이하만 가능해요');
+  const [nicknameValid, setNicknameValid] = useState<boolean>(false);
 
   useEffect(() => {
-    setNicknameMessage('2~12자 이하만 가능해요');
-
     const handleValidateNickname = async (nickname: string) => {
       if (!isNicknameValid(nickname)) {
-        setNicknameMessage('사용할 수 없는 닉네임입니다.');
-        setIsCheckedNickname(false);
+        setNicknameMessage('사용할 수 없는 닉네임이에요');
         setNicknameValid(false);
+        setValue('nicknameValid', false, { shouldValidate: true });
         return;
       }
       try {
@@ -50,20 +42,22 @@ const NicknameCheck = ({
         const result = await response.json();
 
         if (response.status === 409) {
-          setNicknameMessage('이미 사용중인 닉네임이에요.');
-          setIsCheckedNickname(false);
+          setNicknameMessage('이미 사용중인 닉네임이에요');
           setNicknameValid(false);
+          setValue('nicknameValid', false, { shouldValidate: true });
         } else if (response.ok) {
-          setNicknameMessage('사용 가능한 닉네임이에요.');
-          setIsCheckedNickname(true);
+          setNicknameMessage('사용 가능한 닉네임이에요');
           setNicknameValid(true);
+          setValue('nicknameValid', true, { shouldValidate: true });
         } else {
-          setNicknameMessage(result.error || '닉네임 확인 중 오류가 발생했어요.');
+          setNicknameMessage(result.error || '닉네임 확인 중 오류가 발생했어요');
           setNicknameValid(false);
+          setValue('nicknameValid', false, { shouldValidate: true });
         }
       } catch (error) {
-        setNicknameMessage('닉네임 확인 중 오류가 발생했어요.');
+        setNicknameMessage('닉네임 확인 중 오류가 발생했어요');
         setNicknameValid(false);
+        setValue('nicknameValid', false, { shouldValidate: true });
       }
     };
 
@@ -71,53 +65,62 @@ const NicknameCheck = ({
       handleValidateNickname(nickname);
     } else if (hasInteracted) {
       setNicknameValid(false);
-      setIsCheckedNickname(false);
       setNicknameMessage('2~12자 이하만 가능해요');
+      setValue('nicknameValid', false, { shouldValidate: true });
     }
-  }, [nickname, hasInteracted, setIsCheckedNickname, setNicknameMessage, setNicknameValid]);
+  }, [nickname, hasInteracted, setNicknameMessage, setValue]);
 
   const handleClearInput = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setNickname('');
     setHasInteracted(false);
+    setValue('nickname', '');
+    setValue('nicknameValid', false);
   };
 
   const getIcon = () => {
     if (!hasInteracted) return <I />;
-    if (!nicknameValid) return <RedX />;
-    if (nicknameValid) return <CheckVector />;
+    if (!nicknameValid || errors.nickname) return <RedX />;
+    if (nicknameValid && !errors.nickname) return <CheckVector />;
   };
 
-  const borderColor = nicknameValid
-    ? isFocused
-      ? 'border-main-400'
-      : 'border-gray-900'
-    : hasInteracted && !nicknameValid
-      ? 'border-red'
-      : 'border-gray-900';
-  const labelColor = nicknameValid
-    ? isFocused
-      ? 'text-main-400'
-      : 'text-gray-900'
-    : hasInteracted && !nicknameValid
-      ? 'text-red'
-      : 'text-gray-900';
-  const messageColor = nicknameValid ? 'text-main-400' : 'text-red';
+  const borderColor =
+    nicknameValid && !errors.nickname
+      ? isFocused
+        ? 'border-main-400'
+        : 'border-gray-900'
+      : hasInteracted && (!nicknameValid || errors.nickname)
+        ? 'border-red'
+        : 'border-gray-900';
+  const labelColor =
+    nicknameValid && !errors.nickname
+      ? isFocused
+        ? 'text-main-400'
+        : 'text-gray-900'
+      : hasInteracted && (!nicknameValid || errors.nickname)
+        ? 'text-red'
+        : 'text-gray-900';
+  const messageColor = nicknameValid && !errors.nickname ? 'text-main-400' : 'text-red';
 
   return (
     <div className="relative mb-4">
       <label className={`block subtitle2-bold-16px ${labelColor}`}>닉네임</label>
       <input
         type="text"
-        value={nickname}
+        {...register('nickname', {
+          required: '닉네임을 입력해주세요',
+          validate: () => nicknameValid || '유효하지 않은 닉네임입니다.'
+        })}
         onChange={(e) => {
-          setNickname(e.target.value);
           setHasInteracted(true);
+          setValue('nickname', e.target.value);
         }}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={() => {
+          setIsFocused(false);
+          trigger('nickname');
+        }}
         placeholder="닉네임을 입력해 주세요."
-        className={`mt-1 block w-full p-2 border rounded-md focus:outline-none  placeholder:body2-regular-16px ${borderColor}`}
+        className={`mt-1 block w-full p-2 border rounded-md focus:outline-none placeholder:body2-regular-16px ${borderColor}`}
       />
       {isFocused && nickname && (
         <button
@@ -130,9 +133,7 @@ const NicknameCheck = ({
       )}
       <div className="flex items-center mt-1 text-sm">
         {getIcon()}
-        <p className={`ml-2  body2-regular-16px ${hasInteracted ? messageColor : 'text-gray-900'}`}>
-          {nicknameMessage}
-        </p>
+        <p className={`ml-2 body2-regular-16px ${hasInteracted ? messageColor : 'text-gray-900'}`}>{nicknameMessage}</p>
       </div>
     </div>
   );
