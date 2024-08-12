@@ -47,7 +47,7 @@ const ArchiveDetailPost = () => {
   };
 
   const handlePostRetouch = () => {
-    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/edit/${param.id}?category=archive?page=0`);
+    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/edit/${param.id}?category=archive`);
   };
 
   if (!archiveDetail) return <div>Loading...</div>;
@@ -112,7 +112,7 @@ const ArchiveDetailPost = () => {
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-6 whitespace-pre-wrap break-words" data-color-mode="light">
+        <div className="flex flex-col gap-6 whitespace-pre-wrap break-words">
           <p className="text-h4 font-bold">{archiveDetail.title}</p>
 
           <MDEditor.Markdown source={filterSlang(archiveDetail.content)} className="text-body1 font-regular" />

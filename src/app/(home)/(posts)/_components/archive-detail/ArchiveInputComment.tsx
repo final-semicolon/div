@@ -9,7 +9,6 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import ConfirmModal from '@/components/modal/ConfirmModal';
 
 const ArchiveInputComments = () => {
   const params = useParams<{ id: string }>();
@@ -17,11 +16,14 @@ const ArchiveInputComments = () => {
   const queryClient = useQueryClient();
   const [comment, setComment] = useState<string>('');
   const [showModal, setShowModal] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const handleCommentChange = (value?: string) => {
     setComment(value ?? '');
   };
-
+  const handleLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
   const handleComment = useMutation({
     mutationFn: async (userComment: userComment) => {
       const response = await fetch(`/api/posts/archive-detail/archive-comments/${params.id}`, {
@@ -44,7 +46,7 @@ const ArchiveInputComments = () => {
     const archiveComment = { user_id: me?.id, post_id: params.id, comment };
 
     if (!me?.id) {
-      toast.error('로그인 후 입력 가능합니다.', {
+      toast.error('로그인 후 입력가능합니다.', {
         autoClose: 2000
       });
       return;
@@ -56,33 +58,23 @@ const ArchiveInputComments = () => {
       return;
     }
 
+    toast.success('댓글이 입력되었습니다.', { autoClose: 1500 });
     handleComment.mutate(archiveComment);
   };
 
-  const handleCancelClick = () => {
-    setShowModal(true);
-  };
-
-  const handleConfirmCancel = () => {
-    setComment('');
-    setShowModal(false);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
   return (
-    <div className="flex justify-start items-center  py-6 px-5  ">
+    <div className={`flex ${me ? 'justify-start' : 'justify-center'} items-center  py-6`}>
       <form className=" w-full" onSubmit={handleSubmit}>
         <div className=" flex justify-center items-center gap-6" data-color-mode="light">
-          <Image
-            src={userData?.profile_image ?? ''}
-            alt="user profile image"
-            width={48}
-            height={48}
-            className=" rounded-full"
-          />
+          {me && (
+            <Image
+              src={userData?.profile_image ?? ''}
+              alt="user profile image"
+              width={48}
+              height={48}
+              className=" rounded-full"
+            />
+          )}
           <MDEditor
             value={comment}
             onChange={handleCommentChange}
@@ -91,36 +83,34 @@ const ArchiveInputComments = () => {
             commands={commands.getCommands().filter((command) => {
               return command.name !== 'image';
             })}
-            textareaProps={{ maxLength: 1000 }}
+            textareaProps={{
+              placeholder: `${me ? '자유롭게 소통해 보세요!' : '로그인 후 자유롭게 소통해 보세요!'}`,
+              maxLength: 1000
+            }}
             className="w-full "
           />
         </div>
-        <div className=" flex justify-end items-end gap-6 mt-6">
-          <button
-            type="button"
-            className="bg-neutral-50 hover:bg-neutral-100 hover:text-neutral-600 text-neutral-100 px-5 py-3 rounded-lg"
-            onClick={handleCancelClick}
-          >
-            취소
-          </button>
-          <button
-            className={`px-5 py-3 rounded-lg ${
-              comment ? 'bg-main-500 hover:bg-main-600 text-main-50' : 'bg-main-100 text-main-50'
-            }`}
-            disabled={!comment}
-          >
-            등록
-          </button>
-        </div>
+        {me && (
+          <div className=" flex justify-end items-end gap-6 mt-6">
+            <button
+              type="button"
+              disabled={!comment}
+              className={`${comment ? 'bg-neutral-50 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-500' : 'bg-neutral-50 text-neutral-100'}   px-5 py-3 rounded-lg text-subtitle1 font-bold`}
+              onClick={() => {
+                setComment('');
+              }}
+            >
+              취소
+            </button>
+            <button
+              className={`${comment ? 'bg-main-400 text-white hover:bg-main-500 hover:text-white' : 'bg-main-100 text-main-50'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
+              disabled={!comment}
+            >
+              등록
+            </button>
+          </div>
+        )}
       </form>
-      {showModal && (
-        <ConfirmModal
-          isOpen={showModal}
-          onClose={handleCloseModal}
-          onConfirm={handleConfirmCancel}
-          message={'댓글 작성을 취소 하시겠습니까?'}
-        />
-      )}
     </div>
   );
 };
