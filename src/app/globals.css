@@ -70,6 +70,12 @@ body .w-md-editor-text-input {
   .profile-like-bookmark {
     @apply text-subtitle1 font-medium cursor-pointer p-[0px_25px_0px_25px];
   }
+  .search-toggle-list {
+    @apply absolute top-[50px] z-[1000] pt-4 max-h-52 px-4 mt-1 w-full border border-neutral-200 bg-transparent rounded-md shadow-lg overflow-y-auto;
+  }
+  .search-toggle-item {
+    @apply cursor-pointer mb-4 text-body2 font-regular text-neutral-700 hover:bg-neutral-50;
+  }
 }
 
 .custom-dashed-border {
