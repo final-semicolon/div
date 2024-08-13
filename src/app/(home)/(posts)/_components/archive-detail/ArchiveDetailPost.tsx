@@ -50,8 +50,7 @@ const ArchiveDetailPost = () => {
     router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/edit/${param.id}?category=archive`);
   };
 
-  if (!archiveDetail) return <div>Loading...</div>;
-  console.log(archiveDetail.tags);
+  if (!archiveDetail) return <div></div>;
 
   return (
     <div className="flex flex-col gap-4">

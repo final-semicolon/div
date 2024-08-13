@@ -116,14 +116,6 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
   const replyCount = reply?.pages[0].count;
   const totalPage = Math.ceil((replyCount as number) / COMMENT_REPLY_PAGE);
 
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
-
-  if (error) {
-    return <div>오류가 발생했습니다. 다시 시도해 주세요.</div>;
-  }
-
   // MDeditor
   const changeReplyRetouch = (value?: string) => {
     setReplyRetouch(value!);

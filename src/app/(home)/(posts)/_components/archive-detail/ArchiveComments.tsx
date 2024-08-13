@@ -141,7 +141,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   }, [inView]);
 
   if (isPending) {
-    return <div>로딩..</div>;
+    return <div></div>;
   }
   const handleInputReplyToggle = (id: string, count: number) => {
     if (!me) {

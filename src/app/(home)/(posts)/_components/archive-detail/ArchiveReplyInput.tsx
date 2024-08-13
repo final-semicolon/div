@@ -14,7 +14,7 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
   const { me, userData } = useAuth();
   const params = useParams();
   const queryClient = useQueryClient();
-  const [reply, setReply] = useState(''); //
+  const [reply, setReply] = useState('');
   const [showModal, setShowModal] = useState(false);
 
   const handleReply = useMutation({
@@ -37,7 +37,6 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
     }
   });
 
-  //
   const changeReply = (value?: string) => {
     setReply(value ?? '');
   };

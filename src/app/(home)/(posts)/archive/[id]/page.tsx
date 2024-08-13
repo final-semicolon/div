@@ -1,7 +1,7 @@
+import BackClick from '@/components/common/BackClick';
 import ArchiveComments from '../../_components/archive-detail/ArchiveComments';
 import ArchiveDetailPost from '../../_components/archive-detail/ArchiveDetailPost';
 import ArchiveInputComments from '../../_components/archive-detail/ArchiveInputComment';
-import BackClick from '../../_components/archive-detail/BackClick';
 import ScrollToTopButton from '../../_components/forum/ScrollToTopButton';
 
 const ArchiveDetailPage = async ({ params }: { params: { id: string } }) => {
