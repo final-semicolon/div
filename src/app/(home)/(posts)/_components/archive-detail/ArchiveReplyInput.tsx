@@ -26,14 +26,14 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
           'Content-Type': 'application/json'
         }
       });
-      if (!response.ok) {
-        throw new Error('Failed to submit reply');
-      }
-      return response.json();
+      const data = await response.json();
+      console.log(data);
+
+      return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['commentReply'] });
-      queryClient.invalidateQueries({ queryKey: ['archiveCommentReply'] });
+      queryClient.invalidateQueries({ queryKey: ['commentReply', comment_id] });
+      queryClient.invalidateQueries({ queryKey: ['archiveComment'] });
     }
   });
 
@@ -79,6 +79,7 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
 
   return (
     <div className="border-l-4 border-[#C7DCF5] border-b-[1px] p-6">
+      <p>댓글 {count}</p>
       <div className="flex justify-center items-center gap-6">
         <Image
           src={userData?.profile_image ?? ''}

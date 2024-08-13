@@ -22,7 +22,6 @@ function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isCapsLockOn, setIsCapsLockOn] = useState<boolean>(false);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const {
     register,
@@ -37,15 +36,9 @@ function LoginForm() {
   const email = watch('email');
   const password = watch('password');
 
-  const handleCapsLock = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.getModifierState && event.getModifierState('CapsLock')) {
-      setIsCapsLockOn(true);
-    } else {
-      setIsCapsLockOn(false);
-    }
-  };
+  const handleKeyEvents = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    setIsCapsLockOn(event.getModifierState && event.getModifierState('CapsLock'));
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === ' ') {
       event.preventDefault();
     }
@@ -57,7 +50,6 @@ function LoginForm() {
     const isValid = await trigger();
     if (!isValid) {
       const firstErrorKey = Object.keys(errors)[0];
-      setFocusedField(firstErrorKey);
       setFocus(firstErrorKey as keyof LoginFormInputs);
       return;
     }
@@ -103,6 +95,11 @@ function LoginForm() {
     }
   };
 
+  const inputClassName = (field: string, value: string, error: any) =>
+    `mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
+      error ? 'border-red' : value ? 'border-main-400' : 'border-gray-900'
+    }`;
+
   return (
     <div className="flex items-center justify-center min-h-full">
       <div className="bg-white w-full max-w-sm">
@@ -117,13 +114,7 @@ function LoginForm() {
         {error && <p className="text-red mb-4">{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4 relative">
-            <label
-              className={`block subtitle2-bold-16px ${
-                errors.email ? 'text-red' : focusedField === 'email' ? 'text-main-400' : 'text-gray-900'
-              }`}
-            >
-              이메일
-            </label>
+            <label className={`block subtitle2-bold-16px ${errors.email ? 'text-red' : 'text-gray-900'}`}>이메일</label>
             <div className="relative">
               <input
                 type="email"
@@ -135,18 +126,10 @@ function LoginForm() {
                     message: '유효한 이메일 주소를 입력해주세요.'
                   }
                 })}
-                className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
-                  errors.email
-                    ? 'border-red'
-                    : focusedField === 'email' || email
-                      ? 'border-main-400'
-                      : 'border-gray-900'
-                }`}
-                onFocus={() => setFocusedField('email')}
-                onBlur={() => setFocusedField(null)}
-                onKeyDown={handleKeyDown}
+                className={inputClassName('email', email, errors.email)}
+                onKeyDown={handleKeyEvents}
               />
-              {(email || focusedField === 'email') && (
+              {email && (
                 <button
                   type="button"
                   onMouseDown={() => setValue('email', '')}
@@ -158,11 +141,7 @@ function LoginForm() {
             </div>
           </div>
           <div className="mb-4 relative">
-            <label
-              className={`block subtitle2-bold-16px ${
-                errors.password ? 'text-red' : focusedField === 'password' ? 'text-main-400' : 'text-gray-900'
-              }`}
-            >
+            <label className={`block subtitle2-bold-16px ${errors.password ? 'text-red' : 'text-gray-900'}`}>
               비밀번호
             </label>
             <div className="relative">
@@ -176,20 +155,10 @@ function LoginForm() {
                     message: '비밀번호는 영문, 숫자, 특수문자를 포함한 10자 이상이어야 합니다.'
                   }
                 })}
-                className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
-                  errors.password
-                    ? 'border-red'
-                    : focusedField === 'password' || password
-                      ? 'border-main-400'
-                      : 'border-gray-900'
-                }`}
-                onFocus={() => setFocusedField('password')}
-                onBlur={() => setFocusedField(null)}
-                onKeyDown={handleCapsLock}
-                onKeyUp={handleCapsLock}
-                onKeyDownCapture={handleKeyDown}
+                className={inputClassName('password', password, errors.password)}
+                onKeyDown={handleKeyEvents}
               />
-              {(password || focusedField === 'password') && (
+              {password && (
                 <button
                   type="button"
                   onMouseDown={() => setValue('password', '')}
