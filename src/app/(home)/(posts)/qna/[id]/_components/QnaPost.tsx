@@ -44,7 +44,7 @@ const QnaPost = ({ data }: QnaPostProps) => {
         <PostingQnaAnswer content={content} setContent={setContent} setQnaCommentsCount={setQnaCommentsCount} />
       ) : null}
       <QnaAnswers
-        qnaCommentsCount={qnaCommentsCount}
+        qnaCommentsCount={data.qna_comments[0].count}
         questioner={data.user_id}
         setQnaCommentsCount={setQnaCommentsCount}
       />

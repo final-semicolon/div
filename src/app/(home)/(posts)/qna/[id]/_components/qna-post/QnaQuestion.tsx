@@ -76,7 +76,9 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
             {replyCount !== 0 && openQuestionReply ? (
               <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>
             ) : replyCount !== 0 ? (
-              <div className="text-main-400 text-subtitle1 font-medium">{replyCount}개의 댓글</div>
+              <div className="text-main-400 text-subtitle1 font-medium">
+                {questionData?.qna_post_reply[0].count}개의 댓글
+              </div>
             ) : openQuestionReply ? (
               <div className="text-main-400 text-subtitle1 font-medium">댓글 쓰기</div>
             ) : (
@@ -85,7 +87,7 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
           </button>
         </div>
       </div>
-      {openQuestionReply ? <QuestionReplies postReplyCount={replyCount} setReplyCount={setReplyCount} /> : null}
+      {openQuestionReply ? <QuestionReplies postReplyCount={questionData?.qna_post_reply[0].count} /> : null}
     </div>
   );
 };
