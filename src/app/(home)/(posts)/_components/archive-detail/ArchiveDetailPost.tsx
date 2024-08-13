@@ -51,6 +51,7 @@ const ArchiveDetailPost = () => {
   };
 
   if (!archiveDetail) return <div>Loading...</div>;
+  console.log(archiveDetail.tags);
 
   return (
     <div className="flex flex-col gap-4">
