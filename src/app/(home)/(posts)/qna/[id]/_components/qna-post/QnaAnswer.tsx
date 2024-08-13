@@ -6,7 +6,6 @@ import Share from '@/assets/images/common/Share';
 import AnswerReplies from '../qna-comments/AnswerReplies';
 import LikeButton from '@/components/common/LikeButton';
 import { useAuth } from '@/context/auth.context';
-import AnswerKebobBtn from '../kebob-btn/AnswerKebobBtn';
 import { timeForToday } from '@/utils/timeForToday';
 import BookmarkButton from '@/components/common/BookmarkButton';
 import CustomMDEditor from '@/components/common/CustomMDEditor';
@@ -33,6 +32,7 @@ import {
   POST_EDIT_CANCLE_CONFIRM_TEXT,
   SELECT_ANSWER_CONFIRM_TEXT
 } from '@/constants/confirmModal';
+import KebobBtn from '../kebob-btn/KebobBtn';
 
 type QnaAnswerProps = {
   qnaComment: TqnaCommentsWithReplyCount;
@@ -48,7 +48,6 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
   const [openAnswerReply, setOpenAnswerReply] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [content, setContent] = useState(qnaComment.comment);
-  const [replyCount, setReplyCount] = useState<number>(qnaComment?.qna_reply[0].count);
   const [tagList, setTagList] = useState<Array<Ttag>>(TAG_LIST);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isCancleModalOpen, setIsCancleModalOpen] = useState<boolean>(false);
@@ -199,12 +198,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
           </div>
           <div className="ml-auto">
             {me?.id === qnaComment.user_id ? (
-              <AnswerKebobBtn
-                commentId={qnaComment.id}
-                isEdit={isEdit}
-                setIsEdit={setIsEdit}
-                setQnaCommentsCount={setQnaCommentsCount}
-              />
+              <KebobBtn commentId={qnaComment.id} setIsEdit={setIsEdit} category="answer" />
             ) : (
               ''
             )}
@@ -284,10 +278,10 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
             <Share />
           </button>
           <button className="flex gap-1" onClick={handleReplyClick}>
-            {replyCount !== 0 && openAnswerReply ? (
+            {qnaComment?.qna_reply[0].count !== 0 && openAnswerReply ? (
               <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>
-            ) : replyCount !== 0 ? (
-              <div className="text-main-400 text-subtitle1 font-medium">{replyCount}개의 댓글</div>
+            ) : qnaComment?.qna_reply[0].count !== 0 ? (
+              <div className="text-main-400 text-subtitle1 font-medium">{qnaComment?.qna_reply[0].count}개의 댓글</div>
             ) : openAnswerReply ? (
               <div className="text-main-400 text-subtitle1 font-medium">댓글 쓰기</div>
             ) : (
@@ -312,9 +306,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
           </button>
         ) : null}
       </div>
-      {openAnswerReply ? (
-        <AnswerReplies commentId={qnaComment.id} replyCount={replyCount} setReplyCount={setReplyCount} />
-      ) : null}
+      {openAnswerReply ? <AnswerReplies commentId={qnaComment.id} replyCount={qnaComment?.qna_reply[0].count} /> : null}
     </div>
   );
 };

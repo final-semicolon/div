@@ -2,17 +2,16 @@ import { Treply } from '@/types/posts/qnaDetailTypes';
 import NotFound from '@/app/not-found';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Loading from '@/app/(home)/loading';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import AnswerReplyForm from './AnswerReplyForm';
 import AnswerReply from './AnswerReply';
 
 type AnswerCommentsProps = {
   commentId: string;
   replyCount: number;
-  setReplyCount: Dispatch<SetStateAction<number>>;
 };
 
-const AnswerReplies = ({ commentId, replyCount, setReplyCount }: AnswerCommentsProps) => {
+const AnswerReplies = ({ commentId, replyCount }: AnswerCommentsProps) => {
   const pageParamList = [];
   for (let i = 0; replyCount - i * 5 > 0; i++) {
     pageParamList.push(i + 1);
@@ -63,9 +62,9 @@ const AnswerReplies = ({ commentId, replyCount, setReplyCount }: AnswerCommentsP
 
   return (
     <div>
-      <AnswerReplyForm commentId={commentId} setReplyCount={setReplyCount} />
+      <AnswerReplyForm commentId={commentId} />
       {qnaReplyList?.pages[page].map((reply: Treply) => {
-        return <AnswerReply key={reply.id} reply={reply} setReplyCount={setReplyCount} />;
+        return <AnswerReply key={reply.id} reply={reply} />;
       })}
       <div className=" flex pt-6 gap-4 w-full justify-end">
         {pageParamList.map((pageParam) => {
