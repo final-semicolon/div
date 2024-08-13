@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -102,29 +102,6 @@ function LoginForm() {
       toast.error('OAuth 로그인 중 에러가 발생했습니다.');
     }
   };
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.getModifierState('CapsLock')) {
-        setIsCapsLockOn(true);
-      } else {
-        setIsCapsLockOn(false);
-      }
-    };
-
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (!event.getModifierState('CapsLock')) {
-        setIsCapsLockOn(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-full">
@@ -235,13 +212,8 @@ function LoginForm() {
         </form>
         <div className="mt-4 text-center">
           <p className="mt-4 text-center">
-            <span className="mr-4">
-              <Link className="body2-medium-16px" href="/signup">
-                비밀번호 재설정
-              </Link>
-            </span>
             <span>
-              <Link className="body2-medium-16px" href="/signup">
+              <Link className="body2-medium-16px text-gray-900" href="/signup">
                 회원가입
               </Link>
             </span>
