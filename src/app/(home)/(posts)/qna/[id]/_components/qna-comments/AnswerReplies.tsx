@@ -3,8 +3,8 @@ import NotFound from '@/app/not-found';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Loading from '@/app/(home)/loading';
 import { useState } from 'react';
-import AnswerReplyForm from './AnswerReplyForm';
 import AnswerReply from './AnswerReply';
+import ReplyForm from './ReplyForm';
 
 type AnswerCommentsProps = {
   commentId: string;
@@ -62,7 +62,7 @@ const AnswerReplies = ({ commentId, replyCount }: AnswerCommentsProps) => {
 
   return (
     <div>
-      <AnswerReplyForm commentId={commentId} />
+      <ReplyForm commentId={commentId} />
       {qnaReplyList?.pages[page].map((reply: Treply) => {
         return <AnswerReply key={reply.id} reply={reply} />;
       })}

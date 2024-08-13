@@ -3,9 +3,9 @@ import NotFound from '@/app/not-found';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Loading from '@/app/(home)/loading';
 import { TpostReply } from '@/types/posts/qnaDetailTypes';
-import QuestionReplyForm from './QuestionReplyForm';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import QuestionReply from './QuestionReply';
+import ReplyForm from './ReplyForm';
 
 type AnswerCommentsProps = {
   postReplyCount: number;
@@ -72,7 +72,7 @@ const QuestionReplies = ({ postReplyCount }: AnswerCommentsProps) => {
 
   return (
     <div>
-      <QuestionReplyForm />
+      <ReplyForm />
       {qnaReplyList?.pages[page].map((reply: TpostReply) => {
         return <QuestionReply key={reply.id} reply={reply} />;
       })}
