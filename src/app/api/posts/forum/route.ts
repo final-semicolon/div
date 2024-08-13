@@ -15,10 +15,18 @@ const getForumPosts = async (req: NextRequest) => {
   } = await supabase
     .from('forum_posts')
     .select(
-      `*, forum_like: forum_likes(count), forum_comment:forum_comments(count), forum_tags(*), forum_images(*), user:users(*)`
+      `*, 
+      forum_like_count: forum_likes(count),
+      forum_like : forum_likes(user_id),
+      forum_comment:forum_comments(count), 
+      forum_bookmark: forum_bookmarks(user_id), 
+      forum_tags(*), 
+      forum_images(*), 
+      user:users(*)`
     )
-    .order('updated_at', { ascending: false })
+    .order('created_at', { ascending: false })
     .range(page * limit, (page + 1) * limit - 1);
+
   if (error) {
     // console.error('Forum Posts API Error', error);
   }
