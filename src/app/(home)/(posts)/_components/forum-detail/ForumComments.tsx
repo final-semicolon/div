@@ -21,6 +21,7 @@ import { cutText, filterSlang } from '@/utils/markdownCut';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { useLoginAlertStore } from '@/store/loginAlertModal';
 import LoginAlertModal from '@/components/modal/LoginAlertModal';
+import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 
 const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -36,7 +37,9 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const [retouchConfirmModal, setRetouchConfirmModal] = useState<boolean>(false);
   const [commentLength, setCommentLength] = useState<boolean>(false);
   const { isOpen, loginAlertModal } = useLoginAlertStore();
+
   const COMMENT_PAGE = 5;
+
   //댓글 수정
   const commentRetouch = useMutation({
     mutationFn: async ({ id, user_id, mdEditorChange }: commentRetouch) => {
@@ -47,13 +50,14 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['forumComments'] });
+      setEditingState({ Boolean: false });
+      toast.success(COMMENT_EDIT_ALERT_TEXT);
     }
   });
+
   // 수정 이벤트 버튼
   const commentRetouchHandle = async (id: string, user_id: string) => {
     commentRetouch.mutate({ id, user_id, mdEditorChange });
-    setEditingState({ Boolean: false });
-    toast.success('댓글이 수정 되었습니다.', { autoClose: 1500 });
   };
 
   // 댓글 삭제
@@ -67,11 +71,12 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['forumComments'] });
       revalidatePostTag(`forum-detail-${param.id}`);
+      toast.success(COMMENT_DELETE_ALRERT_TEXT);
     }
   });
+
   // 삭제 이벤트 버튼
   const handleDelete = async (id: string, user_id: string) => {
-    toast.success('댓글이 삭제되었습니다.', { autoClose: 1500 });
     commentDelete.mutate({ id, user_id });
   };
 

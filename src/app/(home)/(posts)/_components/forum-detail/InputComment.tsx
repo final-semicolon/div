@@ -1,5 +1,6 @@
 'use client';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
+import { COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
 import { useAuth } from '@/context/auth.context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import MDEditor, { commands } from '@uiw/react-md-editor';
@@ -54,7 +55,7 @@ const InputComments = () => {
       return;
     }
 
-    toast.success('댓글이 입력되었습니다.', { autoClose: 1500 });
+    toast.success(COMMENT_POST_ALERT_TEXT, { autoClose: 1500 });
     handleComment.mutate(forumComment);
   };
 

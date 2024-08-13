@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import ReplyPageButton from './ReplyPageButton';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import { cutText, filterSlang } from '@/utils/markdownCut';
+import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 
 const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_user_id: string }) => {
   const { me } = useAuth();
@@ -41,6 +42,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['commentReply', comment_id] });
+      toast.success(COMMENT_EDIT_ALERT_TEXT);
     }
   });
 
@@ -67,6 +69,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['commentReply'] });
       queryClient.invalidateQueries({ queryKey: ['forumComments'] });
+      toast.success(COMMENT_DELETE_ALRERT_TEXT);
     }
   });
 
@@ -183,19 +186,20 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
                 </div>
               </div>
               {replyEditor[reply.id] ? (
-                <div data-color-mode="light">
-                  <MDEditor
-                    value={replyRetouch}
-                    onChange={changReplyRetouch}
-                    preview="edit"
-                    extraCommands={commands.getCommands().filter(() => false)}
-                    commands={commands.getCommands().filter((command) => {
-                      return command.name !== 'image';
-                    })}
-                    textareaProps={{ maxLength: 1000 }}
-                    height={'auto'}
-                  />
-
+                <>
+                  <div className="border border-neutral-100  rounded-[12px] bg-white ">
+                    <MDEditor
+                      value={replyRetouch}
+                      onChange={changReplyRetouch}
+                      preview="edit"
+                      extraCommands={commands.getCommands().filter(() => false)}
+                      commands={commands.getCommands().filter((command) => {
+                        return command.name !== 'image';
+                      })}
+                      textareaProps={{ maxLength: 1000 }}
+                      height={'auto'}
+                    />
+                  </div>
                   <div className="flex justify-end items-end mt-4 gap-6">
                     <button
                       onClick={() => setReplyEditor({ [reply.id]: false })}
@@ -218,7 +222,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
                       />
                     )}
                   </div>
-                </div>
+                </>
               ) : (
                 <div className="flex flex-col  gap-4">
                   {replyLength ? (
