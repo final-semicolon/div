@@ -9,13 +9,8 @@ import { TAG_LIST } from '@/constants/tags';
 import SelectTagInput from '@/components/common/SelectTagInput';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import Chip from '@/components/common/Chip';
-import { POST_ALERT_TEXT, QNA_ANSWER_ALERT_TEXT, QNA_ANSWER_CANCLE_ALRERT_TEXT } from '@/constants/alert';
-import {
-  ANSWER_APPROVE_CONFIRM_TEXT,
-  ANSWER_CANCLE_CONFIRM_TEXT,
-  POST_APPROVE_CONFIRM_TEXT,
-  POST_CANCLE_CONFIRM_TEXT
-} from '@/constants/confirmModal';
+import { QNA_ANSWER_ALERT_TEXT, QNA_ANSWER_CANCLE_ALRERT_TEXT } from '@/constants/alert';
+import { POST_APPROVE_CONFIRM_TEXT, POST_CANCLE_CONFIRM_TEXT } from '@/constants/confirmModal';
 
 type PostingAnswerAreaProps = {
   content: string;

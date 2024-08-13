@@ -5,27 +5,45 @@ import { POST_DELETE_ALERT_TEXT } from '@/constants/alert';
 import { EDIT_MOVE_CONFIRM_TEXT, POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useRouter } from 'next/navigation';
-import { MouseEventHandler, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const QuestionKebobBtn = () => {
+  const { postId } = useQnaDetailStore();
   const router = useRouter();
   const [openKebab, setOpenKebab] = useState<boolean>(false);
-  const { postId } = useQnaDetailStore();
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
-  const handleDeleteClick: MouseEventHandler = () => {
+  const handleKebobClick = (): void => {
+    setOpenKebab((prev) => !prev);
+  };
+  const handleDeleteClick = (): void => {
     setIsDeleteModalOpen(true);
   };
+  const handleEditClick = (): void => {
+    setIsEditModalOpen(true);
+  };
 
-  const deletePost = async () => {
+  const closeEditModal = (): void => {
+    setIsEditModalOpen(false);
+  };
+  const closeDeleteModal = (): void => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const moveEditPage = (): void => {
+    router.push(`/edit/${postId}/?category=qna`);
+  };
+
+  const deletePost = async (): Promise<void> => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/${postId}`, {
       method: 'DELETE'
     });
     const { data, message } = await response.json();
     if (message) {
-      return toast.error(message);
+      toast.error(message);
+      return;
     }
     await revalidatePostTag(`qna-detail-${postId}`);
     toast.success(POST_DELETE_ALERT_TEXT);
@@ -36,11 +54,7 @@ const QuestionKebobBtn = () => {
   return (
     <>
       <div className=" relative">
-        <button
-          onClick={() => {
-            setOpenKebab((prev) => !prev);
-          }}
-        >
+        <button onClick={handleKebobClick}>
           <KebabButton />
         </button>
 
@@ -49,26 +63,20 @@ const QuestionKebobBtn = () => {
         >
           <ConfirmModal
             isOpen={isEditModalOpen}
-            onClose={() => {
-              setIsEditModalOpen(false);
-            }}
-            onConfirm={() => {
-              router.push(`/edit/${postId}/?category=qna`);
-            }}
+            onClose={closeEditModal}
+            onConfirm={moveEditPage}
             message={EDIT_MOVE_CONFIRM_TEXT}
           />
           <li
             className={` content-center ${openKebab ? '' : 'hidden'} box-content px-4 py-[10px] w-[73px] h-6  hover:bg-main-100 hover:text-main-400 rounded-t-lg cursor-pointer`}
-            onClick={() => setIsEditModalOpen(true)}
+            onClick={handleEditClick}
           >
             게시글 수정
           </li>
 
           <ConfirmModal
             isOpen={isDeleteModalOpen}
-            onClose={() => {
-              setIsDeleteModalOpen(false);
-            }}
+            onClose={closeDeleteModal}
             onConfirm={deletePost}
             message={POST_DELETE_CONFIRM_TEXT}
           />
