@@ -4,8 +4,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import Loading from '@/app/(home)/loading';
 import { TpostReply } from '@/types/posts/qnaDetailTypes';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
-import QuestionReply from './QuestionReply';
 import ReplyForm from './ReplyForm';
+import Reply from './Reply';
 
 type AnswerCommentsProps = {
   postReplyCount: number;
@@ -58,7 +58,7 @@ const QuestionReplies = ({ postReplyCount }: AnswerCommentsProps) => {
   if (isError) {
     return <NotFound />;
   }
-  //배열 5개씩 자르기 //한번에 4로 갔을 때 pageParam이 3이고
+
   const handleBtnClick = async (pageParam: number) => {
     if (page < pageParam && !qnaReplyList?.pageParams.includes(pageParam)) {
       for (let i = page; i < pageParam; i++) {
@@ -74,7 +74,7 @@ const QuestionReplies = ({ postReplyCount }: AnswerCommentsProps) => {
     <div>
       <ReplyForm />
       {qnaReplyList?.pages[page].map((reply: TpostReply) => {
-        return <QuestionReply key={reply.id} reply={reply} />;
+        return <Reply key={reply.id} reply={reply} />;
       })}
       <div className=" flex pt-6 gap-4 w-full justify-end">
         {pageParamList.map((pageParam) => {

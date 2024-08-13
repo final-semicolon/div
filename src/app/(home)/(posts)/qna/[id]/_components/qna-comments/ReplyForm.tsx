@@ -5,7 +5,7 @@ import { COMMENT_CANCLE_CONFIRM_TEXT } from '@/constants/confirmModal';
 import { useAuth } from '@/context/auth.context';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import Image from 'next/image';
-import useReplyForm from '../../_hooks/useReplyForm';
+import useReplyForm from '../../_hooks/reply/useReplyForm';
 
 type ReplyFormProps = {
   commentId?: string;

@@ -1,7 +1,7 @@
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useState } from 'react';
 import { InvalidateQueryFilters } from '@tanstack/react-query';
-import useAddMutation from './useAddMutation';
+import useAddMutation from './useAddReplyMutation';
 
 type useReplyFormProps = {
   commentId?: string;
@@ -21,9 +21,9 @@ const useReplyForm = ({ commentId, userId, replyType }: useReplyFormProps) => {
   };
 
   const path = addMutationObj[`${replyType}`].path;
-  const querykey = addMutationObj[`${replyType}`].queryKey;
+  const queryKey = addMutationObj[`${replyType}`].queryKey;
 
-  const { postingReply } = useAddMutation({ content, path, querykey, commentId, userId, postId });
+  const { postingReply } = useAddMutation({ content, path, queryKey, commentId, userId, postId });
 
   const handleChangeContent = (value?: string) => {
     setContent(value!);

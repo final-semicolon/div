@@ -36,7 +36,7 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaComment
 
   const postingAnswer = async (): Promise<void> => {
     if (!me?.id) return;
-    await addMutate({ user_id: me.id, content, tags: tagList.filter((tag) => tag.selected) });
+    addMutate({ user_id: me.id, content, tags: tagList.filter((tag) => tag.selected) });
     toast.success(QNA_ANSWER_ALERT_TEXT);
     setQnaCommentsCount((prev) => prev + 1);
     await revalidatePostTag(`qna-detail-${postId}`);
