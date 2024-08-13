@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import NotFound from '@/app/not-found';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Loading from '@/app/(home)/loading';
@@ -9,10 +9,9 @@ import QuestionReply from './QuestionReply';
 
 type AnswerCommentsProps = {
   postReplyCount: number;
-  setReplyCount: Dispatch<SetStateAction<number>>;
 };
 
-const QuestionReplies = ({ postReplyCount, setReplyCount }: AnswerCommentsProps) => {
+const QuestionReplies = ({ postReplyCount }: AnswerCommentsProps) => {
   const { postId } = useQnaDetailStore();
   const pageParamList = [];
   for (let i = 0; postReplyCount - i * 5 > 0; i++) {
@@ -73,9 +72,9 @@ const QuestionReplies = ({ postReplyCount, setReplyCount }: AnswerCommentsProps)
 
   return (
     <div>
-      <QuestionReplyForm setReplyCount={setReplyCount} />
+      <QuestionReplyForm />
       {qnaReplyList?.pages[page].map((reply: TpostReply) => {
-        return <QuestionReply key={reply.id} reply={reply} setReplyCount={setReplyCount} />;
+        return <QuestionReply key={reply.id} reply={reply} />;
       })}
       <div className=" flex pt-6 gap-4 w-full justify-end">
         {pageParamList.map((pageParam) => {

@@ -180,7 +180,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                             </div>
                           )}
                           {editingToggleState[comment.id] && (
-                            <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center border-main-400 bg-white shadow-lg border rounded-lg">
+                            <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center border-main-400 bg-white shadow-lg border rounded-lg z-50">
                               <button
                                 className="h-[44px]  w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
                                 onClick={() => toggleEditing(comment.id, comment.comment)}
@@ -209,18 +209,20 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                   </div>
                 </div>
                 {editingState[comment.id] ? (
-                  <div className=" flex flex-col " data-color-mode="light">
-                    <MDEditor
-                      value={mdEditorChange}
-                      onChange={changEditor}
-                      preview="edit"
-                      extraCommands={commands.getCommands().filter(() => false)}
-                      commands={commands.getCommands().filter((command) => {
-                        return command.name !== 'image';
-                      })}
-                      textareaProps={{ maxLength: 1000 }}
-                      height={'auto'}
-                    />
+                  <div className=" flex flex-col  ">
+                    <div className="border border-neutral-100  rounded-[12px] bg-white ">
+                      <MDEditor
+                        value={mdEditorChange}
+                        onChange={changEditor}
+                        preview="edit"
+                        extraCommands={commands.getCommands().filter(() => false)}
+                        commands={commands.getCommands().filter((command) => {
+                          return command.name !== 'image';
+                        })}
+                        textareaProps={{ maxLength: 1000 }}
+                        height={'auto'}
+                      />
+                    </div>
                     <div className="flex justify-end items-end mt-4 gap-6">
                       <button
                         onClick={() => toggleEditing(comment.id, comment.user_id)}
@@ -251,7 +253,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                 ) : (
                   <div>
                     <p className="text-body1 font-regular whitespace-pre-wrap break-words">
-                      {cutText(filterSlang(comment.comment), 370)}
+                      <MDEditor.Markdown source={cutText(filterSlang(comment.comment), 370)} />
                     </p>
                     {comment.comment.length >= 370 && (
                       <button

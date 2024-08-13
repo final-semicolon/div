@@ -18,7 +18,7 @@ type MyPostsListProps = {
 };
 
 const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, selectedType }: MyPostsListProps) => {
-  const { userData } = useAuth();
+  const { me, userData } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState<Map<string, { category: string; type: string }>>(new Map());
   const [combinedItems, setCombinedItems] = useState<MyCombinedItem[]>([]);
@@ -52,6 +52,8 @@ const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, 
   } = useMyComments();
 
   useEffect(() => {
+    if (me === null || !me.id) return;
+
     if (!postLoading && !commentLoading && posts && comments) {
       const combined = myCombineItems(posts, comments);
       combined.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
