@@ -10,7 +10,9 @@ const SearchBar = () => {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
   const [filteredTags, setFilteredTags] = useState<string[]>([]);
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
 
   useEffect(() => {
     if (keyword.startsWith('#')) {
@@ -23,6 +25,21 @@ const SearchBar = () => {
     }
   }, [keyword]);
 
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('searchHistory');
+    if (savedHistory) {
+      setSearchHistory(JSON.parse(savedHistory));
+    }
+  }, []);
+
+  const saveSearchHistory = (newKeyword: string) => {
+    setSearchHistory((prevHistory) => {
+      const updatedHistory = [newKeyword, ...prevHistory.filter((item) => item !== newKeyword)].slice(0, 10);
+      localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
+      return updatedHistory;
+    });
+  };
+
   const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (keyword === '') return;
@@ -32,6 +49,12 @@ const SearchBar = () => {
         });
         return;
       }
+
+      setShowSuggestions(false);
+      setIsFocused(false);
+
+      saveSearchHistory(keyword);
+
       if (keyword.startsWith('#')) {
         router.push(`/search?searchType=tag&keyword=${keyword.slice(1)}`);
       } else {
@@ -51,6 +74,15 @@ const SearchBar = () => {
     setKeyword('');
   };
 
+  const handleHistoryClick = (item: string) => {
+    setKeyword(item);
+    if (item.startsWith('#')) {
+      router.push(`/search?searchType=tag&keyword=${item.slice(1)}`);
+    } else {
+      router.push(`/search?searchType=title&keyword=${item}`);
+    }
+  };
+
   return (
     <div className="relative flex flex-col items-center text-neutral-400">
       <div className="flex items-center border border-neutral-200 rounded-md w-[318px] h-[56px]">
@@ -62,6 +94,8 @@ const SearchBar = () => {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={handleSearch}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             className="mx-2 pr-4 w-[222px] font-bold focus:outline-none bg-transparent"
           />
           {!keyword || (
@@ -71,11 +105,20 @@ const SearchBar = () => {
           )}
         </div>
       </div>
+      {isFocused && !showSuggestions && (
+        <ul className="search-toggle-list">
+          {searchHistory.map((item, index) => (
+            <li key={index} className="search-toggle-item" onClick={() => handleHistoryClick(item)}>
+              {item}
+            </li>
+          ))}
+        </ul>
+      )}
       {showSuggestions && filteredTags.length > 0 && (
-        <ul className="absolute top-[40px] z-[1000] max-h-52 mt-1 w-64 border border-neutral-200 bg-transparent rounded-md shadow-lg overflow-y-auto">
+        <ul className="search-toggle-list">
           {filteredTags.map((tag, index) => (
-            <li key={index} className="p-2 cursor-pointer hover:bg-main-50" onClick={() => handleTagClick(tag)}>
-              #{tag}
+            <li key={index} className="search-toggle-item" onClick={() => handleTagClick(tag)}>
+              # {tag}
             </li>
           ))}
         </ul>
