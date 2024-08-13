@@ -6,9 +6,22 @@ type ForumTag = Tables['forum_tags']['Row'];
 type ForumImage = Tables['forum_images']['Row'];
 type User = Tables['users']['Row'];
 
+export type ForumLike = {
+  user_id: string;
+};
+
+export type ForumLikeCount = {
+  count: number;
+};
+
+export type ForumComment = {
+  count: number;
+};
+
 export type Post = ForumPost & {
-  forum_like: { count: number }[];
-  forum_comment: { count: number }[];
+  forum_like_count: ForumLikeCount[];
+  forum_like: ForumLike[];
+  forum_comment: ForumComment[];
   forum_tags: ForumTag[];
   forum_images: ForumImage[];
   user: User;

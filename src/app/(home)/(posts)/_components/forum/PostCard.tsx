@@ -1,10 +1,10 @@
+'use client';
+
 import CommentBubble from '@/assets/images/common/CommentBubble';
 import Dot from '@/assets/images/common/Dot';
 import Share from '@/assets/images/common/Share';
 import BookmarkButton from '@/components/common/BookmarkButton';
-import LikeButton from '@/components/common/LikeButton';
-import { cutText, filterSlang, markdownCutText, markdownFilterSlang } from '@/utils/markdownCut';
-import TagBlock from '@/components/common/TagBlock';
+import { filterSlang, markdownCutText, markdownFilterSlang } from '@/utils/markdownCut';
 import { PostCardProps } from '@/types/posts/forumTypes';
 import { timeForToday } from '@/utils/timeForToday';
 import MDEditor from '@uiw/react-md-editor';
@@ -12,13 +12,59 @@ import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { handleLinkCopy } from '@/utils/handleLinkCopy';
+import { useCallback, useEffect, useState } from 'react';
+import useDebounce from '@/hooks/common/useDebounce';
+import NewLikeButton from '@/components/common/NewLikeButton';
 
 const removeImageLinks = (markdown: string) => {
   return markdown.replace(/!\[.*?\]\(.*?\)/g, '');
 };
 
-const PostCard = ({ post }: PostCardProps) => {
+const PostCard = ({
+  post,
+  isLiked: initialIsLiked,
+  likeCount: initialLikeCount,
+  onLike,
+  onUnlike
+}: PostCardProps & {
+  isLiked: boolean;
+  likeCount: number;
+  onLike: () => void;
+  onUnlike: () => void;
+}) => {
   const processedContent = removeImageLinks(post.content);
+
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [likeCount, setLikeCount] = useState(initialLikeCount);
+  const [lastAction, setLastAction] = useState<'like' | 'unlike' | null>(null);
+
+  const debouncedLastAction = useDebounce(lastAction, 1000);
+
+  useEffect(() => {
+    if (debouncedLastAction === 'like') {
+      onLike();
+    } else if (debouncedLastAction === 'unlike') {
+      onUnlike();
+    }
+  }, [debouncedLastAction, onLike, onUnlike]);
+
+  useEffect(() => {
+    setIsLiked(initialIsLiked);
+    setLikeCount(initialLikeCount);
+  }, [initialIsLiked, initialLikeCount]);
+
+  const handleLike = useCallback(() => {
+    if (isLiked) {
+      setLikeCount((prevCount) => prevCount - 1);
+      setIsLiked(false);
+      setLastAction('unlike');
+    } else {
+      setLikeCount((prevCount) => prevCount + 1);
+      setIsLiked(true);
+      setLastAction('like');
+    }
+  }, [isLiked]);
+
   return (
     <div className="post-card max-w-[844px] mx-auto p-4 bg-white mb-1 border-b-2 border-b-neutral-50">
       <Link href={`/forum/${post.id}`}>
@@ -83,7 +129,7 @@ const PostCard = ({ post }: PostCardProps) => {
         <div className="post-date mt-1 text-body1 text-neutral-400">{dayjs(post.created_at).format('YYYY-MM-DD')}</div>
         <div className="post-stats mt-2 flex items-center">
           <div className="flex items-center justify-center mr-2">
-            <LikeButton id={post.id} type="forum" />
+            <NewLikeButton isLiked={isLiked} likeCount={likeCount} onClick={handleLike} />
           </div>
           <div className="flex items-center justify-center mr-1">
             <BookmarkButton id={post.id} type="forum" />
