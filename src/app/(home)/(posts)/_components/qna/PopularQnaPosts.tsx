@@ -6,6 +6,10 @@ import useFetchQnaPosts from '@/hooks/qna/useFetchQnaPosts';
 import MDEditor from '@uiw/react-md-editor';
 import Link from 'next/link';
 
+const Loading = () => <div>Loading...</div>;
+
+const Error = ({ message }: { message: string }) => <div>Error: {message}</div>;
+
 const PopularQnaPosts = () => {
   const {
     data: popularPosts,
@@ -18,21 +22,26 @@ const PopularQnaPosts = () => {
   } = useFetchQnaPosts('popular');
 
   if (isPendingPopular) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (isErrorPopular) {
-    return <div>Error: {popularError?.message}</div>;
+    return <Error message={popularError?.message || 'Unknown error occurred'} />;
   }
 
   const pageSize = 6;
   const startIndex = popularPage * pageSize;
-  const endIndex = startIndex + pageSize;
+
+  const buttonClass = (index: number) => {
+    return `w-[33px] h-[32px] flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-2 px-3 py-1 rounded-md ${
+      index === popularPage ? 'bg-main-50 text-main-500' : 'bg-neutral-100 text-neutral-500 border border-neutral-100'
+    }`;
+  };
 
   return (
     <div className="w-[1204px] mx-auto p-4">
       <div className="flex justify-start items-center relative gap-1.5 mb-8">
-        <p className="flex items-center text-h4 font-bold text-left text-neutral-900 ">
+        <p className="flex items-center text-h4 font-bold text-left text-neutral-900">
           인기 QnA
           <div className="ml-1">
             <GradCap />
@@ -44,7 +53,6 @@ const PopularQnaPosts = () => {
           {popularPosts.map((post, index) => (
             <Link key={post.id} href={`/qna/${post.id}`}>
               <li
-                key={post.id}
                 className={`border-t border-b border-neutral-100 p-4 flex flex-col min-h-[158px] ${
                   index % 2 === 0 ? 'border-r' : 'border-l'
                 }`}
@@ -57,7 +65,7 @@ const PopularQnaPosts = () => {
                   <MDEditor.Markdown source={processMarkdown(post.content, 30)} />
                 </div>
                 <div className="mt-auto">
-                  <div className="flex justify-start items-center gap-2 ">
+                  <div className="flex justify-start items-center gap-2">
                     <div className="flex items-center gap-1">
                       <p className="text-body1 text-left text-main-500">좋아요</p>
                       <p className="text-body1 text-left text-main-500">{post.qna_like?.[0]?.count || 0}</p>
@@ -82,17 +90,9 @@ const PopularQnaPosts = () => {
             key={index}
             onClick={() => goToPopularPage(index)}
             disabled={index === popularPage}
-            className={`w-[33px] h-[32px] flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-2 px-3 py-1 rounded-md ${
-              index === popularPage ? 'bg-main-50' : 'bg-neutral-100 border border-neutral-100'
-            }`}
+            className={buttonClass(index)}
           >
-            <p
-              className={`flex-grow-0 flex-shrink-0 text-body1 font-medium text-left ${
-                index === popularPage ? 'text-main-500' : 'text-neutral-500'
-              }`}
-            >
-              {index + 1}
-            </p>
+            <p className="flex-grow-0 flex-shrink-0 text-body1 font-medium text-left">{index + 1}</p>
           </button>
         ))}
       </div>
