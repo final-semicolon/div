@@ -87,15 +87,18 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
           height={48}
           className="rounded-full"
         />
-        <MDEditor
-          value={reply}
-          onChange={changeReply}
-          preview="edit"
-          extraCommands={[]}
-          commands={commands.getCommands().filter((command) => command.name !== 'image')}
-          textareaProps={{ maxLength: 500 }}
-          className="w-full"
-        />
+        <div className="border border-neutral-100 rounded-xl focus-within:border-main-400">
+          <MDEditor
+            value={reply}
+            onChange={changeReply}
+            preview="edit"
+            extraCommands={[]}
+            commands={commands.getCommands().filter((command) => command.name !== 'image')}
+            textareaProps={{ maxLength: 1000, placeholder: '자유롭게 소통해 보세요!' }}
+            height={176}
+            style={{ width: '1092px' }}
+          />
+        </div>
       </div>
       <div className="flex justify-end items-end gap-4 mt-4">
         <button

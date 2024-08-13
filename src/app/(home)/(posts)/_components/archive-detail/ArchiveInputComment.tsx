@@ -1,6 +1,7 @@
 'use client';
 
 import { revalidate } from '@/actions/revalidate';
+import LoginAlertModal from '@/components/modal/LoginAlertModal';
 import { useAuth } from '@/context/auth.context';
 import { userComment } from '@/types/posts/archiveDetailTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -15,7 +16,6 @@ const ArchiveInputComments = () => {
   const { me, userData } = useAuth();
   const queryClient = useQueryClient();
   const [comment, setComment] = useState<string>('');
-  const [showModal, setShowModal] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const handleCommentChange = (value?: string) => {
@@ -63,32 +63,42 @@ const ArchiveInputComments = () => {
   };
 
   return (
-    <div className={`flex ${me ? 'justify-start' : 'justify-center'} items-center  py-6`}>
+    <div className="py-6 w-[1156px] flex flex-col border-y" onClick={me?.id ? () => {} : handleLoginModal}>
+      {isLoginModalOpen ? <LoginAlertModal /> : ''}
       <form className=" w-full" onSubmit={handleSubmit}>
-        <div className=" flex justify-center items-center gap-6" data-color-mode="light">
-          {me && (
-            <Image
-              src={userData?.profile_image ?? ''}
-              alt="user profile image"
-              width={48}
-              height={48}
-              className=" rounded-full"
-            />
-          )}
-          <MDEditor
-            value={comment}
-            onChange={handleCommentChange}
-            preview="edit"
-            extraCommands={commands.getCommands().filter(() => false)}
-            commands={commands.getCommands().filter((command) => {
-              return command.name !== 'image';
-            })}
-            textareaProps={{
-              placeholder: `${me ? '자유롭게 소통해 보세요!' : '로그인 후 자유롭게 소통해 보세요!'}`,
-              maxLength: 1000
-            }}
-            className="w-full "
-          />
+        <div className="flex items-center gap-4 mb-6">
+          {me?.id ? (
+            <div className="relative w-12 h-12">
+              <Image
+                src={userData?.profile_image ?? ''}
+                alt="Profile"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-full"
+              />
+            </div>
+          ) : null}
+          <div className="border border-neutral-100 rounded-xl focus-within:border-main-400">
+            {me?.id ? (
+              <MDEditor
+                value={comment}
+                onChange={handleCommentChange}
+                height={176}
+                style={{ width: '1092px' }}
+                preview="edit"
+                extraCommands={commands.getCommands().filter(() => false)}
+                textareaProps={{ maxLength: 1000, placeholder: '자유롭게 소통해 보세요!' }}
+              />
+            ) : (
+              <MDEditor
+                height={176}
+                style={{ width: '1156px' }}
+                preview="edit"
+                extraCommands={commands.getCommands().filter(() => false)}
+                textareaProps={{ maxLength: 0, placeholder: '로그인 후 자유롭게 소통해 보세요!' }}
+              />
+            )}
+          </div>
         </div>
         {me && (
           <div className=" flex justify-end items-end gap-6 mt-6">

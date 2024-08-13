@@ -221,18 +221,20 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                 </div>
               </div>
               {replyEditor[reply.id] ? (
-                <div>
-                  <MDEditor
-                    value={replyRetouch}
-                    onChange={changeReplyRetouch}
-                    preview="edit"
-                    extraCommands={commands.getCommands().filter(() => false)}
-                    commands={commands.getCommands().filter((command) => {
-                      return command.name !== 'image';
-                    })}
-                    textareaProps={{ maxLength: 1000 }}
-                    height={'auto'}
-                  />
+                <div className="flex flex-col min-h-[200px] mb-6 mx-5 mt-4 gap-4">
+                  <div className="border border-neutral-100 bg-white rounded-xl focus-within:border-main-400">
+                    <MDEditor
+                      value={replyRetouch}
+                      onChange={changeReplyRetouch}
+                      preview="edit"
+                      extraCommands={commands.getCommands().filter(() => false)}
+                      commands={commands.getCommands().filter((command) => {
+                        return command.name !== 'image';
+                      })}
+                      textareaProps={{ maxLength: 1000 }}
+                      height={'auto'}
+                    />
+                  </div>
                   <div className="flex justify-end items-end mt-4 gap-6">
                     <button
                       onClick={() => handleCancelEdit(reply.id)}
