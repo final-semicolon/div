@@ -151,7 +151,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
       </div>
       {comments?.map((data) => (
         <div key={data.id}>
-          {data.data.map((comment) => (
+          {data.data?.map((comment) => (
             <div key={comment.id} className="w-full flex flex-col ">
               <div
                 className={`flex flex-col justify-around border-b-2 gap-4 p-6 ${comment.user_id === me?.id ? 'bg-sub-50' : 'bg-white'}`}

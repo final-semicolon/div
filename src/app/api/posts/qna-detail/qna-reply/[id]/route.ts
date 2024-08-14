@@ -17,6 +17,8 @@ export const GET = async (request: NextRequest, { params }: Tparams) => {
     .order('created_at', { ascending: false })
     .range(page * 5, (page + 1) * 5 - 1);
 
+  console.log(data);
+
   return loadError ? Response.json(POSTING_ERROR_MASSAGE) : Response.json({ data });
 };
 

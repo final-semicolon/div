@@ -4,7 +4,7 @@ import KebabButton from '@/assets/images/common/KebabButton';
 import { useAuth } from '@/context/auth.context';
 import { forumReplyType, replyRetouch } from '@/types/posts/forumDetailTypes';
 import { timeForToday } from '@/utils/timeForToday';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
@@ -18,7 +18,7 @@ import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants
 const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_user_id: string }) => {
   const { me } = useAuth();
   const params = useParams<{ id: string }>();
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const queryClient = useQueryClient();
   const [replyRetouch, setReplyRetouch] = useState<string>('');
   const [replyEditor, setReplyEditor] = useState<{ [key: string]: boolean }>({});
@@ -79,27 +79,25 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
 
   //대댓글 가져오기
   const {
-    fetchNextPage,
     data: reply,
     isPending,
     error
-  } = useInfiniteQuery({
+  } = useQuery({
     queryKey: ['commentReply', comment_id],
-    initialPageParam: 1,
-    queryFn: async ({ pageParam }) => {
-      const response = await fetch(`/api/posts/forum-detail/forum-reply/${comment_id}?page=${pageParam}`);
+    queryFn: async () => {
+      const response = await fetch(`/api/posts/forum-detail/forum-reply/${comment_id}?page=${page}`);
       const data = await response.json();
+      console.log(data);
       return data as Promise<forumReplyType>;
     },
-    getNextPageParam: (lastPage, allPages, lastPageParam) => {
-      const nextPage = lastPageParam + 1;
-      return nextPage <= Math.ceil(allPages[0].count / COMMENT_REPLY_PAGE) ? nextPage : undefined;
-    }
+    gcTime: 5 * 60 * 1000,
+    staleTime: 1 * 60 * 1000,
+    retry: 1
   });
 
-  //reply 페이지 수
-  const replyCount = reply?.pages[0].count;
-  const totalPage = (replyCount as number) / COMMENT_REPLY_PAGE;
+  // //reply 페이지 수
+  // const replyCount = reply?.pages[0].count;
+  // const totalPage = (replyCount as number) / COMMENT_REPLY_PAGE;
 
   if (isPending) {
     return <div>loading...</div>;
@@ -123,7 +121,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
 
   return (
     <div>
-      {reply?.pages[page].reply.map((reply) => (
+      {reply?.reply.map((reply: any) => (
         <div key={reply.id} className="w-full">
           {reply.comment_id === comment_id && (
             <div
@@ -252,13 +250,13 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
           )}
         </div>
       ))}
-      <ReplyPageButton
+      {/* <ReplyPageButton
         page={page}
         setPage={setPage}
         totalPage={totalPage}
         fetchNextPage={fetchNextPage}
         reply={reply}
-      />
+      /> */}
     </div>
   );
 };

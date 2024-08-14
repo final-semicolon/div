@@ -27,15 +27,56 @@ const InputComments = () => {
         body: JSON.stringify({ userComment })
       });
       const result = await response.json();
+      // console.log(result);
+      return result;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['forumComments'] });
+    onSuccess: (data) => {
+      queryClient.setQueryData(['forumComments', params.id], (oldData: any) => {
+        console.log('old', oldData);
+        const dd = oldData.pages.map((page: any) => page.data.flat()).flat();
+        const ee = data;
+        ee.push(...dd);
+        const dataArray = (array: any, size: any) => {
+          const Array = [];
+
+          for (let i = 0; i < array.length; i += size) {
+            const chunk = array.slice(i, i + size);
+            Array.push(chunk);
+          }
+          return Array;
+        };
+
+        const tt = [dataArray(ee, 5)];
+        console.log('new', { ...oldData, pages: [{ data: tt }] });
+        return [{ ...oldData, pages: tt }];
+      });
+
       if (comment) {
         setComment('');
         revalidatePostTag(`forum-detail-${params.id}`);
       }
     }
   });
+
+  // onSuccess: async (data) => {
+  //   await queryClient.invalidateQueries({ queryKey: ['qnaReply', commentId] });
+
+  //   // const replyCount = (
+  //   //   queryClient.getQueryData(['qnaReply', commentId]) as { pages: Treply[]; pageParams: number }
+  //   // ).pages.flat().length as number;
+
+  //   await queryClient.setQueryData(
+  //     ['qnaComments', postId],
+  //     (oldData: { pages: TqnaCommentsWithReplyCount[][]; pageParams: number }) => {
+  //       const newData = oldData.pages.map((page: TqnaCommentsWithReplyCount[]) =>
+  //         page.map((comment) =>
+  //           comment.id === data[0].comment_id
+  //             ? { ...comment, qna_reply: [{ count: comment.qna_reply[0].count + 1 }] }
+  //             : { ...comment }
+  //         )
+  //       );
+  //       return { ...oldData, pages: newData };
+  //     }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,6 +97,7 @@ const InputComments = () => {
     }
 
     toast.success(COMMENT_POST_ALERT_TEXT, { autoClose: 1500 });
+    // console.log(forumComment);
     handleComment.mutate(forumComment);
   };
 

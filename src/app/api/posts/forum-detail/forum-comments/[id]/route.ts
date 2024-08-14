@@ -32,8 +32,11 @@ export const POST = async (request: Request) => {
   const user_id = data.userComment.user_id as string;
   const post_id = data.userComment.post_id as string;
 
-  const { data: comments } = await supabase.from('forum_comments').insert({ comment, user_id, post_id });
-
+  const { data: comments } = await supabase
+    .from('forum_comments')
+    .insert({ comment, user_id, post_id })
+    .select('*, user: users(*), reply: forum_reply(count)');
+  console.log(comments);
   return NextResponse.json(comments);
 };
 
