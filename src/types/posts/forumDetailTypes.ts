@@ -63,10 +63,7 @@ export type forumReplyType = {
   created_at: string;
   comment_id: string;
   updated_at: string;
-  user: string[];
   count: number;
-  pageParams: number[];
-  pages: { count: number; reply: any }[];
 };
 
 export type CommentReply = {

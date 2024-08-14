@@ -4,13 +4,13 @@ import KebabButton from '@/assets/images/common/KebabButton';
 import { useAuth } from '@/context/auth.context';
 import { forumReplyType, replyRetouch } from '@/types/posts/forumDetailTypes';
 import { timeForToday } from '@/utils/timeForToday';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import ReplyPageButton from './ReplyPageButton';
+import ReplyPageButton from '../../../../../components/common/ReplyPageButton';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
@@ -26,9 +26,6 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
   const [replyRetouchModal, setReplyRetouchModal] = useState<boolean>(false);
   const [replyLength, setReplyLength] = useState<boolean>(false);
-
-  //한 페이지 안에 reply 수
-  const COMMENT_REPLY_PAGE = 5;
 
   //대댓글 수정
   const replyRetouchMutation = useMutation({
@@ -68,7 +65,6 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['commentReply'] });
-      queryClient.invalidateQueries({ queryKey: ['forumComments'] });
       toast.success(COMMENT_DELETE_ALRERT_TEXT);
     }
   });
@@ -83,11 +79,10 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
     isPending,
     error
   } = useQuery({
-    queryKey: ['commentReply', comment_id],
+    queryKey: ['commentReply', comment_id, page],
     queryFn: async () => {
       const response = await fetch(`/api/posts/forum-detail/forum-reply/${comment_id}?page=${page}`);
       const data = await response.json();
-      console.log(data);
       return data as Promise<forumReplyType>;
     },
     gcTime: 5 * 60 * 1000,
@@ -95,20 +90,21 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
     retry: 1
   });
 
-  // //reply 페이지 수
-  // const replyCount = reply?.pages[0].count;
-  // const totalPage = (replyCount as number) / COMMENT_REPLY_PAGE;
-
   if (isPending) {
     return <div>loading...</div>;
   }
+
+  //reply 페이지 수
+  const COMMENT_REPLY_PAGE = 5;
+  const replyCount = reply?.count;
+  const totalPage = Math.ceil((replyCount as number) / COMMENT_REPLY_PAGE);
 
   //MDeditor
   const changReplyRetouch = (value?: string) => {
     setReplyRetouch(value!);
   };
 
-  //댓글 수정 버튼
+  //댓글 수정 열기
   const toggleReplyEditing = (id: string, reply: string) => {
     setReplyEditor({ [id]: true });
     setReplyEditorToggle({ [id]: !replyEditorToggle[id] });
@@ -121,7 +117,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
 
   return (
     <div>
-      {reply?.reply.map((reply: any) => (
+      {reply?.reply.map((reply) => (
         <div key={reply.id} className="w-full">
           {reply.comment_id === comment_id && (
             <div
@@ -250,13 +246,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
           )}
         </div>
       ))}
-      {/* <ReplyPageButton
-        page={page}
-        setPage={setPage}
-        totalPage={totalPage}
-        fetchNextPage={fetchNextPage}
-        reply={reply}
-      /> */}
+      <ReplyPageButton page={page} setPage={setPage} totalPage={totalPage} />
     </div>
   );
 };
