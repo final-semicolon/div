@@ -13,7 +13,7 @@ const ScrollToTopButton = dynamic(() => import('../_components/forum/ScrollToTop
 const QnaPage = () => {
   return (
     <>
-      <div className="mb-20 relative rounded-[40px] overflow-hidden ">
+      <div className="mb-20 relative rounded-[40px] overflow-hidden">
         <Image src={qnaBanner} alt="QnA Banner" priority placeholder="blur" width={1204} height={288} loading="eager" />
       </div>
       <div className="mb-[120px]">
