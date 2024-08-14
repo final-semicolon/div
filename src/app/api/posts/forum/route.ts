@@ -1,7 +1,7 @@
 import { createClient } from '@/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 5;
 
 const getForumPosts = async (req: NextRequest) => {
   const searchParams = req.nextUrl.searchParams;
