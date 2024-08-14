@@ -16,9 +16,8 @@ type PostingAnswerAreaProps = {
   content: string;
   setContent: Dispatch<SetStateAction<string>>;
   setToggleAnswer: Dispatch<SetStateAction<boolean>>;
-  setQnaCommentsCount: Dispatch<SetStateAction<number>>;
 };
-const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaCommentsCount }: PostingAnswerAreaProps) => {
+const PostingAnswerArea = ({ content, setContent, setToggleAnswer }: PostingAnswerAreaProps) => {
   const { me } = useAuth();
   const { postId } = useQnaDetailStore();
   const [isCancleModalOpen, setIsCancleModalOpen] = useState<boolean>(false);
@@ -36,9 +35,8 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer, setQnaComment
 
   const postingAnswer = async (): Promise<void> => {
     if (!me?.id) return;
-    await addMutate({ user_id: me.id, content, tags: tagList.filter((tag) => tag.selected) });
+    addMutate({ user_id: me.id, content, tags: tagList.filter((tag) => tag.selected) });
     toast.success(QNA_ANSWER_ALERT_TEXT);
-    setQnaCommentsCount((prev) => prev + 1);
     await revalidatePostTag(`qna-detail-${postId}`);
     return;
   };
