@@ -147,7 +147,6 @@ const config: Config = {
   },
 
   plugins: [
-    require('@tailwindcss/line-clamp'), // 기존 플러그인
     require('tailwindcss-animate') // shadcn 플러그인
   ]
 };

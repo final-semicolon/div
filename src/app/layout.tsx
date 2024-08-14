@@ -10,11 +10,7 @@ export const metadata: Metadata = {
 };
 
 const pretendard = localFont({
-  src: [
-    { path: '../assets/fonts/subset-PretendardVariable-Regular.woff2', weight: '400 500 700' },
-    { path: '../assets/fonts/subset-PretendardVariable-Regular.woff', weight: '400 500 700' },
-    { path: '../assets/fonts/subset-PretendardVariable-Regular.ttf', weight: '400 500 700' }
-  ],
+  src: [{ path: '../assets/fonts/subset-PretendardVariable-Regular.woff2', weight: '400 500 700' }],
   display: 'swap',
   variable: '--font-pretendard'
 });
@@ -26,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="kr">
-      <body className={pretendard.className}>
+      <body className={`${pretendard.variable}`}>
         <Providers>{children}</Providers>
       </body>
     </html>

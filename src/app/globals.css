@@ -64,9 +64,18 @@
 @layer base {
   body {
     /* @apply font-main; */
-    @apply font-pretendard;
+    /* @apply font-pretendard; */
+    font-family: var(--font-pretendard);
   }
 }
+
+/* @font-face {
+  font-family: 'Pretendard';
+  src:
+    url('../assets/fonts/subset-PretendardVariable-Regular.woff2') format('woff2'),
+    url('../assets/fonts/subset-PretendardVariable-Regular.woff') format('woff'),
+    url('../assets/fonts/subset-PretendardVariable-Regular.ttf') format('truetype');
+} */
 
 @import 'swiper/css';
 @import 'swiper/css/navigation';
