@@ -7,7 +7,7 @@ type useEditReplyMutationProps = {
   commentId?: string;
   postId: string;
   path: string;
-  queryKey: InvalidateQueryFilters;
+  queryKey: (string | number)[];
   content: string;
 };
 
@@ -35,9 +35,8 @@ const useEditReplyMutation = ({ commentId, postId, path, queryKey, content }: us
   const { mutate: editMutate } = useMutation({
     mutationFn: editReplyMutation,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(queryKey);
+      await queryClient.invalidateQueries({ queryKey });
       toast.success(COMMENT_EDIT_ALERT_TEXT);
-      await revalidatePostTag(`qna-detail-${postId}`);
     }
   });
 

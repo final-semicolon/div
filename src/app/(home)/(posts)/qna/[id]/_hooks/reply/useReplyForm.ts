@@ -1,6 +1,5 @@
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { useState } from 'react';
-import { InvalidateQueryFilters } from '@tanstack/react-query';
 import useAddMutation from './useAddReplyMutation';
 
 type useReplyFormProps = {
@@ -15,13 +14,8 @@ const useReplyForm = ({ commentId, userId, replyType }: useReplyFormProps) => {
   const [isSelectModalOpen, setIsSelectModalOpen] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
-  const addMutationObj = {
-    answer: { path: `/qna-reply/${commentId}`, queryKey: ['qnaReply', commentId] as InvalidateQueryFilters },
-    question: { path: `/qna-post-reply/${postId}`, queryKey: ['qnaReply', postId] as InvalidateQueryFilters }
-  };
-
-  const path = addMutationObj[`${replyType}`].path;
-  const queryKey = addMutationObj[`${replyType}`].queryKey;
+  const path = replyType === 'answer' ? `/qna-reply/${commentId}` : `/qna-post-reply/${postId}`;
+  const queryKey = ['qnaReply', commentId ? commentId : postId];
 
   const { postingReply } = useAddMutation({ content, path, queryKey, commentId, userId, postId });
 

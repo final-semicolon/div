@@ -4,13 +4,13 @@ import { TqnaData } from '@/types/posts/qnaDetailTypes';
 import Image from 'next/image';
 import Share from '@/assets/images/common/Share';
 import LikeButton from '@/components/common/LikeButton';
-import QuestionReplies from '../qna-comments/QuestionReplies';
 import { useAuth } from '@/context/auth.context';
 import QuestionKebobBtn from '../kebob-btn/QuestionKebobBtn';
 import { timeForToday } from '@/utils/timeForToday';
 import BookmarkButton from '@/components/common/BookmarkButton';
 import TagBlock from '@/components/common/TagBlock';
 import { filterSlang } from '@/utils/markdownCut';
+import Replies from '../qna-comments/Replies';
 
 type QnaQuestionProps = {
   questionData: TqnaData;
@@ -79,14 +79,16 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
                 {questionData?.qna_post_reply[0].count}개의 댓글
               </div>
             ) : openQuestionReply ? (
-              <div className="text-main-400 text-subtitle1 font-medium">댓글 쓰기</div>
+              <div className=" text-subtitle1 font-medium">댓글 쓰기</div>
             ) : (
-              <div className="text-neutral-400 text-subtitle1 font-medium">댓글 쓰기</div>
+              <div className={`${openQuestionReply ? 'text-main-400' : 'text-neutral-400'} text-subtitle1 font-medium`}>
+                댓글 쓰기
+              </div>
             )}
           </button>
         </div>
       </div>
-      {openQuestionReply ? <QuestionReplies postReplyCount={questionData?.qna_post_reply[0].count} /> : null}
+      {openQuestionReply ? <Replies replyCount={questionData?.qna_post_reply[0].count} /> : null}
     </div>
   );
 };

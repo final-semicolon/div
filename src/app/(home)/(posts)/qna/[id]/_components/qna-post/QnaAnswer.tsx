@@ -1,9 +1,8 @@
 import MDEditor from '@uiw/react-md-editor';
 import Image from 'next/image';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
 import Share from '@/assets/images/common/Share';
-import AnswerReplies from '../qna-comments/AnswerReplies';
 import LikeButton from '@/components/common/LikeButton';
 import { useAuth } from '@/context/auth.context';
 import { timeForToday } from '@/utils/timeForToday';
@@ -33,16 +32,16 @@ import {
   SELECT_ANSWER_CONFIRM_TEXT
 } from '@/constants/confirmModal';
 import KebobBtn from '../kebob-btn/KebobBtn';
+import Replies from '../qna-comments/Replies';
 
 type QnaAnswerProps = {
   qnaComment: TqnaCommentsWithReplyCount;
   questioner: string;
   index?: number;
   qnaCommentsCount?: number;
-  setQnaCommentsCount: Dispatch<SetStateAction<number>>;
 };
 
-const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaCommentsCount }: QnaAnswerProps) => {
+const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswerProps) => {
   const { me } = useAuth();
   const { postId, seletedComment, setSeletedComment } = useQnaDetailStore();
   const [openAnswerReply, setOpenAnswerReply] = useState(false);
@@ -91,6 +90,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
     }
     return data;
   };
+
   const { mutate: selectMutate } = useMutation({
     mutationFn: selectCommentMutation,
     onSuccess: (data) => {
@@ -133,7 +133,6 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
     if (message) {
       return toast.error(message);
     }
-
     return data;
   };
 
@@ -306,7 +305,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
           </button>
         ) : null}
       </div>
-      {openAnswerReply ? <AnswerReplies commentId={qnaComment.id} replyCount={qnaComment?.qna_reply[0].count} /> : null}
+      {openAnswerReply ? <Replies commentId={qnaComment.id} replyCount={qnaComment?.qna_reply[0].count} /> : null}
     </div>
   );
 };

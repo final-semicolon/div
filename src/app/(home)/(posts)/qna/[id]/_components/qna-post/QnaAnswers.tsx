@@ -11,10 +11,9 @@ import EndOfData from '@/components/common/EndOfData';
 type QnaAnswersProps = {
   qnaCommentsCount: number;
   questioner: string;
-  setQnaCommentsCount: Dispatch<SetStateAction<number>>;
 };
 
-const QnaAnswers = ({ qnaCommentsCount, questioner, setQnaCommentsCount }: QnaAnswersProps) => {
+const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
   const [ref, inView] = useInView({ threshold: 0.5 });
   const { postId, seletedComment } = useQnaDetailStore();
   const getCommentList = async ({ queryKey, pageParam }: { queryKey: string[]; pageParam: number }) => {
@@ -80,15 +79,9 @@ const QnaAnswers = ({ qnaCommentsCount, questioner, setQnaCommentsCount }: QnaAn
                 questioner={questioner}
                 index={index}
                 qnaCommentsCount={qnaCommentsCount}
-                setQnaCommentsCount={setQnaCommentsCount}
               />
             ) : (
-              <QnaAnswer
-                key={qnaComment.id + 'comment'}
-                qnaComment={qnaComment}
-                questioner={questioner}
-                setQnaCommentsCount={setQnaCommentsCount}
-              />
+              <QnaAnswer key={qnaComment.id + 'comment'} qnaComment={qnaComment} questioner={questioner} />
             );
           })
         : null}

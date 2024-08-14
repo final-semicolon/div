@@ -1,5 +1,4 @@
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
-import { InvalidateQueryFilters } from '@tanstack/react-query';
 import { useState } from 'react';
 import useEditReplyMutation from './useEditReplyMutation';
 
@@ -16,13 +15,8 @@ const useReply = ({ commentId, replyId, replyContent, replyType }: useReplyProps
   const [content, setContent] = useState<string>(replyContent);
   const [seeMore, setSeeMore] = useState<boolean>(false);
 
-  const editMutationObj = {
-    answer: { path: `/qna-reply/${replyId}`, queryKey: ['qnaReply', commentId] as InvalidateQueryFilters },
-    question: { path: `/qna-post-reply/${replyId}`, queryKey: ['qnaReply', postId] as InvalidateQueryFilters }
-  };
-
-  const path = editMutationObj[`${replyType}`].path;
-  const queryKey = editMutationObj[`${replyType}`].queryKey;
+  const path = replyType === 'answer' ? `/qna-reply/${replyId}` : `/qna-post-reply/${replyId}`;
+  const queryKey = ['qnaReply', commentId ? commentId : postId];
 
   const { editReply } = useEditReplyMutation({ commentId, postId, path, content, queryKey });
 

@@ -29,13 +29,13 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
     handleEditReply
   } = useReply(
     commentId
-      ? { replyContent, replyId: reply.id, replyType: 'question' }
-      : {
+      ? {
           commentId,
           replyContent,
           replyId: reply.id,
           replyType: 'answer'
         }
+      : { replyContent, replyId: reply.id, replyType: 'question' }
   );
   const { me } = useAuth();
 
@@ -62,7 +62,12 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
         </div>
         {me?.id === reply.user_id ? (
           <div className="flex ml-auto mb-auto">
-            <KebobBtn replyId={reply.id} setIsEdit={setIsEdit} category={'questionReply'} />
+            <KebobBtn
+              replyId={reply.id}
+              setIsEdit={setIsEdit}
+              category={commentId ? 'answerReply' : 'questionReply'}
+              commentId={commentId ?? ''}
+            />
           </div>
         ) : null}
       </div>

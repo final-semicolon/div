@@ -34,22 +34,22 @@ const useKebob = ({ commentId, replyId, setIsEdit, category }: useReplyKebobProp
     setIsModalOpen(false);
   };
 
-  const handleKebobClick = (): void => {
+  const handleKebobClick = () => {
     setOpenKebab((prev) => !prev);
   };
 
-  const handleEditClick = (): void => {
+  const handleEditClick = () => {
     setIsEdit(true);
     setOpenKebab(false);
   };
 
-  const handleDeleteClick = (): void => {
+  const handleDeleteClick = () => {
     openModal();
     setOpenKebab(false);
   };
 
-  const handleDeleteData = async () => {
-    await deleteQnaData();
+  const handleDeleteData = () => {
+    deleteQnaData();
   };
 
   return {

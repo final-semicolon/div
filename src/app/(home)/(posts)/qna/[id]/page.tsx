@@ -1,3 +1,5 @@
+'use server';
+
 import { TqnaData } from '@/types/posts/qnaDetailTypes';
 import QnaPost from './_components/QnaPost';
 import NotFound from '@/app/not-found';
