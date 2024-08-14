@@ -1,10 +1,10 @@
 'use client';
 
 import useFetchForumPosts from '@/hooks/forum/useFetchForumPosts';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import dayjs from 'dayjs';
 import { ForumCategory, Post, SortOption } from '@/types/posts/forumTypes';
-import PostCard from './PostCard';
+import PostCard from './card/PostCard';
 import Link from 'next/link';
 import { useInView } from 'react-intersection-observer';
 import SortDropdown from '@/components/common/SortDropdownGrey';
@@ -13,6 +13,7 @@ import WriteButton from '@/assets/images/forum/WriteButton';
 import EndOfData from '@/components/common/EndOfData';
 import { useAuth } from '@/context/auth.context';
 import { LikeType } from '@/types/buttons/like';
+import PostCardSkeleton from './skeleton/PostCardSkeleton';
 
 const ForumPostsWithCategoryAndSort = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending, error } = useFetchForumPosts();
@@ -35,7 +36,7 @@ const ForumPostsWithCategoryAndSort = () => {
     }
   }, [inView, fetchNextPage, hasNextPage]);
 
-  const filterAndSortPosts = (posts: Post[], category: ForumCategory, sortMethod: SortOption): Post[] => {
+  const filterAndSortPosts = useCallback((posts: Post[], category: ForumCategory, sortMethod: SortOption): Post[] => {
     let filteredPosts = category === '전체' ? posts : posts.filter((post) => post.forum_category === category);
 
     switch (sortMethod) {
@@ -48,7 +49,7 @@ const ForumPostsWithCategoryAndSort = () => {
       default:
         return filteredPosts;
     }
-  };
+  }, []);
 
   const handleCategoryClick = (category: ForumCategory) => {
     setActiveCategory(category);
@@ -58,60 +59,38 @@ const ForumPostsWithCategoryAndSort = () => {
     setSortBy(event.target.value as SortOption);
   };
 
+  const handleLikeToggle = useCallback(
+    async (postId: string, type: LikeType, action: 'like' | 'unlike') => {
+      if (!currentUserId) return;
+      try {
+        const method = action === 'like' ? 'POST' : 'DELETE';
+        const response = await fetch('/api/common/like/new-like', {
+          method,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            postId,
+            userId: currentUserId,
+            type
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to ${action} the post`);
+        }
+
+        const data = await response.json();
+        console.log(`${action === 'like' ? 'Liked' : 'Unliked'} post with ID: ${postId}`, data);
+      } catch (error) {
+        console.error(`Error ${action === 'like' ? 'liking' : 'unliking'} post with ID: ${postId}`, error);
+      }
+    },
+    [currentUserId]
+  );
+
   const allPosts = data?.pages.flatMap((page) => page.data) || [];
   const filteredAndSortedPost = filterAndSortPosts(allPosts, activeCategory, sortBy);
-
-  const handleLike = async (postId: string, type: LikeType) => {
-    if (!currentUserId) return;
-    try {
-      const response = await fetch('/api/common/like/new-like', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          postId,
-          userId: currentUserId,
-          type
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to like the post');
-      }
-
-      const data = await response.json();
-      console.log(`Liked post with ID: ${postId}`, data);
-    } catch (error) {
-      console.error(`Error liking post with ID: ${postId}`, error);
-    }
-  };
-
-  const handleUnlike = async (postId: string, type: LikeType) => {
-    if (!currentUserId) return;
-    try {
-      const response = await fetch('/api/common/like/new-like', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          postId,
-          userId: currentUserId,
-          type
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to unlike the post');
-      }
-
-      const data = await response.json();
-      console.log(`Unliked post with ID: ${postId}`, data);
-    } catch (error) {
-      console.error(`Error unliking post with ID: ${postId}`, error);
-    }
-  };
 
   return (
     <div className="pl-6">
@@ -124,12 +103,18 @@ const ForumPostsWithCategoryAndSort = () => {
         <SortDropdown sortBy={sortBy} handleSortChange={handleSortChange} sortOptions={sortOptions} />
       </div>
       <div className="mt-8 mb-8 max-w-[844px] mx-auto border-b-2 border-b-neutral-50">
-        <Link href="/posting">
+        <Link href="/posting" rel="preload">
           <WriteButton />
         </Link>
       </div>
       <div className="category-items max-w-[844px] mx-auto">
-        {isPending && <div>로딩중...</div>}
+        {isPending && (
+          <div className="posts-card">
+            {[...Array(5)].map((_, index) => (
+              <PostCardSkeleton key={index} />
+            ))}
+          </div>
+        )}
         {error && <div>에러 발생</div>}
         {!isPending && !error && filteredAndSortedPost.length === 0 && <div>게시글이 없습니다.</div>}
         {!isPending && !error && filteredAndSortedPost.length > 0 && (
@@ -140,15 +125,15 @@ const ForumPostsWithCategoryAndSort = () => {
                 post={post}
                 isLiked={post.forum_like.some((like) => like.user_id === currentUserId)}
                 likeCount={post.forum_like_count[0]?.count || 0}
-                onLike={() => handleLike(post.id, 'forum')}
-                onUnlike={() => handleUnlike(post.id, 'forum')}
+                onLike={() => handleLikeToggle(post.id, 'forum', 'like')}
+                onUnlike={() => handleLikeToggle(post.id, 'forum', 'unlike')}
               />
             ))}
           </div>
         )}
         {isFetchingNextPage && <div>추가 게시물 로딩중...</div>}
-        <div className="h-1" ref={ref}></div>
-        {!hasNextPage && !isFetchingNextPage && <EndOfData />}
+        <div ref={ref} className="h-1"></div>
+        {!isPending && !error && !isFetchingNextPage && data && !hasNextPage && <EndOfData />}
       </div>
     </div>
   );
