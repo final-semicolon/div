@@ -25,3 +25,17 @@ export type FetchResult = {
 };
 
 export type SortOption = 'latest' | 'oldest' | 'mostLikes';
+
+export type SwiperNavigationButtonProps = {
+  direction: 'prev' | 'next';
+  isHovering: boolean;
+  onClick: () => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+};
+
+export type PaginationProps = {
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+};
