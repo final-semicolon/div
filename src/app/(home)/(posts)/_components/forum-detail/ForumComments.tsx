@@ -22,6 +22,7 @@ import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { useLoginAlertStore } from '@/store/loginAlertModal';
 import LoginAlertModal from '@/components/modal/LoginAlertModal';
 import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
+import Chip from '@/components/common/Chip';
 
 const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -229,18 +230,27 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                       />
                     </div>
                     <div className="flex justify-end items-end mt-4 gap-6">
-                      <button
+                      <Chip
+                        intent="gray"
+                        size="medium"
+                        label="취소"
                         onClick={() => toggleEditing(comment.id, comment.user_id)}
-                        className="bg-neutral-50 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-500 px-5 py-3 rounded-lg text-subtitle1 font-bold"
-                      >
-                        취소
-                      </button>
-                      <button
-                        onClick={() => setRetouchConfirmModal(true)}
-                        className="bg-main-400 text-white hover:bg-main-500 hover:text-white' px-5 py-3 rounded-lg text-subtitle1 font-bold"
-                      >
-                        수정
-                      </button>
+                      />
+                      {mdEditorChange === comment.comment ? (
+                        <>
+                          <Chip intent="primary_disabled" size="medium" label="등록" />
+                        </>
+                      ) : (
+                        <>
+                          <Chip
+                            intent="primary"
+                            size="medium"
+                            label="수정"
+                            onClick={() => setRetouchConfirmModal(true)}
+                          />
+                        </>
+                      )}
+
                       {retouchConfirmModal && (
                         <ConfirmModal
                           isOpen={retouchConfirmModal}

@@ -14,6 +14,7 @@ import ReplyPageButton from '../../../../../components/common/ReplyPageButton';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
+import Chip from '@/components/common/Chip';
 
 const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_user_id: string }) => {
   const { me } = useAuth();
@@ -195,18 +196,23 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
                     />
                   </div>
                   <div className="flex justify-end items-end mt-4 gap-6">
-                    <button
-                      onClick={() => setReplyEditor({ [reply.id]: false })}
-                      className={`${reply ? 'bg-neutral-50 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-500' : 'bg-neutral-50 text-neutral-100'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-                    >
-                      취소
-                    </button>
-                    <button
-                      onClick={() => setReplyRetouchModal(true)}
-                      className={`${reply ? 'bg-main-400 text-white hover:bg-main-500 hover:text-white' : 'bg-main-100 text-main-50'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-                    >
-                      수정
-                    </button>
+                    {replyRetouch === reply.reply ? (
+                      <>
+                        <Chip intent="gray_disabled" size="medium" label="취소" />
+                        <Chip intent="primary_disabled" size="medium" label="등록" />
+                      </>
+                    ) : (
+                      <>
+                        <Chip
+                          intent="gray"
+                          size="medium"
+                          label="취소"
+                          onClick={() => setReplyEditor({ [reply.id]: false })}
+                        />
+                        <Chip intent="primary" size="medium" label="등록" onClick={() => setReplyRetouchModal(true)} />
+                      </>
+                    )}
+
                     {replyRetouchModal && (
                       <ConfirmModal
                         isOpen={replyRetouchModal}

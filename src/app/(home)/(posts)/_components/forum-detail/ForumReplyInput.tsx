@@ -1,5 +1,6 @@
 'use client';
 
+import Chip from '@/components/common/Chip';
 import { useAuth } from '@/context/auth.context';
 import { CommentReply } from '@/types/posts/forumDetailTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -86,19 +87,17 @@ const ForumReplyInput = ({ comment_id, toggle, count }: commentReplyProps) => {
           />
         </div>
         <div className="flex justify-end items-end gap-4 mt-4">
-          <button
-            onClick={() => toggle(comment_id, count)}
-            disabled={!reply}
-            className={`${reply ? 'bg-neutral-50 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-500' : 'bg-neutral-50 text-neutral-100'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-          >
-            취소
-          </button>
-          <button
-            onClick={onClickReply}
-            className={`${reply ? 'bg-main-400 text-white hover:bg-main-500 hover:text-white' : 'bg-main-100 text-main-50'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-          >
-            등록
-          </button>
+          {reply === '' ? (
+            <>
+              <Chip intent="gray_disabled" size="medium" label="취소" />
+              <Chip intent="primary_disabled" size="medium" label="등록" />
+            </>
+          ) : (
+            <>
+              <Chip intent="gray" size="medium" label="취소" onClick={() => toggle(comment_id, count)} />
+              <Chip intent="primary" size="medium" label="등록" onClick={onClickReply} />
+            </>
+          )}
         </div>
       </div>
     </div>

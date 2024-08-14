@@ -1,5 +1,6 @@
 'use client';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
+import Chip from '@/components/common/Chip';
 import { COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
 import { useAuth } from '@/context/auth.context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -27,7 +28,6 @@ const InputComments = () => {
         body: JSON.stringify({ userComment })
       });
       const result = await response.json();
-      // console.log(result);
       return result;
     },
     onSuccess: (data) => {
@@ -58,28 +58,9 @@ const InputComments = () => {
     }
   });
 
-  // onSuccess: async (data) => {
-  //   await queryClient.invalidateQueries({ queryKey: ['qnaReply', commentId] });
-
-  //   // const replyCount = (
-  //   //   queryClient.getQueryData(['qnaReply', commentId]) as { pages: Treply[]; pageParams: number }
-  //   // ).pages.flat().length as number;
-
-  //   await queryClient.setQueryData(
-  //     ['qnaComments', postId],
-  //     (oldData: { pages: TqnaCommentsWithReplyCount[][]; pageParams: number }) => {
-  //       const newData = oldData.pages.map((page: TqnaCommentsWithReplyCount[]) =>
-  //         page.map((comment) =>
-  //           comment.id === data[0].comment_id
-  //             ? { ...comment, qna_reply: [{ count: comment.qna_reply[0].count + 1 }] }
-  //             : { ...comment }
-  //         )
-  //       );
-  //       return { ...oldData, pages: newData };
-  //     }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  //댓글 등록 onClick 함수
+  const handleCommentClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e?.preventDefault();
 
     const forumComment = { user_id: me?.id, post_id: params.id, comment };
 
@@ -96,14 +77,13 @@ const InputComments = () => {
       return;
     }
 
-    toast.success(COMMENT_POST_ALERT_TEXT, { autoClose: 1500 });
-    // console.log(forumComment);
+    toast.success(COMMENT_POST_ALERT_TEXT);
     handleComment.mutate(forumComment);
   };
 
   return (
     <div className={`flex ${me ? 'justify-start' : 'justify-center'} items-center  py-6`}>
-      <form className=" w-full" onSubmit={handleSubmit}>
+      <div className=" w-full">
         <div className=" flex justify-center items-center gap-6" data-color-mode="light">
           {me && (
             <Image
@@ -131,25 +111,27 @@ const InputComments = () => {
         </div>
         {me && (
           <div className=" flex justify-end items-end gap-6 mt-6">
-            <button
-              type="button"
-              disabled={!comment}
-              className={`${comment ? 'bg-neutral-50 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-500' : 'bg-neutral-50 text-neutral-100'}   px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-              onClick={() => {
-                setComment('');
-              }}
-            >
-              취소
-            </button>
-            <button
-              className={`${comment ? 'bg-main-400 text-white hover:bg-main-500 hover:text-white' : 'bg-main-100 text-main-50'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-              disabled={!comment}
-            >
-              등록
-            </button>
+            {comment === '' ? (
+              <>
+                <Chip intent="gray_disabled" size="medium" label="취소" />
+                <Chip intent="primary_disabled" size="medium" label="등록" />
+              </>
+            ) : (
+              <>
+                <Chip
+                  intent="gray"
+                  size="medium"
+                  label="취소"
+                  onClick={() => {
+                    setComment('');
+                  }}
+                />
+                <Chip intent="primary" size="medium" label="등록" onClick={handleCommentClick} />
+              </>
+            )}
           </div>
         )}
-      </form>
+      </div>
     </div>
   );
 };
