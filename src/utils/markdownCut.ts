@@ -40,3 +40,10 @@ export const cutText = (text: string, limit: number): string => {
   cutText = filterSlang(cutText);
   return cutText;
 };
+
+export const removeImageLinks = (markdown: string) => markdown.replace(/!\[.*?\]\(.*?\)/g, '');
+
+export const cutTitle = (text: string, limit: number): string => {
+  const trimmedText = text.length > limit ? text.slice(0, limit) + '...' : text;
+  return filterSlang(trimmedText);
+};

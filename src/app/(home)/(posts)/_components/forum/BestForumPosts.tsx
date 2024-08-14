@@ -1,15 +1,21 @@
 'use client';
 
-import Info from '@/assets/images/forum/Info';
-import King from '@/assets/images/forum/King';
-import Tooltip from '@/assets/images/forum/Tooltip';
-
+// import Info from '@/assets/images/forum/Info';
+// import King from '@/assets/images/forum/King';
+// import Tooltip from '@/assets/images/forum/Tooltip';
 import useFetchTopLikedPosts from '@/hooks/forum/useFetchTopLikedPosts';
 import { Post } from '@/types/posts/forumTypes';
-import { cutText } from '@/utils/markdownCut';
-
+import { filterSlang } from '@/utils/markdownCut';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
+import BestForumSkeleton from './skeleton/BestForumSkeleton';
+
+const Info = dynamic(() => import('@/assets/images/forum/Info'));
+const King = dynamic(() => import('@/assets/images/forum/King'));
+const Tooltip = dynamic(() => import('@/assets/images/forum/Tooltip'), {
+  ssr: false
+});
 
 const BestForumPosts = () => {
   const { data, error, isPending } = useFetchTopLikedPosts();
@@ -28,7 +34,7 @@ const BestForumPosts = () => {
   }, [data]);
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return <BestForumSkeleton />;
   }
 
   if (error) {
@@ -66,7 +72,7 @@ const BestForumPosts = () => {
           {topPosts.map((post) => (
             <div className="mt-5 min-h-12" key={post.id}>
               <Link href={`/forum/${post.id}`}>
-                <p className="text-neutral-700 font-medium text-body2 mb-5">{cutText(post.title, 45)}</p>
+                <p className="text-neutral-700 font-medium text-body2 mb-5 line-clamp-2">{filterSlang(post.title)}</p>
               </Link>
             </div>
           ))}
@@ -76,4 +82,4 @@ const BestForumPosts = () => {
   );
 };
 
-export default BestForumPosts;
+export default memo(BestForumPosts);

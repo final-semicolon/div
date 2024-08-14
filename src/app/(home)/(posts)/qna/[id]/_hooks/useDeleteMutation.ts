@@ -13,12 +13,12 @@ const useDeleteMutation = ({ path, querykey, postId }: replyMutationProps) => {
   const queryClient = useQueryClient();
   const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail`;
 
-  const deleteQnaData = async (): Promise<void> => {
-    await deleteMutate();
+  const deleteQnaData = (): void => {
+    deleteMutate();
     return;
   };
 
-  const deleteReplyMutation = async () => {
+  const deleteMutation = async () => {
     const response = await fetch(`${BASE_URL}${path}`, {
       method: 'DELETE'
     });
@@ -30,7 +30,7 @@ const useDeleteMutation = ({ path, querykey, postId }: replyMutationProps) => {
   };
 
   const { mutate: deleteMutate } = useMutation({
-    mutationFn: deleteReplyMutation,
+    mutationFn: deleteMutation,
     onSuccess: async () => {
       await queryClient.invalidateQueries(querykey);
       path.includes('reply') ? toast.success(COMMENT_DELETE_ALRERT_TEXT) : toast.success(QNA_ANSWER_DELETE_ALRERT_TEXT);

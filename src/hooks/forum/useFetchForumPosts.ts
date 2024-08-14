@@ -3,11 +3,14 @@
 import { FetchResult } from '@/types/posts/forumTypes';
 import { InfiniteData, QueryFunctionContext, useInfiniteQuery } from '@tanstack/react-query';
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 5;
 
 const fetchForumPosts = async ({ pageParam }: QueryFunctionContext<[string], number>): Promise<FetchResult> => {
+  console.log('Fetching page:', pageParam);
   const response = await fetch(`/api/posts/forum?page=${pageParam}&limit=${POSTS_PER_PAGE}`);
   const data = await response.json();
+
+  console.log('Fetched data:', data);
   return { data: data.data, nextPage: data.data.length === POSTS_PER_PAGE ? pageParam + 1 : null };
 };
 

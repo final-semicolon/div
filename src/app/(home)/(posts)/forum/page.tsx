@@ -1,7 +1,13 @@
+import dynamic from 'next/dynamic';
 import BestForumPosts from '../_components/forum/BestForumPosts';
-
 import ForumPostsWithCategoryAndSort from '../_components/forum/ForumPostsWithCategoryAndSort';
-import ScrollToTopButton from '../_components/forum/ScrollToTopButton';
+// import ScrollToTopButton from '../_components/forum/ScrollToTopButton';
+
+const ScrollToTopButton = dynamic(() => import('../_components/forum/ScrollToTopButton'), {
+  ssr: false
+});
+// const BestForumPosts = dynamic(() => import('../_components/forum/BestForumPosts'));
+// const ForumPostsWithCategoryAndSort = dynamic(() => import('../_components/forum/ForumPostsWithCategoryAndSort'));
 
 const ForumPage = () => {
   return (

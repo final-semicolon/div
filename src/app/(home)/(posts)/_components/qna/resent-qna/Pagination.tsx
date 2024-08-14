@@ -9,7 +9,7 @@ const Pagination = ({
   currentPage: number;
   onPageChange: (page: number) => void;
 }) => (
-  <div className="flex justify-center items-center gap-4 mt-4">
+  <div className="flex justify-center items-center gap-4 mt-4 mb-[76px]">
     {Array.from({ length: totalPages }, (_, index) => (
       <button
         key={index}
