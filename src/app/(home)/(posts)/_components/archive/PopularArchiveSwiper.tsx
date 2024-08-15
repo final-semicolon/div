@@ -7,9 +7,10 @@ import { useEffect, useState } from 'react';
 import SwiperCore from 'swiper';
 import SwiperNavigationButton from './SwiperNavigationButton';
 import ArchivePostCard from './ArchivePostCard';
+import PopularArchiveSwiperSkeleton from './skeleton/PopularArchiveSwiperSkeleton';
 
 const PopularArchiveSwiper = () => {
-  const { data, error, isLoading } = usePopularArchivePosts();
+  const { data, error, isPending } = usePopularArchivePosts();
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
@@ -42,8 +43,8 @@ const PopularArchiveSwiper = () => {
     if (swiperInstance) swiperInstance.slideNext();
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (isPending) {
+    return <PopularArchiveSwiperSkeleton />;
   }
   if (error) {
     return <div>Error: {error.message}</div>;

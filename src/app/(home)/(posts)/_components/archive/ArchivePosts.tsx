@@ -8,6 +8,7 @@ import { useArchivePosts } from '@/hooks/archive/useFetchArchivePosts';
 import { Post, SortOption } from '@/types/posts/archiveTypes';
 import Pagination from './Pagination';
 import ArchivePostCard from './ArchivePostCard';
+import ArchivePostsSkeleton from './skeleton/ArchivePostsSkeleton';
 
 const ArchivePosts = () => {
   const [page, setPage] = useState(0);
@@ -42,7 +43,7 @@ const ArchivePosts = () => {
   ];
 
   if (isPendingArchive) {
-    return <div>Loading...</div>;
+    return <ArchivePostsSkeleton />;
   }
 
   if (isErrorArchive) {
