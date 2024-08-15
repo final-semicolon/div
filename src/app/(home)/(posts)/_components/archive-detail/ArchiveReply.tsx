@@ -278,13 +278,15 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
           )}
         </div>
       ))}
-      <ReplyPageButton
-        page={page}
-        setPage={setPage}
-        totalPage={totalPage}
-        fetchNextPage={fetchNextPage}
-        reply={reply}
-      />
+      <div className=" flex pt-6 gap-4 w-full mt-6 justify-end">
+        <ReplyPageButton
+          page={page}
+          setPage={setPage}
+          totalPage={totalPage}
+          fetchNextPage={fetchNextPage}
+          reply={reply}
+        />
+      </div>
     </div>
   );
 };

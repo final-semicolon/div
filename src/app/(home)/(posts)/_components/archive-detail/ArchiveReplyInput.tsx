@@ -27,8 +27,6 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
         }
       });
       const data = await response.json();
-      console.log(data);
-
       return data;
     },
     onSuccess: () => {
@@ -122,7 +120,7 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
           isOpen={showModal}
           onClose={handleCloseModal}
           onConfirm={handleConfirmCancel}
-          message={'댓글 작성을 취소 하시겠습니까?'}
+          message={'댓글 작성을 중단할까요?'}
         />
       )}
     </div>
