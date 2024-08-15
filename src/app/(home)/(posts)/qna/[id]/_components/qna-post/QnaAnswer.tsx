@@ -71,15 +71,14 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
   };
 
   const selectComment = async (): Promise<void> => {
-    const data = await selectMutate();
-    toast.success(SELECT_ANSWER_ALERT_TEXT);
-    await revalidatePostTag(`qna-detail-${postId}`);
     setSeletedComment(qnaComment.id);
+    selectMutate();
+    // await revalidatePostTag(`qna-detail-${postId}`);
   };
 
   const selectCommentMutation = async () => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/${postId}?comment_id=${qnaComment.id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/question/${postId}?comment_id=${qnaComment.id}`,
       {
         method: 'PATCH'
       }
@@ -93,8 +92,9 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
 
   const { mutate: selectMutate } = useMutation({
     mutationFn: selectCommentMutation,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+      toast.success(SELECT_ANSWER_ALERT_TEXT);
     }
   });
 
@@ -103,7 +103,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
       toast.error('내용을 입력해주세요!');
       return;
     }
-    const data = await editMutate({
+    editMutate({
       commentId: qnaComment.id,
       comment: content,
       tags: tagList.filter((tag) => tag.selected),
@@ -138,8 +138,8 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
 
   const { mutate: editMutate } = useMutation({
     mutationFn: editCommentMutation,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
     }
   });
 

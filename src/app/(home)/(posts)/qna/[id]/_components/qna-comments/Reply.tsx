@@ -54,7 +54,6 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
             className="rounded-full"
           />
         </div>
-
         <div className="flex flex-col gap-1">
           {postUser === me?.id ? <Tag intent="primary" label="글쓴이" /> : null}
           <div className="text-subtitle1 text-neutral-900">{reply.users.nickname}</div>
