@@ -23,6 +23,7 @@ import { useLoginAlertStore } from '@/store/loginAlertModal';
 import LoginAlertModal from '@/components/modal/LoginAlertModal';
 import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 import Chip from '@/components/common/Chip';
+import { COMMENT_CANCLE_CONFIRM_TEXT, COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 
 const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -37,6 +38,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const [deleteConfirmModal, setDeleteConfirmModal] = useState<boolean>(false);
   const [retouchConfirmModal, setRetouchConfirmModal] = useState<boolean>(false);
   const [commentLength, setCommentLength] = useState<boolean>(false);
+  const [cancelCommentModal, setCancelCommentModal] = useState<boolean>(false);
   const { isOpen, loginAlertModal } = useLoginAlertStore();
 
   const COMMENT_PAGE = 5;
@@ -204,7 +206,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                                   isOpen={deleteConfirmModal}
                                   onClose={() => setDeleteConfirmModal(false)}
                                   onConfirm={() => handleDelete(comment.id, comment.user_id)}
-                                  message={'댓글을 삭제 하겠습니까?'}
+                                  message={COMMENT_DELETE_CONFIRM_TEXT}
                                 />
                               )}
                             </div>
@@ -230,33 +232,34 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                       />
                     </div>
                     <div className="flex justify-end items-end mt-4 gap-6">
-                      <Chip
-                        intent="gray"
-                        size="medium"
-                        label="취소"
-                        onClick={() => toggleEditing(comment.id, comment.user_id)}
-                      />
                       {mdEditorChange === comment.comment ? (
                         <>
-                          <Chip intent="primary_disabled" size="medium" label="등록" />
+                          <Chip
+                            intent="gray"
+                            size="medium"
+                            label="취소"
+                            onClick={() => toggleEditing(comment.id, comment.user_id)}
+                          />
+                          <Chip intent="primary_disabled" size="medium" label="수정" />
                         </>
                       ) : (
                         <>
+                          <Chip intent="gray" size="medium" label="취소" onClick={() => setCancelCommentModal(true)} />
                           <Chip
                             intent="primary"
                             size="medium"
                             label="수정"
-                            onClick={() => setRetouchConfirmModal(true)}
+                            onClick={() => commentRetouchHandle(comment.id, comment.user_id)}
                           />
                         </>
                       )}
 
-                      {retouchConfirmModal && (
+                      {cancelCommentModal && (
                         <ConfirmModal
-                          isOpen={retouchConfirmModal}
-                          onClose={() => setRetouchConfirmModal(false)}
-                          onConfirm={() => commentRetouchHandle(comment.id, comment.user_id)}
-                          message={'댓글을 수정 하겠습니까?'}
+                          isOpen={cancelCommentModal}
+                          onClose={() => setCancelCommentModal(false)}
+                          onConfirm={() => toggleEditing(comment.id, comment.user_id)}
+                          message={COMMENT_CANCLE_CONFIRM_TEXT}
                         />
                       )}
                     </div>

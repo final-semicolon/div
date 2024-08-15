@@ -15,6 +15,7 @@ import ConfirmModal from '@/components/modal/ConfirmModal';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 import Chip from '@/components/common/Chip';
+import { COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 
 const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_user_id: string }) => {
   const { me } = useAuth();
@@ -25,8 +26,8 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
   const [replyEditor, setReplyEditor] = useState<{ [key: string]: boolean }>({});
   const [replyEditorToggle, setReplyEditorToggle] = useState<{ [key: string]: boolean }>({});
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
-  const [replyRetouchModal, setReplyRetouchModal] = useState<boolean>(false);
   const [replyLength, setReplyLength] = useState<boolean>(false);
+  const [replyCancelModal, setReplyCancelModal] = useState<boolean>(false);
 
   //대댓글 수정
   const replyRetouchMutation = useMutation({
@@ -171,7 +172,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
                               isOpen={confirmModal}
                               onClose={() => setConfirmModal(false)}
                               onConfirm={() => handleReplyDelete(reply.id, reply.user_id)}
-                              message={'댓글을 삭제 하겠습니까?'}
+                              message={COMMENT_DELETE_CONFIRM_TEXT}
                             />
                           )}
                         </div>
@@ -198,26 +199,31 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
                   <div className="flex justify-end items-end mt-4 gap-6">
                     {replyRetouch === reply.reply ? (
                       <>
-                        <Chip intent="gray_disabled" size="medium" label="취소" />
-                        <Chip intent="primary_disabled" size="medium" label="등록" />
-                      </>
-                    ) : (
-                      <>
                         <Chip
                           intent="gray"
                           size="medium"
                           label="취소"
                           onClick={() => setReplyEditor({ [reply.id]: false })}
                         />
-                        <Chip intent="primary" size="medium" label="등록" onClick={() => setReplyRetouchModal(true)} />
+                        <Chip intent="primary_disabled" size="medium" label="수정" />
+                      </>
+                    ) : (
+                      <>
+                        <Chip intent="gray" size="medium" label="취소" onClick={() => setReplyCancelModal(true)} />
+                        <Chip
+                          intent="primary"
+                          size="medium"
+                          label="수정"
+                          onClick={() => replyRetouchHandle(reply.id, reply.user_id)}
+                        />
                       </>
                     )}
 
-                    {replyRetouchModal && (
+                    {replyCancelModal && (
                       <ConfirmModal
-                        isOpen={replyRetouchModal}
-                        onClose={() => setReplyRetouchModal(false)}
-                        onConfirm={() => replyRetouchHandle(reply.id, reply.user_id)}
+                        isOpen={replyCancelModal}
+                        onClose={() => setReplyCancelModal(false)}
+                        onConfirm={() => setReplyEditor({ [reply.id]: false })}
                         message={'댓글을 수정 하시겠습니까?'}
                       />
                     )}
