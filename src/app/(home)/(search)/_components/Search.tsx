@@ -1,146 +1,118 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import SearchPostCard from './SearchPostCard';
 import SearchFilter from './SearchFilter';
 import { useSearchParams } from 'next/navigation';
-
-type Post = {
-  id: string;
-  title: string;
-  content: string;
-  thumbnail?: string;
-  created_at: string;
-  category: 'archive' | 'forum' | 'qna';
-  forum_category?: string;
-  likescount: string;
-  commentsCount: string;
-
-  user: {
-    id: string;
-    nickname: string;
-    profile_image?: string;
-  };
-  tag?: { tag: string }[];
-};
-
-type SearchData = {
-  archive: Post[];
-  forum: Post[];
-  qna: Post[];
-};
+import { useAuth } from '@/context/auth.context';
+import PostCountDisplay from './PostCountDisplay';
+import { SearchData } from '@/types/search/SearchType';
 
 const Search = () => {
   const [data, setData] = useState<SearchData | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'qna' | 'forum' | 'archive'>('all');
-  const [selectedForumCategory, setSelectedForumCategory] = useState<string | null>(null);
-  const [selectedType, setSelectedType] = useState<'time' | 'like' | 'comment'>('time');
+  const [primaryCategory, setPrimaryCategory] = useState<'all' | 'qna' | 'forum' | 'archive'>('all');
+  const [primaryForumCategory, setPrimaryForumCategory] = useState<string | null>(null);
+  const [sortingType, setSortingType] = useState<'time' | 'like' | 'comment'>('time');
+  const { me } = useAuth();
+  const currentUserId = me?.id;
 
   const searchParams = useSearchParams();
   const searchType = searchParams.get('searchType');
   const keyword = searchParams.get('keyword');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (searchType && keyword) {
-        try {
-          const response = await fetch(`/api/search?searchType=${searchType}&keyword=${keyword}`);
-          const data = await response.json();
-          setData(data);
-        } catch (error) {
-          // console.error('Error fetching search data:', error);
-        }
-      }
-    };
+  const fetchData = useCallback(async (searchType: string, keyword: string) => {
+    try {
+      const response = await fetch(`/api/search?searchType=${searchType}&keyword=${keyword}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching search data:', error);
+      return null;
+    }
+  }, []);
 
-    fetchData();
-  }, [searchType, keyword]);
+  useEffect(() => {
+    if (searchType && keyword) {
+      fetchData(searchType, keyword).then((data) => {
+        if (data) {
+          setData(data);
+        }
+      });
+    }
+  }, [searchType, keyword, fetchData]);
+
+  const combined = useMemo(() => {
+    if (!data) return [];
+    return [...data.archive, ...data.forum, ...data.qna];
+  }, [data]);
+
+  const sortedItems = useMemo(() => {
+    return combined.sort((a, b) => {
+      if (sortingType === 'time') {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      }
+      if (sortingType === 'like') {
+        return b.likesCount - a.likesCount;
+      }
+      if (sortingType === 'comment') {
+        return b.commentsCount - a.commentsCount;
+      }
+      return 0;
+    });
+  }, [combined, sortingType]);
+
+  const categoryFilteredItems = useMemo(() => {
+    if (primaryCategory === 'all') return sortedItems;
+    if (primaryCategory === 'forum') {
+      return sortedItems.filter(
+        (item) =>
+          item.category === 'forum' &&
+          (primaryForumCategory === '전체' || !primaryForumCategory || item.forum_category === primaryForumCategory)
+      );
+    }
+    return sortedItems.filter((item) => item.category === primaryCategory);
+  }, [sortedItems, primaryCategory, primaryForumCategory]);
 
   if (!data) return <div>Loading...</div>;
 
-  const combined: Post[] = [...data.archive, ...data.forum, ...data.qna];
-
-  const sortedItems = combined.sort((a, b) => {
-    if (selectedType === 'time') {
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    }
-    if (selectedType === 'like') {
-      return parseInt(b.likescount, 10) - parseInt(a.likescount, 10);
-    }
-    if (selectedType === 'comment') {
-      return parseInt(b.commentsCount, 10) - parseInt(a.commentsCount, 10);
-    }
-    return 0;
-  });
-
-  const categoryFilteredItems =
-    selectedCategory === 'all'
-      ? sortedItems
-      : selectedCategory === 'forum'
-        ? sortedItems.filter(
-            (item) =>
-              item.category === 'forum' &&
-              (selectedForumCategory === '전체' ||
-                !selectedForumCategory ||
-                item.forum_category === selectedForumCategory)
-          )
-        : sortedItems.filter((item) => item.category === selectedCategory);
-
   return (
-    <div className="w-[1204px]">
+    <div className="max-w-[1204px]">
       <div className="flex flex-col ">
         <span className="mb-[88px]">
-          {searchType === 'title' ? (
-            <span className="text-neutral-900 text-h3 font-bold">{keyword}</span>
-          ) : (
-            <span className="text-neutral-900 text-h3 font-bold">#{keyword}</span>
-          )}
+          <span className="text-neutral-900 text-h3 font-bold">
+            {searchType === 'title' ? <>{keyword}</> : <>#{keyword}</>}
+          </span>
           <span className="text-neutral-700 text-h3 font-normal"> 검색결과</span>
         </span>
-        <div>
-          {selectedCategory === 'all' ? (
-            <div>
-              <span className=" text-subtitle1 font-medium text-neutral-700"> 전체 게시글 </span>
-              <span className="text-subtitle1 font-bold text-neutral-800">
-                {' '}
-                ({data.archive.length + data.forum.length + data.qna.length}){' '}
-              </span>
-            </div>
-          ) : selectedCategory === 'archive' ? (
-            <div>
-              <span className=" text-subtitle1 font-medium text-neutral-700"> 아카이브 게시글 </span>
-              <span className="text-subtitle1 font-bold text-neutral-800"> ({data.archive.length}) </span>
-            </div>
-          ) : selectedCategory === 'forum' ? (
-            <div>
-              <span className=" text-subtitle1 font-medium text-neutral-700"> 포럼 게시글 </span>
-              <span className="text-subtitle1 font-bold text-neutral-800"> ({data.forum.length}) </span>
-            </div>
-          ) : (
-            <div>
-              <span className=" text-subtitle1 font-medium text-neutral-700"> Q&A 게시글 </span>
-              <span className="text-subtitle1 font-bold text-neutral-800"> ({data.qna.length}) </span>
-            </div>
-          )}
-        </div>
+        <PostCountDisplay
+          primaryCategory={primaryCategory}
+          archiveCount={data.archive.length}
+          forumCount={data.forum.length}
+          qnaCount={data.qna.length}
+        />
         <div className="relative">
           <SearchFilter
-            selectedCategory={selectedCategory}
-            selectedForumCategory={selectedForumCategory}
-            selectedType={selectedType}
-            onCategoryChange={setSelectedCategory}
-            onForumCategoryChange={setSelectedForumCategory}
-            onTypeChange={setSelectedType}
+            primaryCategory={primaryCategory}
+            primaryForumCategory={primaryForumCategory}
+            sortingType={sortingType}
+            onCategoryChange={setPrimaryCategory}
+            onForumCategoryChange={setPrimaryForumCategory}
+            onTypeChange={setSortingType}
           />
         </div>
       </div>
       <div>
         {categoryFilteredItems.length === 0 ? (
-          <div> {keyword} 검색 결과가 없습니다.</div>
+          <div>{keyword} 검색 결과가 없습니다.</div>
         ) : (
-          <div className="grid grid-cols-2 gap-y-9 gap-x-5 ">
+          <div className="grid grid-cols-1 gap-y-9 gap-x-5 md:grid-cols-2 justify-center">
             {categoryFilteredItems.map((post) => (
-              <SearchPostCard key={post.id} post={post} />
+              <SearchPostCard
+                key={post.id}
+                post={post}
+                isLiked={post.isLiked.user_id === currentUserId}
+                currentUserId={currentUserId}
+              />
             ))}
           </div>
         )}
