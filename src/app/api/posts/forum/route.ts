@@ -1,7 +1,7 @@
 import { createClient } from '@/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 5;
 
 const getForumPosts = async (req: NextRequest) => {
   const searchParams = req.nextUrl.searchParams;
@@ -28,13 +28,16 @@ const getForumPosts = async (req: NextRequest) => {
     .range(page * limit, (page + 1) * limit - 1);
 
   if (error) {
-    // console.error('Forum Posts API Error', error);
+    console.error('Forum Posts API Error', error);
   }
+
   if (!posts || posts.length === 0) {
     return NextResponse.json({ data: [], count: 0 });
   }
 
-  return NextResponse.json({ data: posts, count, nextPage: posts.length === limit ? page + 1 : null });
+  const nextPage = posts.length === limit ? page + 1 : null;
+
+  return NextResponse.json({ data: posts, count, nextPage });
 };
 
 export async function GET(req: NextRequest) {

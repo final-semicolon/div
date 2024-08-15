@@ -31,6 +31,10 @@ export type PostCardProps = {
   post: Post;
 };
 
+export type PostTagsProps = {
+  tags: ForumTag[];
+};
+
 export type SortOption = 'latest' | 'mostComments' | 'mostLikes';
 export type ForumCategory = '전체' | '일상' | '커리어' | '자기개발' | '토론' | '코드 리뷰';
 

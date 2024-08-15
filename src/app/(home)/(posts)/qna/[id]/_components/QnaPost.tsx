@@ -20,7 +20,6 @@ const QnaPost = ({ data }: QnaPostProps) => {
   const { me } = useAuth();
   const { setPostId, setPostUser, setSeletedComment } = useQnaDetailStore();
   const [content, setContent] = useState<string>('');
-  const [qnaCommentsCount, setQnaCommentsCount] = useState<number>(data.qna_comments[0].count);
 
   const handleTopBtnClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -40,14 +39,8 @@ const QnaPost = ({ data }: QnaPostProps) => {
         </Link>
       </div>
       <QnaQuestion questionData={data} />
-      {me && me.id !== data.user_id ? (
-        <PostingQnaAnswer content={content} setContent={setContent} setQnaCommentsCount={setQnaCommentsCount} />
-      ) : null}
-      <QnaAnswers
-        qnaCommentsCount={data.qna_comments[0].count}
-        questioner={data.user_id}
-        setQnaCommentsCount={setQnaCommentsCount}
-      />
+      {me && me.id !== data.user_id ? <PostingQnaAnswer content={content} setContent={setContent} /> : null}
+      <QnaAnswers qnaCommentsCount={data.qna_comments[0].count} questioner={data.user_id} />
       <button className=" fixed right-[168px] bottom-[62px]" onClick={handleTopBtnClick}>
         <GoToTop />
       </button>
