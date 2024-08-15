@@ -4,6 +4,7 @@ import Logo from '@/assets/images/header/Logo';
 import { useAuth } from '@/context/auth.context';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { memo, useCallback, useMemo } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import NavLinks from './NavLinks';
 import SearchBar from './SearchBar';
@@ -13,32 +14,27 @@ const Header = () => {
   const { isLoggedIn, userData } = useAuth();
   const pathname = usePathname();
 
-  const getLinkClasses = (path: string) => {
-    return pathname === path ? 'text-h4 font-bold text-main-400' : 'text-h4 font-bold text-neutral-900';
-  };
+  const getLinkClasses = useCallback(
+    (path: string) => (pathname === path ? 'text-h4 font-bold text-main-400' : 'text-h4 font-bold text-neutral-900'),
+    [pathname]
+  );
 
   return (
     <header className="bg-transparent h-[120px] w-full mt-[76px]">
-      <div className="container mx-auto flex items-center">
-        <div className="flex items-center ml-40">
-          <div className="mt-[27.5px] mb-[27.5px] mr-2">
-            <Link href={'/'}>
+      <div className="mx-auto flex items-center w-[1204px] justify-between">
+        <div className="flex items-center mr-2">
+          <Link href={'/'}>
+            <div className="mt-[27.5px] mb-[27.5px] mr-2">
               <Logo />
-            </Link>
-          </div>
-          <div className="my-8">
-            <NavLinks getLinkClasses={getLinkClasses} />
-          </div>
-          <div className="mx-2">
-            <SearchBar />
-          </div>
+            </div>
+          </Link>
+          <NavLinks getLinkClasses={getLinkClasses} />
+          <SearchBar />
         </div>
-        <div className="w-[333px]">
-          <UserMenu isLoggedIn={isLoggedIn} userData={userData} />
-        </div>
+        <UserMenu isLoggedIn={isLoggedIn} userData={userData} />
       </div>
     </header>
   );
 };
 
-export default Header;
+export default memo(Header);
