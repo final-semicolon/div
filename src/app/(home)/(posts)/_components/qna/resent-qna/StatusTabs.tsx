@@ -17,7 +17,7 @@ const StatusTabs = ({ status, setStatus }: { status: string; setStatus: (status:
           status === 'selected' ? 'bg-sub-50 text-neutral-700' : 'bg-white text-neutral-400'
         } rounded-tr-3xl rounded-tl-3xl transition-colors duration-300`}
       >
-        <p className="text-body1 font-bold"> 채택된 질문글</p>
+        <p className="text-body1 font-bold"> 채택을 완료한 질문글</p>
       </button>
     </div>
   );

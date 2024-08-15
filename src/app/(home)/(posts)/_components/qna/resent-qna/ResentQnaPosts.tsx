@@ -6,8 +6,10 @@ import useFetchQnaPosts from '@/hooks/qna/useFetchQnaPosts';
 import { Post, SortOption } from '@/types/posts/qnaTypes';
 import dayjs from 'dayjs';
 import Pagination from './Pagination';
-import QnaPostItem from './QnaPostItem';
+import QnaPostItemWaiting from './QnaPostItemWaiting';
 import StatusTabs from './StatusTabs';
+import QnaPostItemSelected from './QnaPostItemSelected';
+import QnaPostItemSkeleton from '../skeleton/QnaPostItemSkeleton';
 
 const ResentQnaPosts = () => {
   const [status, setStatus] = useState('waiting');
@@ -56,7 +58,7 @@ const ResentQnaPosts = () => {
 
   const sortOptions: { value: SortOption; label: string }[] = [
     { value: 'latest', label: '최신순' },
-    { value: 'mostComments', label: '댓글순' },
+    { value: 'mostComments', label: '답변순' },
     { value: 'mostLikes', label: '좋아요순' }
   ];
 
@@ -71,7 +73,7 @@ const ResentQnaPosts = () => {
   }, []);
 
   if ((status === 'waiting' && isPendingWaiting) || (status === 'selected' && isPendingSelected)) {
-    return <div>Loading...</div>;
+    return <QnaPostItemSkeleton />;
   }
 
   if ((status === 'waiting' && isErrorWaiting) || (status === 'selected' && isErrorSelected)) {
@@ -91,9 +93,13 @@ const ResentQnaPosts = () => {
 
       {sortedPosts.length > 0 ? (
         <ul>
-          {sortedPosts.map((post: Post) => (
-            <QnaPostItem key={post.id} post={post} />
-          ))}
+          {sortedPosts.map((post: Post) =>
+            status === 'waiting' ? (
+              <QnaPostItemWaiting key={post.id} post={post} />
+            ) : (
+              <QnaPostItemSelected key={post.id} post={post} />
+            )
+          )}
         </ul>
       ) : (
         <div>게시물이 없습니다.</div>
