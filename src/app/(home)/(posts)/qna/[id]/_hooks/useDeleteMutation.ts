@@ -1,40 +1,56 @@
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { COMMENT_DELETE_ALRERT_TEXT, QNA_ANSWER_DELETE_ALRERT_TEXT } from '@/constants/alert';
+import { useQnaDetailStore } from '@/store/qnaDetailStore';
+import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
 import { InvalidateQueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 type replyMutationProps = {
   path: string;
-  querykey: InvalidateQueryFilters;
+  queryKey: (string | number)[];
   postId: string;
+  commentId?: string;
 };
 
-const useDeleteMutation = ({ path, querykey, postId }: replyMutationProps) => {
+const useDeleteMutation = ({ path, queryKey, postId, commentId }: replyMutationProps) => {
+  const { commentPage } = useQnaDetailStore();
   const queryClient = useQueryClient();
   const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail`;
 
-  const deleteQnaData = async (): Promise<void> => {
-    await deleteMutate();
+  const deleteQnaData = (): void => {
+    deleteMutate();
     return;
   };
 
-  const deleteReplyMutation = async () => {
-    const response = await fetch(`${BASE_URL}${path}`, {
+  const deleteMutation = async () => {
+    const response = await fetch(`${BASE_URL}${path}?commentId=${commentId} `, {
       method: 'DELETE'
     });
-    const { data, message } = await response.json();
+    const { count, message } = await response.json();
     if (message) {
       return toast.error(message);
     }
-    return data;
+    return count;
   };
 
   const { mutate: deleteMutate } = useMutation({
-    mutationFn: deleteReplyMutation,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(querykey);
+    mutationFn: deleteMutation,
+    onSuccess: async (count) => {
+      await queryClient.invalidateQueries({ queryKey });
+
       path.includes('reply') ? toast.success(COMMENT_DELETE_ALRERT_TEXT) : toast.success(QNA_ANSWER_DELETE_ALRERT_TEXT);
-      await revalidatePostTag(`qna-detail-${postId}`);
+      !path.includes('qna-reply') ? await revalidatePostTag(`qna-detail-${postId}`) : '';
+
+      if (commentId) {
+        await queryClient.setQueryData(
+          ['qnaComments', postId, commentPage],
+          (oldComments: TqnaCommentsWithReplyCount[]) => {
+            return oldComments.map((oldComment) =>
+              oldComment.id === commentId ? { ...oldComment, qna_reply: [{ count }] } : oldComment
+            );
+          }
+        );
+      }
     }
   });
 

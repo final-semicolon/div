@@ -15,11 +15,10 @@ import ConfirmModal from '@/components/modal/ConfirmModal';
 import ArchiveReplyInput from './ArchiveReplyInput';
 import ArchiveReply from './ArchiveReply';
 import { archiveCommentsType, commentRetouch } from '@/types/posts/archiveDetailTypes';
-import EndOfData from '@/components/common/EndOfData';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import { useLoginAlertStore } from '@/store/loginAlertModal';
 import LoginAlertModal from '@/components/modal/LoginAlertModal';
-import CommentPageButton from './CommentPageButton';
+import CommentPageButton from '@/components/common/CommentPageButton';
 
 const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -33,7 +32,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   const [confirmModal, setConfirmModal] = useState<{ [key: string]: boolean }>({});
   const [commentLength, setCommentLength] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const itemsPerPage = 5; // 페이지당 아이템 수
+  const itemsPerPage = 5;
   const { isOpen, loginAlertModal } = useLoginAlertStore();
 
   // 댓글 수정
@@ -55,7 +54,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   const commentRetouchHandle = async (id: string, user_id: string) => {
     commentRetouch.mutate({ id, user_id, mdEditorChange });
     setEditingState({ Boolean: false });
-    toast.success('댓글이 수정 되었습니다.', { autoClose: 1500 });
+    toast.success('댓글이 수정되었어요', { autoClose: 1500 });
   };
 
   // 댓글 삭제
@@ -80,7 +79,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   });
 
   const handleDelete = async (id: string, user_id: string) => {
-    toast.success('댓글이 삭제되었습니다.', { autoClose: 1500 });
+    toast.success('댓글이 삭제되었어요', { autoClose: 1500 });
     commentDelete.mutate({ id, user_id });
   };
 
@@ -112,24 +111,16 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   };
 
   // 댓글 가져오기
-  const {
-    data: comments,
-    isPending,
-    isError
-  } = useQuery<archiveCommentsType>({
+  const { data: comments } = useQuery<archiveCommentsType>({
     queryKey: ['archiveComments', param.id, page],
     queryFn: async () => {
-      const response = await fetch(`/api/posts/archive-detail/archive-comments/${param.id}?page=${page - 1}`);
+      const response = await fetch(`/api/posts/archive-detail/archive-comments/${param.id}?page=${page}`);
       if (!response.ok) {
         throw new Error('Failed to fetch comments');
       }
       return response.json();
     }
   });
-
-  if (isPending) {
-    return <div>Loading...</div>;
-  }
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -210,7 +201,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
                               isOpen={confirmModal[comment.id]}
                               onClose={() => setConfirmModal((prev) => ({ ...prev, [comment.id]: false }))}
                               onConfirm={() => handleDelete(comment.id, comment.user_id)}
-                              message={'댓글을 삭제 하겠습니까?'}
+                              message={'댓글을 삭제 할까요?'}
                             />
                           )}
                         </div>
@@ -251,7 +242,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
                       isOpen={confirmModal[comment.id]}
                       onClose={() => handleCloseModal(comment.id)}
                       onConfirm={() => handleConfirmCancelEdit(comment.id)}
-                      message={'댓글 작성을 취소 하시겠습니까?'}
+                      message={'댓글 작성을 중단 할까요?'}
                     />
                   )}
                 </div>

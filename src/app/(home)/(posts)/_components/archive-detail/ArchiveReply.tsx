@@ -51,7 +51,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
 
   const replyRetouchHandle = async (id: string, user_id: string) => {
     if (!replyRetouch) {
-      toast.error('댓글을 입력해주세요!', {
+      toast.error('댓글을 입력해주세요', {
         autoClose: 2000
       });
       return;
@@ -71,10 +71,6 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
         }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to delete reply');
-      }
-
       return response.json();
     },
     onSuccess: () => {
@@ -88,13 +84,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
   };
 
   // 대댓글 가져오기
-  const {
-    fetchNextPage,
-    data: reply,
-    isLoading,
-    hasNextPage,
-    error
-  } = useInfiniteQuery({
+  const { fetchNextPage, data: reply } = useInfiniteQuery({
     queryKey: ['archiveCommentReply', comment_id],
     initialPageParam: 0,
     queryFn: async ({ pageParam = 0 }) => {
@@ -203,7 +193,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                               isOpen={confirmModal[reply.id]}
                               onClose={() => setConfirmModal((prev) => ({ ...prev, [reply.id]: false }))}
                               onConfirm={() => handleReplyDelete(reply.id, reply.user_id)}
-                              message={'댓글을 삭제 하겠습니까?'}
+                              message={'댓글을 삭제 할까요?'}
                             />
                           )}
                         </div>
@@ -246,7 +236,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                       isOpen={confirmModal[reply.id]}
                       onClose={() => handleCloseModal(reply.id)}
                       onConfirm={() => handleConfirmCancelEdit(reply.id)}
-                      message={'댓글 작성을 취소 하시겠습니까?'}
+                      message={'댓글 작성을 중단 할까요?'}
                     />
                   )}
                 </div>

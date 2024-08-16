@@ -1,69 +1,43 @@
 import MDEditor, { commands } from '@uiw/react-md-editor';
-import { MouseEventHandler, useState } from 'react';
-import { TpostReply } from '@/types/posts/qnaDetailTypes';
+import { TpostReply, Treply } from '@/types/posts/qnaDetailTypes';
 import Image from 'next/image';
 import { timeForToday } from '@/utils/timeForToday';
 import { useAuth } from '@/context/auth.context';
-import { toast } from 'react-toastify';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import Chip from '@/components/common/Chip';
 import Tag from '@/components/common/Tag';
 import { cutText, filterSlang } from '@/utils/markdownCut';
-import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 import KebobBtn from '../kebob-btn/KebobBtn';
+import useReply from '../../_hooks/reply/useReply';
 
-type QuestionReplyProps = {
-  reply: TpostReply;
+type ReplyProps = {
+  commentId?: string;
+  reply: TpostReply | Treply;
 };
 
-const QuestionReply = ({ reply }: QuestionReplyProps) => {
-  const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [content, setContent] = useState<string>(reply.post_reply_content);
-  const [seeMore, setSeeMore] = useState<boolean>(false);
+const Reply = ({ commentId, reply }: ReplyProps) => {
+  const replyContent = commentId ? (reply as Treply).reply : (reply as TpostReply).post_reply_content;
+
+  const {
+    postUser,
+    isEdit,
+    setIsEdit,
+    content,
+    seeMore,
+    handleContentChange,
+    handleCancleClick,
+    handleSeeMoreClick,
+    handleEditReply
+  } = useReply(
+    commentId
+      ? {
+          commentId,
+          replyContent,
+          replyId: reply.id,
+          replyType: 'answer'
+        }
+      : { replyContent, replyId: reply.id, replyType: 'question' }
+  );
   const { me } = useAuth();
-  const { postId, postUser } = useQnaDetailStore();
-  const queryClient = useQueryClient();
-
-  const handleContentChange = (value: string | undefined): void => {
-    setContent(value!);
-  };
-
-  const handleCancleClick = () => {
-    setIsEdit(false);
-    setContent(reply.post_reply_content);
-  };
-
-  const handleEditQuestionReply: MouseEventHandler<HTMLButtonElement> = async () => {
-    const data = await editMutate({ replyId: reply.id, post_reply_content: content });
-    toast.success(COMMENT_EDIT_ALERT_TEXT);
-    setIsEdit(false);
-  };
-
-  const editQuestionReply = async ({
-    replyId,
-    post_reply_content
-  }: {
-    replyId: string;
-    post_reply_content: string;
-  }) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/qna-post-reply/${replyId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ post_reply_content })
-    });
-    const { data, message } = await response.json();
-    if (message) {
-      return toast.error(message);
-    }
-    return data;
-  };
-
-  const { mutate: editMutate } = useMutation({
-    mutationFn: editQuestionReply,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['qnaReply', postId] });
-    }
-  });
 
   return (
     <div
@@ -80,7 +54,6 @@ const QuestionReply = ({ reply }: QuestionReplyProps) => {
             className="rounded-full"
           />
         </div>
-
         <div className="flex flex-col gap-1">
           {postUser === me?.id ? <Tag intent="primary" label="글쓴이" /> : null}
           <div className="text-subtitle1 text-neutral-900">{reply.users.nickname}</div>
@@ -88,7 +61,12 @@ const QuestionReply = ({ reply }: QuestionReplyProps) => {
         </div>
         {me?.id === reply.user_id ? (
           <div className="flex ml-auto mb-auto">
-            <KebobBtn replyId={reply.id} setIsEdit={setIsEdit} category={'questionReply'} />
+            <KebobBtn
+              replyId={reply.id}
+              setIsEdit={setIsEdit}
+              category={commentId ? 'answerReply' : 'questionReply'}
+              commentId={commentId ?? ''}
+            />
           </div>
         ) : null}
       </div>
@@ -113,22 +91,20 @@ const QuestionReply = ({ reply }: QuestionReplyProps) => {
               intent={`${content.length === 0 ? 'primary_disabled' : 'primary'}`}
               size="medium"
               label="등록"
-              onClick={handleEditQuestionReply}
+              onClick={handleEditReply}
             />
           </div>
         </div>
       ) : (
         <div className="flex flex-col mb-6 mx-5  gap-[16px]">
           {seeMore ? (
-            <MDEditor.Markdown source={filterSlang(reply.post_reply_content)} />
+            <MDEditor.Markdown source={filterSlang(replyContent)} />
           ) : (
             <>
-              <MDEditor.Markdown source={cutText(reply.post_reply_content, 344)} />
+              <MDEditor.Markdown source={cutText(replyContent, 344)} />
               <button
                 className={`${content.length > 350 ? '' : 'hidden'} text-start text-subtitle2 text-neutral-700`}
-                onClick={() => {
-                  setSeeMore(true);
-                }}
+                onClick={handleSeeMoreClick}
               >
                 ...더 보기
               </button>
@@ -142,4 +118,4 @@ const QuestionReply = ({ reply }: QuestionReplyProps) => {
   );
 };
 
-export default QuestionReply;
+export default Reply;

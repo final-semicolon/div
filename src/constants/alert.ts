@@ -21,6 +21,7 @@ export const QNA_ANSWER_CANCLE_ALRERT_TEXT = '답변 작성을 취소했어요.'
 export const QNA_ANSWER_EDIT_ALERT_TEXT = '답변을 수정했어요.';
 export const QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT = '답변 수정을 취소했어요.';
 export const QNA_ANSWER_DELETE_ALRERT_TEXT = '답변을 삭제했어요.';
+
 //채택 완료 Alert 메세지
 export const SELECT_ANSWER_ALERT_TEXT = '채택이 완료되었어요.';
 

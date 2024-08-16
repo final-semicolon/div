@@ -46,8 +46,8 @@ const ReplyPageButton = ({ page, setPage, totalPage, fetchNextPage, reply }: arc
           <rect x="1" y="0.5" width="31" height="31" rx="5.5" stroke="none" />
           <path
             d="M19.5 10L13.6414 15.8586C13.5633 15.9367 13.5633 16.0633 13.6414 16.1414L19.5 22"
-            stroke-width="1.5"
-            stroke-linecap="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
           />
         </svg>
       </button>
@@ -64,8 +64,8 @@ const ReplyPageButton = ({ page, setPage, totalPage, fetchNextPage, reply }: arc
           <rect x="1" y="0.5" width="31" height="31" rx="5.5" stroke="none" />
           <path
             d="M13.5 10L19.3586 15.8586C19.4367 15.9367 19.4367 16.0633 19.3586 16.1414L13.5 22"
-            stroke-width="1.5"
-            stroke-linecap="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
           />
         </svg>
       </button>

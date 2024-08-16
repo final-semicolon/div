@@ -32,11 +32,11 @@ const ArchiveInputComments = () => {
       });
       const result = await response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
       if (comment) {
         setComment('');
-        revalidate('/', 'page');
+        await revalidate('/', 'layout');
       }
     }
   });
@@ -46,19 +46,19 @@ const ArchiveInputComments = () => {
     const archiveComment = { user_id: me?.id, post_id: params.id, comment };
 
     if (!me?.id) {
-      toast.error('로그인 후 입력가능합니다.', {
+      toast.error('로그인 후 입력해주세요', {
         autoClose: 2000
       });
       return;
     }
     if (comment === '') {
-      toast.error('댓글을 입력해주세요!', {
+      toast.error('댓글을 입력해주세요', {
         autoClose: 2000
       });
       return;
     }
 
-    toast.success('댓글이 입력되었습니다.', { autoClose: 1500 });
+    toast.success('댓글을 등록했어요', { autoClose: 1500 });
     handleComment.mutate(archiveComment);
   };
 

@@ -45,13 +45,13 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
     const archiveCommentReply: userReply = { user_id: me?.id, comment_id, reply };
 
     if (!me?.id) {
-      toast.error('로그인 후 입력 가능합니다.', {
+      toast.error('로그인 후 입력해주세요', {
         autoClose: 2000
       });
       return;
     }
     if (!reply) {
-      toast.error('댓글을 입력해주세요.', {
+      toast.error('댓글을 입력해주세요', {
         autoClose: 2000
       });
       return;
