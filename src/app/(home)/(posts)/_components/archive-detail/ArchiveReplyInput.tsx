@@ -14,7 +14,7 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
   const { me, userData } = useAuth();
   const params = useParams();
   const queryClient = useQueryClient();
-  const [reply, setReply] = useState(''); //
+  const [reply, setReply] = useState('');
   const [showModal, setShowModal] = useState(false);
 
   const handleReply = useMutation({
@@ -26,18 +26,15 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
           'Content-Type': 'application/json'
         }
       });
-      if (!response.ok) {
-        throw new Error('Failed to submit reply');
-      }
-      return response.json();
+      const data = await response.json();
+      return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['commentReply'] });
-      queryClient.invalidateQueries({ queryKey: ['archiveCommentReply'] });
+      queryClient.invalidateQueries({ queryKey: ['commentReply', comment_id] });
+      queryClient.invalidateQueries({ queryKey: ['archiveComment'] });
     }
   });
 
-  //
   const changeReply = (value?: string) => {
     setReply(value ?? '');
   };
@@ -48,13 +45,13 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
     const archiveCommentReply: userReply = { user_id: me?.id, comment_id, reply };
 
     if (!me?.id) {
-      toast.error('로그인 후 입력 가능합니다.', {
+      toast.error('로그인 후 입력해주세요', {
         autoClose: 2000
       });
       return;
     }
     if (!reply) {
-      toast.error('댓글을 입력해주세요.', {
+      toast.error('댓글을 입력해주세요', {
         autoClose: 2000
       });
       return;
@@ -79,6 +76,7 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
 
   return (
     <div className="border-l-4 border-[#C7DCF5] border-b-[1px] p-6">
+      <p>댓글 {count}</p>
       <div className="flex justify-center items-center gap-6">
         <Image
           src={userData?.profile_image ?? ''}
@@ -87,15 +85,18 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
           height={48}
           className="rounded-full"
         />
-        <MDEditor
-          value={reply}
-          onChange={changeReply}
-          preview="edit"
-          extraCommands={[]}
-          commands={commands.getCommands().filter((command) => command.name !== 'image')}
-          textareaProps={{ maxLength: 500 }}
-          className="w-full"
-        />
+        <div className="border border-neutral-100 rounded-xl focus-within:border-main-400">
+          <MDEditor
+            value={reply}
+            onChange={changeReply}
+            preview="edit"
+            extraCommands={[]}
+            commands={commands.getCommands().filter((command) => command.name !== 'image')}
+            textareaProps={{ maxLength: 1000, placeholder: '자유롭게 소통해 보세요!' }}
+            height={176}
+            style={{ width: '1092px' }}
+          />
+        </div>
       </div>
       <div className="flex justify-end items-end gap-4 mt-4">
         <button
@@ -119,7 +120,7 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
           isOpen={showModal}
           onClose={handleCloseModal}
           onConfirm={handleConfirmCancel}
-          message={'댓글 작성을 취소 하시겠습니까?'}
+          message={'댓글 작성을 중단할까요?'}
         />
       )}
     </div>
