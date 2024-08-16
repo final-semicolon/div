@@ -10,12 +10,12 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import ReplyPageButton from '../../../../../components/common/ReplyPageButton';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 import Chip from '@/components/common/Chip';
 import { COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
+import ReplyPageBtn from '@/components/common/ReplyPageBtn';
 
 const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_user_id: string }) => {
   const { me } = useAuth();
@@ -95,7 +95,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
   if (isPending) {
     return <div>loading...</div>;
   }
-
+  console.log(reply);
   //reply 페이지 수
   const COMMENT_REPLY_PAGE = 5;
   const replyCount = reply?.count;
@@ -118,7 +118,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
   };
 
   return (
-    <div>
+    <div className="flex flex-col justify-end items-end">
       {reply?.reply.map((reply) => (
         <div key={reply.id} className="w-full">
           {reply.comment_id === comment_id && (
@@ -258,7 +258,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
           )}
         </div>
       ))}
-      <ReplyPageButton page={page} setPage={setPage} totalPage={totalPage} />
+      <ReplyPageBtn page={page} setPage={setPage} totalPage={totalPage} />
     </div>
   );
 };

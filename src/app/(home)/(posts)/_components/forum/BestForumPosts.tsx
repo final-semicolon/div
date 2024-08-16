@@ -38,7 +38,7 @@ const BestForumPosts = () => {
   }
 
   if (error) {
-    return <div>Error loading posts</div>;
+    return <div>Error</div>;
   }
 
   return (

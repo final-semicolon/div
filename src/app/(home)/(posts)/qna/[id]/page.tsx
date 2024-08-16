@@ -9,9 +9,12 @@ type QnaDetailPageProps = {
 };
 
 const QnaDetailPage = async ({ params }: QnaDetailPageProps) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/${params.id}?category=qna`, {
-    next: { tags: [`qna-detail-${params.id}`], revalidate: 60 }
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/question/${params.id}?category=qna`,
+    {
+      next: { tags: [`qna-detail-${params.id}`], revalidate: 60 }
+    }
+  );
   const { questionData, message }: { questionData: TqnaData; message: string } = await response.json();
 
   if (message) {

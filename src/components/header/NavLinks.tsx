@@ -1,9 +1,8 @@
 import { NavLinksProps } from '@/types/header/headerTypes';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { memo } from 'react';
 
 const NavLinks = ({ getLinkClasses }: NavLinksProps) => {
-  const pathname = usePathname();
   return (
     <div className="flex w-[437px] h-[56px]">
       <Link href={'/'}>
@@ -30,4 +29,4 @@ const NavLinks = ({ getLinkClasses }: NavLinksProps) => {
   );
 };
 
-export default NavLinks;
+export default memo(NavLinks);

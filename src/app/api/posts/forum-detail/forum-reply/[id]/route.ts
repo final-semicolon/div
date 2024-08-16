@@ -30,7 +30,12 @@ export const POST = async (request: Request) => {
 
   const { data: replyText } = await supabase.from('forum_reply').insert({ user_id, comment_id, reply });
 
-  return NextResponse.json(replyText);
+  const { data: replyCount } = await supabase
+    .from('forum_reply')
+    .select('*', { count: 'exact', head: true })
+    .eq(comment_id, comment_id);
+
+  return NextResponse.json({ replyText, replyCount });
 };
 
 export const PATCH = async (request: Request) => {

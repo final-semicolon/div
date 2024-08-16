@@ -9,8 +9,6 @@ type forumReplyPageProps = {
 };
 
 const CommentsPageButton = ({ commentsPage, setCommentsPage, totalPage }: forumReplyPageProps) => {
-  const PAGES_GROUP = 5;
-
   return (
     <div className="flex justify-end items-end gap-2 mt-4">
       <button onClick={() => setCommentsPage((prev) => Math.max(prev - 1, 1))} disabled={commentsPage === 1}>

@@ -5,8 +5,7 @@ import useFetchQnaPosts from '@/hooks/qna/useFetchQnaPosts';
 import PopularQnaPostItem from './PopularQnaPostItem';
 import { Suspense } from 'react';
 import PopularQnaPagination from './PopualrQnaPagination';
-
-export const Loading = () => <div>Loading...</div>;
+import { NoPostsPlaceholder, PopularQnaPostsSkeleton } from '../skeleton/PopularQnaPostsSkeleton';
 
 const Error = ({ message }: { message: string }) => <div>Error: {message}</div>;
 
@@ -22,7 +21,7 @@ const PopularQnaPosts = () => {
   } = useFetchQnaPosts('popular');
 
   if (isPendingPopular) {
-    return <Loading />;
+    return <PopularQnaPostsSkeleton />;
   }
 
   if (isErrorPopular) {
@@ -34,15 +33,7 @@ const PopularQnaPosts = () => {
 
   return (
     <div className="w-[1204px] mx-auto p-4">
-      <div className="flex justify-start items-center relative gap-1.5 mb-8">
-        <p className="flex items-center text-h4 font-bold text-left text-neutral-900">
-          인기 QnA
-          <div className="ml-1">
-            <GradCap />
-          </div>
-        </p>
-      </div>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<PopularQnaPostsSkeleton />}>
         {popularPosts && popularPosts.length > 0 ? (
           <ul className="grid grid-cols-2">
             {popularPosts.map((post, index) => (
@@ -50,7 +41,8 @@ const PopularQnaPosts = () => {
             ))}
           </ul>
         ) : (
-          <div>게시물이 없습니다.</div>
+          // <div>게시물이 없습니다.</div>
+          <NoPostsPlaceholder />
         )}
       </Suspense>
       <PopularQnaPagination totalPages={popularTotalPages} currentPage={popularPage} onPageChange={goToPopularPage} />

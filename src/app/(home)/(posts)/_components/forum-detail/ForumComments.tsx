@@ -22,7 +22,6 @@ import LoginAlertModal from '@/components/modal/LoginAlertModal';
 import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 import Chip from '@/components/common/Chip';
 import { COMMENT_CANCLE_CONFIRM_TEXT, COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
-import CommentsPageButton from '@/components/common/CommentsPageButton';
 
 const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -319,7 +318,6 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
           </div>
         </div>
       ))}
-      <CommentsPageButton commentsPage={commentsPage} setCommentsPage={setCommentsPage} totalPage={commentsTotalPage} />
       {loginAlertModal && <LoginAlertModal />}
     </>
   );
