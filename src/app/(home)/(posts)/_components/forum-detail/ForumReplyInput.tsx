@@ -14,9 +14,10 @@ type commentReplyProps = {
   comment_id: string;
   toggle: (id: string, count: number) => void;
   count: number;
+  commentsPage: number;
 };
 
-const ForumReplyInput = ({ comment_id, toggle, count }: commentReplyProps) => {
+const ForumReplyInput = ({ comment_id, toggle, count, commentsPage }: commentReplyProps) => {
   const { me, userData } = useAuth();
   const params = useParams();
   const queryClient = useQueryClient();
@@ -32,9 +33,16 @@ const ForumReplyInput = ({ comment_id, toggle, count }: commentReplyProps) => {
       const data = await response.json();
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['commentReply', comment_id] });
-      queryClient.invalidateQueries({ queryKey: ['forumComments'] });
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ['commentReply', comment_id] });
+      if (comment_id) {
+        await queryClient.setQueryData(['forumComments', params.id, commentsPage], (oldData: any) => {
+          const newComment = oldData.data.map((comment: any) =>
+            comment.id === comment_id ? { ...comment, reply: [{ count: data?.replyCount }] } : comment
+          );
+          return { ...oldData, data: newComment };
+        });
+      }
     }
   });
 
@@ -47,18 +55,11 @@ const ForumReplyInput = ({ comment_id, toggle, count }: commentReplyProps) => {
     const commentReply = { user_id: me?.id, comment_id, reply };
 
     if (!me?.id) {
-      toast.error('로그인 후 입력가능합니다.', {
-        autoClose: 2000
-      });
-      return;
-    }
-    if (!reply) {
-      toast.error('댓글을 입력해주세요..', {
-        autoClose: 2000
-      });
+      toast.error('로그인 후 입력가능합니다.');
       return;
     }
     setReply('');
+
     handleReply.mutate(commentReply);
   };
 

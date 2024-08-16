@@ -113,7 +113,6 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   if (isPending) {
     return <div>loading...</div>;
   }
-
   const COMMENT_PAGE = 5;
   const commentsCount = comments?.count ?? 0;
   const commentsTotalPage: number = Math.ceil(commentsCount / COMMENT_PAGE);
@@ -140,7 +139,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
       <div className=" mt-10 mb-6 px-6 text-subtitle1 font-medium ">
         {comments && comments.length > 0 && <p>댓글 {comments.count}</p>}
       </div>
-      {comments?.data.map((comment: any) => (
+      {comments?.data?.map((comment: any) => (
         <div key={comment.id}>
           <div key={comment.id} className="w-full flex flex-col ">
             <div
@@ -312,9 +311,16 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
             </div>
 
             {inputReplyToggle[comment.id] ? (
-              <ForumReplyInput comment_id={comment.id} toggle={handleInputReplyToggle} count={comment.reply[0].count} />
+              <ForumReplyInput
+                comment_id={comment.id}
+                toggle={handleInputReplyToggle}
+                count={comment.reply[0].count}
+                commentsPage={commentsPage}
+              />
             ) : null}
-            {replyToggle[comment.id] ? <ForumReply comment_id={comment.id} post_user_id={post_user_id} /> : null}
+            {replyToggle[comment.id] ? (
+              <ForumReply comment_id={comment.id} post_user_id={post_user_id} commentsPage={commentsPage} />
+            ) : null}
           </div>
         </div>
       ))}

@@ -17,7 +17,15 @@ import Chip from '@/components/common/Chip';
 import { COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 import ReplyPageBtn from '@/components/common/ReplyPageBtn';
 
-const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_user_id: string }) => {
+const ForumReply = ({
+  comment_id,
+  post_user_id,
+  commentsPage
+}: {
+  comment_id: string;
+  post_user_id: string;
+  commentsPage: number;
+}) => {
   const { me } = useAuth();
   const params = useParams<{ id: string }>();
   const [page, setPage] = useState<number>(1);
@@ -59,20 +67,31 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
 
   //대댓글 삭제
   const commentDelete = useMutation({
-    mutationFn: async ({ id, user_id }: { id: string; user_id: string }) => {
+    mutationFn: async ({ id, user_id, comment_id }: { id: string; user_id: string; comment_id: string }) => {
       const response = await fetch(`/api/posts/forum-detail/forum-reply/${params.id}`, {
         method: 'DELETE',
-        body: JSON.stringify({ id, user_id })
+        body: JSON.stringify({ id, user_id, comment_id })
       });
+      const data = response.json();
+
+      return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['commentReply'] });
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ['commentReply'] });
+      if (comment_id) {
+        await queryClient.setQueryData(['forumComments', params.id, commentsPage], (oldData: any) => {
+          const newComment = oldData.data.map((comment: any) =>
+            comment.id === comment_id ? { ...comment, reply: [{ count: data?.replyCount }] } : comment
+          );
+          return { ...oldData, data: newComment };
+        });
+      }
       toast.success(COMMENT_DELETE_ALRERT_TEXT);
     }
   });
 
-  const handleReplyDelete = async (id: string, user_id: string) => {
-    commentDelete.mutate({ id, user_id });
+  const handleReplyDelete = async (id: string, user_id: string, comment_id: string) => {
+    commentDelete.mutate({ id, user_id, comment_id });
   };
 
   //대댓글 가져오기
@@ -95,7 +114,6 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
   if (isPending) {
     return <div>loading...</div>;
   }
-  console.log(reply);
   //reply 페이지 수
   const COMMENT_REPLY_PAGE = 5;
   const replyCount = reply?.count;
@@ -171,7 +189,7 @@ const ForumReply = ({ comment_id, post_user_id }: { comment_id: string; post_use
                             <ConfirmModal
                               isOpen={confirmModal}
                               onClose={() => setConfirmModal(false)}
-                              onConfirm={() => handleReplyDelete(reply.id, reply.user_id)}
+                              onConfirm={() => handleReplyDelete(reply.id, reply.user_id, reply.comment_id)}
                               message={COMMENT_DELETE_CONFIRM_TEXT}
                             />
                           )}
