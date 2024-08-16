@@ -8,3 +8,9 @@ export type UserMenuProps = {
     profile_image?: string | null;
   } | null;
 };
+
+export type DesktopHeaderProps = {
+  getLinkClasses: (path: string) => string;
+  isLoggedIn: boolean;
+  userData: any;
+};
