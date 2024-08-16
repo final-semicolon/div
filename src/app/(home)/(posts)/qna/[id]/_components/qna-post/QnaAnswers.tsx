@@ -1,11 +1,12 @@
 import QnaAnswer from './QnaAnswer';
 import { useQuery } from '@tanstack/react-query';
 import NotFound from '@/app/not-found';
-import Loading from '@/app/(home)/loading';
 import { useState } from 'react';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { toast } from 'react-toastify';
+import Loading from '@/app/(home)/loading';
+import QnaAnswerSkeleton from '../skeleton/QnaAnswerSkeleton';
 
 type QnaAnswersProps = {
   qnaCommentsCount: number;
@@ -47,7 +48,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
   });
 
   if (isPending) {
-    return <Loading />;
+    return <QnaAnswerSkeleton />;
   }
   if (isError) {
     return <NotFound />;

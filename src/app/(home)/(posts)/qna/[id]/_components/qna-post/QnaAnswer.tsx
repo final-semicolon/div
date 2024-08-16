@@ -303,25 +303,31 @@ const QnaAnswer = ({
         </div>
       </div>
       <div className="flex justify-between  h-[59px] items-center">
-        <div className="flex gap-6 items-center ">
-          <span className="text-body1 text-neutral-400">{qnaComment.created_at?.slice(0, 10)}</span>
-          <div className="flex gap-1 ">
-            <LikeButton id={qnaComment.id} type={'qnaComment'} />
+        <div className={`w-full flex gap-6 items-center`}>
+          <span className={`text-body1 text-neutral-400 `}>{qnaComment.created_at?.slice(0, 10)}</span>
+          <div
+            className={`flex gap-[26px]  ${me?.id === questioner && seletedComment !== qnaComment.id ? '' : 'ml-auto'}`}
+          >
+            <div className="flex gap-1 ">
+              <LikeButton id={qnaComment.id} type={'qnaComment'} />
+            </div>
+            <div className="flex gap-1 ">
+              <BookmarkButton id={qnaComment.id} type={'qnaComment'} />
+            </div>
+            <button className="flex gap-1" onClick={handleReplyClick}>
+              {qnaComment?.qna_reply[0].count !== 0 && openAnswerReply ? (
+                <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>
+              ) : qnaComment?.qna_reply[0].count !== 0 ? (
+                <div className="text-main-400 text-subtitle1 font-medium">
+                  {qnaComment?.qna_reply[0].count}개의 댓글
+                </div>
+              ) : openAnswerReply ? (
+                <div className="text-main-400 text-subtitle1 font-medium">댓글 쓰기</div>
+              ) : (
+                <div className="text-neutral-400 text-subtitle1 font-medium">댓글 쓰기</div>
+              )}
+            </button>
           </div>
-          <div className="flex gap-1 ">
-            <BookmarkButton id={qnaComment.id} type={'qnaComment'} />
-          </div>
-          <button className="flex gap-1" onClick={handleReplyClick}>
-            {qnaComment?.qna_reply[0].count !== 0 && openAnswerReply ? (
-              <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>
-            ) : qnaComment?.qna_reply[0].count !== 0 ? (
-              <div className="text-main-400 text-subtitle1 font-medium">{qnaComment?.qna_reply[0].count}개의 댓글</div>
-            ) : openAnswerReply ? (
-              <div className="text-main-400 text-subtitle1 font-medium">댓글 쓰기</div>
-            ) : (
-              <div className="text-neutral-400 text-subtitle1 font-medium">댓글 쓰기</div>
-            )}
-          </button>
         </div>
         <ConfirmModal
           isOpen={isSelectModalOpen}
