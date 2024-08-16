@@ -105,8 +105,8 @@ const SearchBar = () => {
   };
 
   return (
-    <div ref={searchBarRef} className="relative flex flex-col items-center text-neutral-400">
-      <div className="flex items-center border border-neutral-200 rounded-md w-[318px] h-[56px]">
+    <div ref={searchBarRef} className=" relative flex flex-col items-center text-neutral-400">
+      <div className=" flex items-center border border-neutral-200 rounded-md w-[318px] h-[56px] ml-10">
         <div className="flex items-center ml-4">
           <SearchButton />
           <input

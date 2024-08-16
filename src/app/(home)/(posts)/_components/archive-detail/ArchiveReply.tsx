@@ -51,7 +51,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
 
   const replyRetouchHandle = async (id: string, user_id: string) => {
     if (!replyRetouch) {
-      toast.error('댓글을 입력해주세요!', {
+      toast.error('댓글을 입력해주세요', {
         autoClose: 2000
       });
       return;
@@ -71,10 +71,6 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
         }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to delete reply');
-      }
-
       return response.json();
     },
     onSuccess: () => {
@@ -88,13 +84,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
   };
 
   // 대댓글 가져오기
-  const {
-    fetchNextPage,
-    data: reply,
-    isLoading,
-    hasNextPage,
-    error
-  } = useInfiniteQuery({
+  const { fetchNextPage, data: reply } = useInfiniteQuery({
     queryKey: ['archiveCommentReply', comment_id],
     initialPageParam: 0,
     queryFn: async ({ pageParam = 0 }) => {
@@ -115,14 +105,6 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
 
   const replyCount = reply?.pages[0].count;
   const totalPage = Math.ceil((replyCount as number) / COMMENT_REPLY_PAGE);
-
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
-
-  if (error) {
-    return <div>오류가 발생했습니다. 다시 시도해 주세요.</div>;
-  }
 
   // MDeditor
   const changeReplyRetouch = (value?: string) => {
@@ -211,7 +193,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                               isOpen={confirmModal[reply.id]}
                               onClose={() => setConfirmModal((prev) => ({ ...prev, [reply.id]: false }))}
                               onConfirm={() => handleReplyDelete(reply.id, reply.user_id)}
-                              message={'댓글을 삭제 하겠습니까?'}
+                              message={'댓글을 삭제 할까요?'}
                             />
                           )}
                         </div>
@@ -221,18 +203,20 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                 </div>
               </div>
               {replyEditor[reply.id] ? (
-                <div>
-                  <MDEditor
-                    value={replyRetouch}
-                    onChange={changeReplyRetouch}
-                    preview="edit"
-                    extraCommands={commands.getCommands().filter(() => false)}
-                    commands={commands.getCommands().filter((command) => {
-                      return command.name !== 'image';
-                    })}
-                    textareaProps={{ maxLength: 1000 }}
-                    height={'auto'}
-                  />
+                <div className="flex flex-col min-h-[200px] mb-6 mx-5 mt-4 gap-4">
+                  <div className="border border-neutral-100 bg-white rounded-xl focus-within:border-main-400">
+                    <MDEditor
+                      value={replyRetouch}
+                      onChange={changeReplyRetouch}
+                      preview="edit"
+                      extraCommands={commands.getCommands().filter(() => false)}
+                      commands={commands.getCommands().filter((command) => {
+                        return command.name !== 'image';
+                      })}
+                      textareaProps={{ maxLength: 1000 }}
+                      height={'auto'}
+                    />
+                  </div>
                   <div className="flex justify-end items-end mt-4 gap-6">
                     <button
                       onClick={() => handleCancelEdit(reply.id)}
@@ -252,7 +236,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                       isOpen={confirmModal[reply.id]}
                       onClose={() => handleCloseModal(reply.id)}
                       onConfirm={() => handleConfirmCancelEdit(reply.id)}
-                      message={'댓글 작성을 취소 하시겠습니까?'}
+                      message={'댓글 작성을 중단 할까요?'}
                     />
                   )}
                 </div>
@@ -284,13 +268,15 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
           )}
         </div>
       ))}
-      <ReplyPageButton
-        page={page}
-        setPage={setPage}
-        totalPage={totalPage}
-        fetchNextPage={fetchNextPage}
-        reply={reply}
-      />
+      <div className=" flex pt-6 gap-4 w-full mt-6 justify-end">
+        <ReplyPageButton
+          page={page}
+          setPage={setPage}
+          totalPage={totalPage}
+          fetchNextPage={fetchNextPage}
+          reply={reply}
+        />
+      </div>
     </div>
   );
 };
