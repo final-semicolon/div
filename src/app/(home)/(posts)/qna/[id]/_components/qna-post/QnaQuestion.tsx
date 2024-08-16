@@ -1,5 +1,5 @@
 import MDEditor from '@uiw/react-md-editor';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { TqnaData } from '@/types/posts/qnaDetailTypes';
 import Image from 'next/image';
 import Share from '@/assets/images/common/Share';
@@ -41,9 +41,9 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
               <Image
                 src={questionData.users.profile_image ?? ''}
                 alt="Profile"
-                layout="fill"
-                objectFit="cover"
                 className="rounded-full"
+                width={48}
+                height={48}
               />
             </div>
           ) : null}
@@ -51,7 +51,7 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
           <span className="text-body1 text-neutral-500">{timeForToday(questionData.updated_at ?? '')}</span>
         </div>
       </div>
-      <div className=" max-w-[1204px] flex my-6 ">
+      <div className=" max-w-[1204px] flex my-6">
         <MDEditor.Markdown style={{ maxWidth: '1156px' }} source={filterSlang(questionData.content)} />
       </div>
       <div className="flex gap-2">
@@ -62,12 +62,12 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
       <div className="flex justify-between h-[59px] items-center">
         <span className="text-body1 text-neutral-400">{questionData.updated_at?.slice(0, 10)}</span>
         <div className="flex gap-6 items-center">
-          <button className="flex gap-1">
+          <div className="flex gap-1">
             <LikeButton id={questionData.id} type={'qna'} />
-          </button>
-          <button className="flex gap-1">
+          </div>
+          <div className="flex gap-1">
             <BookmarkButton id={questionData.id} type={'qnaComment'} />
-          </button>
+          </div>
           <button>
             <Share />
           </button>

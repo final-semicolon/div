@@ -30,6 +30,7 @@ const Replies = ({ commentId, replyCount }: AnswerCommentsProps) => {
       const { data } = await response.json();
       return data;
     },
+    enabled: !!postId,
     gcTime: 5 * 60 * 1000, // 5분
     staleTime: 1 * 60 * 1000, // 1분
     retry: 1

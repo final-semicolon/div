@@ -15,6 +15,7 @@ type QnaAnswersProps = {
 const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
   const { postId, seletedComment } = useQnaDetailStore();
   const [page, setPage] = useState<number>(1);
+  const [sortedByLikes, setSortedByLikes] = useState<boolean>(false);
   const pageParamList = [...Array(Math.ceil(qnaCommentsCount / 5))].map((_, idx) => idx + 1);
 
   const {
@@ -34,6 +35,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
       }
       return data;
     },
+    enabled: !!postId,
     gcTime: 5 * 60 * 1000, // 5분
     staleTime: 1 * 60 * 1000, // 1분
     retry: 1
@@ -53,6 +55,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
             return index === 0 ? (
               <QnaAnswer
                 key={qnaComment.id + 'comment'}
+                setSortedByLikes={setSortedByLikes}
                 qnaComment={qnaComment}
                 questioner={questioner}
                 index={index}

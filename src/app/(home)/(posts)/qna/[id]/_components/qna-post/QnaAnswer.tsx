@@ -1,6 +1,6 @@
 import MDEditor from '@uiw/react-md-editor';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
 import Share from '@/assets/images/common/Share';
 import LikeButton from '@/components/common/LikeButton';
@@ -33,15 +33,17 @@ import {
 } from '@/constants/confirmModal';
 import KebobBtn from '../kebob-btn/KebobBtn';
 import Replies from '../qna-comments/Replies';
+import Dot from '@/assets/images/common/Dot';
 
 type QnaAnswerProps = {
+  setSortedByLikes?: Dispatch<SetStateAction<boolean>>;
   qnaComment: TqnaCommentsWithReplyCount;
   questioner: string;
   index?: number;
   qnaCommentsCount?: number;
 };
 
-const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswerProps) => {
+const QnaAnswer = ({ setSortedByLikes, qnaComment, questioner, index, qnaCommentsCount }: QnaAnswerProps) => {
   const { me } = useAuth();
   const { postId, seletedComment, setSeletedComment } = useQnaDetailStore();
   const [openAnswerReply, setOpenAnswerReply] = useState(false);
@@ -158,7 +160,18 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
       className={`w-[1204px]  mb-6 px-6 py-12 border ${seletedComment === qnaComment.id ? 'border-main-400' : ''} rounded-2xl overflow-auto`}
     >
       <div className="mb-6">
-        {index === 0 ? <div className="w-[1156px] pb-12 text-h4 font-bold">총 {qnaCommentsCount}개의 답변</div> : null}
+        {index === 0 ? (
+          <div className="flex">
+            <div className="w-[1156px] pb-12 text-h4 font-bold ">총 {qnaCommentsCount}개의 답변</div>
+            <div className="flex min-w-[125px] max-h-[22px] gap-3 text-subtitle2 font-medium">
+              <button className="underline hover:font-bold">채택순</button>
+              <div className="flex items-center">
+                <Dot />
+              </div>
+              <button className="underline hover:font-bold">좋아요순</button>
+            </div>
+          </div>
+        ) : null}
         <div
           className={`flex gap-4 items-center ${seletedComment === qnaComment.id ? 'bg-main-50 ' : 'bg-neutral-50 '} py-6 px-5 rounded-2xl`}
         >
@@ -168,9 +181,10 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
                 <Image
                   src={qnaComment.users?.profile_image ?? ''}
                   alt="Profile"
-                  layout="fill"
-                  objectFit="cover"
+                  fill
                   className="rounded-full"
+                  sizes="48px,48px"
+                  loading="lazy"
                 />
               </div>
             ) : null}
@@ -267,15 +281,12 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
       <div className="flex justify-between  h-[59px] items-center">
         <div className="flex gap-6 items-center ">
           <span className="text-body1 text-neutral-400">{qnaComment.created_at?.slice(0, 10)}</span>
-          <button className="flex gap-1 ">
+          <div className="flex gap-1 ">
             <LikeButton id={qnaComment.id} type={'qnaComment'} />
-          </button>
-          <button className="flex gap-1 ">
+          </div>
+          <div className="flex gap-1 ">
             <BookmarkButton id={qnaComment.id} type={'qnaComment'} />
-          </button>
-          <button className="flex gap-1 ">
-            <Share />
-          </button>
+          </div>
           <button className="flex gap-1" onClick={handleReplyClick}>
             {qnaComment?.qna_reply[0].count !== 0 && openAnswerReply ? (
               <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>

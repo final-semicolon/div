@@ -21,15 +21,19 @@ const PostingQnaAnswer = ({ content, setContent }: PostingQnaAnswerProps) => {
       className={`w-[1204px] max-h-[1224px] mb-6 px-6 py-6 border rounded-2xl overflow-y-auto overflow-x-hidden ${toggleAnswer ? 'border-main-400' : ''} `}
     >
       <div className={`flex py-6 gap-x-4 w-[1154px] items-center mb-12 ${toggleAnswer ? 'border-b' : ''} `}>
-        <div className="relative w-12 h-12">
-          <Image
-            src={answer?.profile_image ?? ''}
-            alt="Profile"
-            layout="fill"
-            objectFit="cover"
-            className="rounded-full"
-          />
-        </div>
+        {answer ? (
+          <div className="relative min-w-12 h-12">
+            <Image
+              src={answer?.profile_image ?? ''}
+              alt="Profile"
+              fill
+              className="rounded-full"
+              sizes="48px,48px"
+              loading="lazy"
+            />{' '}
+          </div>
+        ) : null}
+
         <div className="flex flex-col w-[1060px] ">
           <span className="text-main-400 text-subtitle1 font-medium">
             {answer?.nickname ?? ''}
