@@ -126,7 +126,24 @@ body .w-md-editor-text-input {
   background-color: transparent !important;
   color-scheme: white;
 }
-
+@media (min-width: 375px) {
+  .wmde-markdown {
+    font-family: 'Pretendard' !important ;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    background-color: transparent !important;
+    color-scheme: white;
+  }
+}
+@media (min-width: 768px) {
+  .wmde-markdown {
+    font-family: 'Pretendard' !important ;
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    background-color: transparent !important;
+    color-scheme: white;
+  }
+}
 #select-tag-list::-webkit-scrollbar {
   display: none;
 }
@@ -147,11 +164,23 @@ body .w-md-editor-text-input {
   .profile-like-bookmark {
     @apply text-subtitle1 font-medium cursor-pointer p-[0px_25px_0px_25px];
   }
-  .search-toggle-list {
+  .searchbar-toggle-list {
     @apply absolute top-[50px] z-[1000] pt-4 max-h-52 px-4 mt-1 w-full border border-neutral-200 bg-transparent rounded-md shadow-lg overflow-y-auto;
   }
-  .search-toggle-item {
+  .searchbar-toggle-item {
     @apply cursor-pointer mb-4 text-body2 font-regular text-neutral-700 hover:bg-neutral-50;
+  }
+  .filters-item {
+    @apply p-[8px_8px_8px_8px] h-[40px] text-subtitle1 font-medium cursor-pointer center-alignment;
+  }
+  .filter-active {
+    @apply text-main-400 border border-main-400 rounded-lg bg-main-50;
+  }
+  .filter-inactive {
+    @apply text-neutral-700 border border-neutral-100 rounded-lg bg-white;
+  }
+  .searchcard-markdown {
+    @apply text-neutral-400;
   }
 }
 
