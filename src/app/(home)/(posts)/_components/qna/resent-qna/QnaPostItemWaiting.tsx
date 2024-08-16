@@ -48,7 +48,6 @@ const QnaPostItemWaiting = ({ post }: { post: Post }) => (
             </div>
             {post.qna_like[0]?.count || 0}
           </p>
-          <div className="w-0.5 h-[18px] bg-neutral-100" />
           <p className="flex items-center text-body1 font-regular text-neutral-400">
             <div className="flex mr-1">
               <CommentBubble />
