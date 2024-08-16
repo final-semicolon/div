@@ -5,6 +5,7 @@ import { useAuth } from '@/context/auth.context';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useCallback, useMemo } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import 'react-toastify/dist/ReactToastify.css';
 import NavLinks from './NavLinks';
 import SearchBar from './SearchBar';

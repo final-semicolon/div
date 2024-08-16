@@ -14,7 +14,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
       <QnaBackground />
       <HeaderWrapper />
       <div className="flex justify-center flex-1 w-full" data-color-mode="light">
-        <main className="w-[1204px] pt-14">
+        <main className="max-w-[1204px] pt-14">
           {children}
           <ArchiveBackground />
         </main>
