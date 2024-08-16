@@ -36,7 +36,7 @@ export const GET = async (request: NextRequest, { params }: Tparams) => {
           data
         });
   } else if (selecte_comment_id && page === 1) {
-    const { data: commentsWithUnseleted, error: loadError } = await supabase
+    const { data: commentsWithUnselected, error: loadError } = await supabase
       .from('qna_comments')
       .select(`*,users(*),qna_reply(count),qna_comment_tag(tag)`)
       .eq('post_id', post_id)
@@ -51,14 +51,14 @@ export const GET = async (request: NextRequest, { params }: Tparams) => {
 
     const commentsWithSelected = [
       ...(selectedComment as TqnaCommentsWithReplyCount[]),
-      ...(commentsWithUnseleted as TqnaCommentsWithReplyCount[])
+      ...(commentsWithUnselected as TqnaCommentsWithReplyCount[])
     ];
-    console.log('123123123123123123', commentsWithSelected[0]);
+
     return loadSelectedError
       ? NextResponse.json(LOAD_ERROR_MASSAGE)
       : NextResponse.json({ data: commentsWithSelected });
   } else if (selecte_comment_id) {
-    const { data: commentsWithUnseleted, error: loadError } = await supabase
+    const { data: commentsWithUnselected, error: loadError } = await supabase
       .from('qna_comments')
       .select(`*,users(*),qna_reply(count),qna_comment_tag(tag)`)
       .eq('post_id', post_id)
@@ -66,16 +66,16 @@ export const GET = async (request: NextRequest, { params }: Tparams) => {
       .order('created_at', { ascending: false })
       .range(minRange, maxRange);
 
-    return loadError ? NextResponse.json(LOAD_ERROR_MASSAGE) : NextResponse.json({ data: commentsWithUnseleted });
+    return loadError ? NextResponse.json(LOAD_ERROR_MASSAGE) : NextResponse.json({ data: commentsWithUnselected });
   }
-  const { data: commentsWithUnseleted, error: loadError } = await supabase
+  const { data: commentsWithUnselected, error: loadError } = await supabase
     .from('qna_comments')
     .select(`*,users(*),qna_reply(count),qna_comment_tag(tag)`)
     .eq('post_id', post_id)
     .order('created_at', { ascending: false })
     .range(minRange, maxRange);
 
-  return loadError ? NextResponse.json(LOAD_ERROR_MASSAGE) : NextResponse.json({ data: commentsWithUnseleted });
+  return loadError ? NextResponse.json(LOAD_ERROR_MASSAGE) : NextResponse.json({ data: commentsWithUnselected });
 };
 
 export const POST = async (request: Request, { params }: Tparams) => {

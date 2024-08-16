@@ -14,7 +14,7 @@ type QnaAnswersProps = {
 };
 
 const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
-  const { postId, seletedComment, setCommentPage } = useQnaDetailStore();
+  const { postId, selectedComment, setCommentPage } = useQnaDetailStore();
   const [page, setPage] = useState<number>(1);
   const [sortedByLikes, setSortedByLikes] = useState<boolean>(false);
   const pageParamList = [...Array(Math.ceil(qnaCommentsCount / 5))].map((_, idx) => idx + 1);
@@ -27,7 +27,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
     queryKey: sortedByLikes ? ['qnaComments', postId, page, 'likes'] : ['qnaComments', postId, page],
     queryFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${postId}?page=${page}&selected=${seletedComment}&sortedByLikes=${sortedByLikes}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${postId}?page=${page}&selected=${selectedComment}&sortedByLikes=${sortedByLikes}`
       );
       const {
         data,
