@@ -18,7 +18,7 @@ const useKebob = ({ commentId, replyId, setIsEdit, category }: useReplyKebobProp
   const deleteMutationObj = {
     answer: {
       path: `/comment/${commentId}`,
-      queryKey: ['qnaComments', commentId, commentPage]
+      queryKey: ['qnaComments', postId, commentPage]
     },
     questionReply: { path: `/qna-post-reply/${replyId}`, queryKey: ['qnaReply', postId] },
     answerReply: { path: `/qna-reply/${replyId}`, queryKey: ['qnaReply', commentId] }

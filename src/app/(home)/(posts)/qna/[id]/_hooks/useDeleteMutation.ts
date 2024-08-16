@@ -2,7 +2,7 @@ import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { COMMENT_DELETE_ALRERT_TEXT, QNA_ANSWER_DELETE_ALRERT_TEXT } from '@/constants/alert';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
-import { InvalidateQueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 
@@ -34,10 +34,7 @@ const useDeleteMutation = ({ path, queryKey, postId, commentId }: replyMutationP
     onSuccess: async (count) => {
       await queryClient.invalidateQueries({ queryKey });
 
-      path.includes('reply') ? toast.success(COMMENT_DELETE_ALRERT_TEXT) : toast.success(QNA_ANSWER_DELETE_ALRERT_TEXT);
-      !path.includes('qna-reply') ? await revalidatePostTag(`qna-detail-${postId}`) : '';
-
-      if (commentId) {
+      if (path.includes('reply')) {
         await queryClient.setQueryData(
           ['qnaComments', postId, commentPage],
           (oldComments: TqnaCommentsWithReplyCount[]) => {
@@ -47,6 +44,9 @@ const useDeleteMutation = ({ path, queryKey, postId, commentId }: replyMutationP
           }
         );
       }
+
+      path.includes('reply') ? toast.success(COMMENT_DELETE_ALRERT_TEXT) : toast.success(QNA_ANSWER_DELETE_ALRERT_TEXT);
+      !path.includes('qna-reply') ? await revalidatePostTag(`qna-detail-${postId}`) : '';
     }
   });
 

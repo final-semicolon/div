@@ -6,7 +6,6 @@ import {
 } from '@/constants/upsert.api';
 import { createClient } from '@/supabase/server';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
-import { PostgrestError, PostgrestResponse } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Tparams = { params: { id: string } };
@@ -21,12 +20,22 @@ export const GET = async (request: NextRequest, { params }: Tparams) => {
   const urlSearchParams = request.nextUrl.searchParams;
   const page = urlSearchParams.get('page') ? Number(urlSearchParams.get('page')) : 1;
   const selecte_comment_id = urlSearchParams.get('selected');
-  console.log(selecte_comment_id);
+  const sortedByLikes = urlSearchParams.get('sortedByLikes');
   const minRange = page === 1 ? 0 : selecte_comment_id ? (page - 1) * 5 - 1 : (page - 1) * 5;
   const maxRange =
     page === 1 && selecte_comment_id ? 3 : page === 1 ? 4 : selecte_comment_id ? page * 5 - 2 : page * 5 - 1;
 
-  if (selecte_comment_id && page === 1) {
+  if (sortedByLikes === 'true') {
+    const { data, error } = await supabase
+      .rpc('get_comment_details_with_likes', { p_post_id: post_id })
+      .range(page === 1 ? 0 : (page - 1) * 5, page === 1 ? 4 : page * 5 - 1);
+
+    return error
+      ? NextResponse.json(LOAD_ERROR_MASSAGE)
+      : NextResponse.json({
+          data
+        });
+  } else if (selecte_comment_id && page === 1) {
     const { data: commentsWithUnseleted, error: loadError } = await supabase
       .from('qna_comments')
       .select(`*,users(*),qna_reply(count),qna_comment_tag(tag)`)
@@ -44,7 +53,7 @@ export const GET = async (request: NextRequest, { params }: Tparams) => {
       ...(selectedComment as TqnaCommentsWithReplyCount[]),
       ...(commentsWithUnseleted as TqnaCommentsWithReplyCount[])
     ];
-
+    console.log('123123123123123123', commentsWithSelected[0]);
     return loadSelectedError
       ? NextResponse.json(LOAD_ERROR_MASSAGE)
       : NextResponse.json({ data: commentsWithSelected });

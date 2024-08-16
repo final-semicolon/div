@@ -2,7 +2,6 @@ import MDEditor from '@uiw/react-md-editor';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
-import Share from '@/assets/images/common/Share';
 import LikeButton from '@/components/common/LikeButton';
 import { useAuth } from '@/context/auth.context';
 import { timeForToday } from '@/utils/timeForToday';
@@ -36,6 +35,7 @@ import Replies from '../qna-comments/Replies';
 import Dot from '@/assets/images/common/Dot';
 
 type QnaAnswerProps = {
+  sortedByLikes?: boolean;
   setSortedByLikes?: Dispatch<SetStateAction<boolean>>;
   qnaComment: TqnaCommentsWithReplyCount;
   questioner: string;
@@ -43,7 +43,14 @@ type QnaAnswerProps = {
   qnaCommentsCount?: number;
 };
 
-const QnaAnswer = ({ setSortedByLikes, qnaComment, questioner, index, qnaCommentsCount }: QnaAnswerProps) => {
+const QnaAnswer = ({
+  sortedByLikes,
+  setSortedByLikes,
+  qnaComment,
+  questioner,
+  index,
+  qnaCommentsCount
+}: QnaAnswerProps) => {
   const { me } = useAuth();
   const { postId, seletedComment, setSeletedComment } = useQnaDetailStore();
   const [openAnswerReply, setOpenAnswerReply] = useState(false);
@@ -54,6 +61,13 @@ const QnaAnswer = ({ setSortedByLikes, qnaComment, questioner, index, qnaComment
   const [isCancleModalOpen, setIsCancleModalOpen] = useState<boolean>(false);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
+
+  const handelLikeSortTrue = () => {
+    index === 0 && setSortedByLikes ? setSortedByLikes(true) : null;
+  };
+  const handelLikeSortFalse = () => {
+    index === 0 && setSortedByLikes ? setSortedByLikes(false) : null;
+  };
 
   const handleReplyClick = () => {
     setOpenAnswerReply((prev) => !prev);
@@ -75,7 +89,7 @@ const QnaAnswer = ({ setSortedByLikes, qnaComment, questioner, index, qnaComment
   const selectComment = async (): Promise<void> => {
     setSeletedComment(qnaComment.id);
     selectMutate();
-    // await revalidatePostTag(`qna-detail-${postId}`);
+    await revalidatePostTag(`qna-detail-${postId}`);
   };
 
   const selectCommentMutation = async () => {
@@ -164,11 +178,21 @@ const QnaAnswer = ({ setSortedByLikes, qnaComment, questioner, index, qnaComment
           <div className="flex">
             <div className="w-[1156px] pb-12 text-h4 font-bold ">총 {qnaCommentsCount}개의 답변</div>
             <div className="flex min-w-[125px] max-h-[22px] gap-3 text-subtitle2 font-medium">
-              <button className="underline hover:font-bold">채택순</button>
+              <button
+                className={`underline hover:font-bold ${sortedByLikes ? '' : 'font-bold'}`}
+                onClick={handelLikeSortFalse}
+              >
+                채택순
+              </button>
               <div className="flex items-center">
                 <Dot />
               </div>
-              <button className="underline hover:font-bold">좋아요순</button>
+              <button
+                className={`underline hover:font-bold ${sortedByLikes ? 'font-bold' : ''}`}
+                onClick={handelLikeSortTrue}
+              >
+                좋아요순
+              </button>
             </div>
           </div>
         ) : null}

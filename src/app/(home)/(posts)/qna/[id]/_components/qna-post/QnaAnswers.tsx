@@ -13,7 +13,7 @@ type QnaAnswersProps = {
 };
 
 const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
-  const { postId, seletedComment } = useQnaDetailStore();
+  const { postId, seletedComment, setCommentPage } = useQnaDetailStore();
   const [page, setPage] = useState<number>(1);
   const [sortedByLikes, setSortedByLikes] = useState<boolean>(false);
   const pageParamList = [...Array(Math.ceil(qnaCommentsCount / 5))].map((_, idx) => idx + 1);
@@ -23,12 +23,17 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
     isError,
     data: qnaCommentList
   } = useQuery({
-    queryKey: ['qnaComments', postId, page],
+    queryKey: sortedByLikes ? ['qnaComments', postId, page, 'likes'] : ['qnaComments', postId, page],
     queryFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${postId}?page=${page}&selected=${seletedComment}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${postId}?page=${page}&selected=${seletedComment}&sortedByLikes=${sortedByLikes}`
       );
-      const { data, message }: { data: TqnaCommentsWithReplyCount[]; message: string } = await response.json();
+      const {
+        data,
+        message
+      }: { data: TqnaCommentsWithReplyCount[] & { qna_comment_likes?: { count: number } }; message: string } =
+        await response.json();
+
       if (message) {
         toast.error(message);
         return;
@@ -55,6 +60,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
             return index === 0 ? (
               <QnaAnswer
                 key={qnaComment.id + 'comment'}
+                sortedByLikes={sortedByLikes}
                 setSortedByLikes={setSortedByLikes}
                 qnaComment={qnaComment}
                 questioner={questioner}
@@ -74,6 +80,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
               key={'replyPage' + pageParam}
               onClick={() => {
                 setPage(pageParam);
+                setCommentPage(pageParam);
               }}
             >
               {pageParam}

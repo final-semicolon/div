@@ -43,7 +43,7 @@ const PostingQnaAnswer = ({ content, setContent }: PostingQnaAnswerProps) => {
         </div>
         {toggleAnswer ? null : (
           <button
-            className="w-[110px] h-[56px] bg-main-400 text-white text-subtitle1 rounded-lg hover:bg-main-500"
+            className="w-[110px] h-[56px] bg-main-400 text-white text-subtitle1 rounded-full hover:bg-main-500"
             onClick={handleToggleClick}
           >
             답변하기
