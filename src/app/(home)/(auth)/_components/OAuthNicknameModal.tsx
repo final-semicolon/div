@@ -16,7 +16,7 @@ const Modal = ({ isOpen, children }: ModalProps) => {
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded w-[500px]">{children}</div>
+      <div className="bg-white p-6 rounded-[32px] w-[500px]">{children}</div>
     </div>,
     document.body
   );
@@ -45,7 +45,7 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
       if (!nickname) {
         setNicknameValid(null);
         setIsCheckedNickname(false);
-        setNicknameMessage('닉네임을 입력해 주세요.');
+        setNicknameMessage('닉네임을 입력해 주세요');
         return;
       }
 
@@ -56,7 +56,7 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
         return;
       }
       if (!isNicknameValid(nickname)) {
-        setNicknameMessage('사용할 수 없는 닉네임입니다.');
+        setNicknameMessage('사용할 수 없는 닉네임이에요');
         setIsCheckedNickname(false);
         setNicknameValid(false);
         return;
