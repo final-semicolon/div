@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { InvalidateQueryFilters } from '@tanstack/react-query';
 import useDeleteMutation from './useDeleteMutation';
@@ -29,31 +29,31 @@ const useKebob = ({ commentId, replyId, setIsEdit, category }: useReplyKebobProp
 
   const { deleteQnaData } = useDeleteMutation({ path, queryKey, postId, commentId });
 
-  const openModal = () => {
+  const openModal = useCallback(() => {
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const handleKebobClick = () => {
+  const handleKebobClick = useCallback(() => {
     setOpenKebab((prev) => !prev);
-  };
+  }, []);
 
-  const handleEditClick = () => {
+  const handleEditClick = useCallback(() => {
     setIsEdit(true);
     setOpenKebab(false);
-  };
+  }, [setIsEdit]);
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = useCallback(() => {
     openModal();
     setOpenKebab(false);
-  };
+  }, [openModal]);
 
-  const handleDeleteData = () => {
+  const handleDeleteData = useCallback(() => {
     deleteQnaData();
-  };
+  }, [deleteQnaData]);
 
   return {
     openKebab,

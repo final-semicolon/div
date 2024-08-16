@@ -260,7 +260,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
         )}
         <div className={`flex gap-[6px] my-6 ${isEdit ? 'hidden' : ''}`}>
           {qnaComment.qna_comment_tag.map((tag) => (
-            <TagBlock key={'answer' + tag} tag={tag.tag} />
+            <TagBlock key={'answer' + tag.tag} tag={tag.tag} />
           ))}
         </div>
       </div>

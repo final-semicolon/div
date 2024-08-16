@@ -1,5 +1,5 @@
 import MDEditor from '@uiw/react-md-editor';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { TqnaData } from '@/types/posts/qnaDetailTypes';
 import Image from 'next/image';
 import Share from '@/assets/images/common/Share';
@@ -51,7 +51,7 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
           <span className="text-body1 text-neutral-500">{timeForToday(questionData.updated_at ?? '')}</span>
         </div>
       </div>
-      <div className=" max-w-[1204px] flex my-6">
+      <div className=" max-w-[1204px] flex my-6 ">
         <MDEditor.Markdown style={{ maxWidth: '1156px' }} source={filterSlang(questionData.content)} />
       </div>
       <div className="flex gap-2">

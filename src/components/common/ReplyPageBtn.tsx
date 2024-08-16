@@ -14,10 +14,10 @@ const ReplyPageBtn = ({ totalPage, page, setPage }: ReplyPageBtnProps) => {
     setPage((prev) => prev + 1);
   };
   return (
-    <>
-      <button onClick={handlePrevPage} disabled={page === 1 || totalPage === 1}>
+    <div className=" flex pt-6 gap-4 w-full justify-end">
+      <button onClick={handlePrevPage} disabled={page === 1}>
         <svg
-          className={`${totalPage === 1 ? 'hidden' : ''} ${page === 1 ? 'stroke-neutral-100 ' : 'stroke-neutral-500 hover:stroke-main-400 hover:bg-main-50 active:bg-main-50 active:stroke-main-400'} bg-neutral-50  rounded    `}
+          className={`${totalPage <= 1 ? 'hidden' : ''} ${page === 1 ? 'stroke-neutral-100 ' : 'stroke-neutral-500 hover:stroke-main-400 hover:bg-main-50 active:bg-main-50 active:stroke-main-400'} bg-neutral-50  rounded    `}
           width="33"
           height="32"
           viewBox="0 0 33 32"
@@ -33,9 +33,9 @@ const ReplyPageBtn = ({ totalPage, page, setPage }: ReplyPageBtnProps) => {
           />
         </svg>
       </button>
-      <button onClick={handleNextPage} disabled={totalPage === page || totalPage === 1}>
+      <button onClick={handleNextPage} disabled={totalPage === page}>
         <svg
-          className={`${totalPage === 1 ? 'hidden' : ''} ${totalPage === page ? 'stroke-neutral-100' : 'stroke-neutral-500 hover:stroke-main-400 hover:bg-main-50 active:bg-main-50 active:stroke-main-400'} bg-neutral-50 rounded  `}
+          className={`${totalPage <= 1 ? 'hidden' : ''} ${totalPage === page ? 'stroke-neutral-100' : 'stroke-neutral-500 hover:stroke-main-400 hover:bg-main-50 active:bg-main-50 active:stroke-main-400'} bg-neutral-50 rounded  `}
           width="33"
           height="32"
           viewBox="0 0 33 32"
@@ -51,7 +51,7 @@ const ReplyPageBtn = ({ totalPage, page, setPage }: ReplyPageBtnProps) => {
           />
         </svg>
       </button>
-    </>
+    </div>
   );
 };
 

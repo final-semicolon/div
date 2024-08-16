@@ -8,8 +8,8 @@ import QnaQuestion from './qna-post/QnaQuestion';
 import PostingQnaAnswer from './qna-post/PostingQnaAnswer';
 import { TqnaData } from '@/types/posts/qnaDetailTypes';
 import QnaAnswers from './qna-post/QnaAnswers';
-import GoToTop from '@/assets/images/common/GoToTop';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
+import TopButton from '@/components/common/TopButton';
 
 type QnaPostProps = {
   data: TqnaData;
@@ -20,10 +20,6 @@ const QnaPost = ({ data }: QnaPostProps) => {
   const { me } = useAuth();
   const { setPostId, setPostUser, setSeletedComment } = useQnaDetailStore();
   const [content, setContent] = useState<string>('');
-
-  const handleTopBtnClick = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   useEffect(() => {
     setPostId(data.id);
@@ -41,9 +37,7 @@ const QnaPost = ({ data }: QnaPostProps) => {
       <QnaQuestion questionData={data} />
       {me && me.id !== data.user_id ? <PostingQnaAnswer content={content} setContent={setContent} /> : null}
       <QnaAnswers qnaCommentsCount={data.qna_comments[0].count} questioner={data.user_id} />
-      <button className=" fixed right-[168px] bottom-[62px]" onClick={handleTopBtnClick}>
-        <GoToTop />
-      </button>
+      <TopButton />
     </div>
   );
 };

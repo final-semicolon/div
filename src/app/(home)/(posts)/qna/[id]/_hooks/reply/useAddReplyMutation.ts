@@ -3,6 +3,7 @@ import { COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { TqnaCommentsWithReplyCount, TqnaReplyWithUser, Treply } from '@/types/posts/qnaDetailTypes';
 import { InvalidateQueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 
 type useAddMutationProps = {
@@ -18,11 +19,6 @@ const useAddMutation = ({ content, path, queryKey, commentId, userId, postId }: 
   const queryClient = useQueryClient();
   const { commentPage } = useQnaDetailStore();
   const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail`;
-
-  const postingReply = () => {
-    postReplyMutate({ user_id: userId, content });
-    return;
-  };
 
   const postReplyMutation = async ({
     user_id,
@@ -65,6 +61,11 @@ const useAddMutation = ({ content, path, queryKey, commentId, userId, postId }: 
       path.includes('qna-post-reply') ? await revalidatePostTag(`qna-detail-${postId}`) : '';
     }
   });
+
+  const postingReply = useCallback(() => {
+    postReplyMutate({ user_id: userId, content });
+    return;
+  }, [userId, content, postReplyMutate]);
 
   return { postingReply };
 };

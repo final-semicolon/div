@@ -55,7 +55,7 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
           />
         </div>
         <div className="flex flex-col gap-1">
-          {postUser === me?.id ? <Tag intent="primary" label="글쓴이" /> : null}
+          {postUser === reply.user_id ? <Tag intent="primary" label="글쓴이" /> : null}
           <div className="text-subtitle1 text-neutral-900">{reply.users.nickname}</div>
           <div className="text-body2 text-neutral-300">{timeForToday(reply.updated_at!)}</div>
         </div>
