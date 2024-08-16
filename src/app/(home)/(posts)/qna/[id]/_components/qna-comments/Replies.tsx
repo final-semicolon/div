@@ -44,14 +44,12 @@ const Replies = ({ commentId, replyCount }: AnswerCommentsProps) => {
   }
 
   return (
-    <div>
+    <div key={commentId + 'replies'}>
       <ReplyForm commentId={commentId ?? ''} />
       {qnaReplyList?.map((reply: Treply | TqnaReplyWithUser) => {
         return <Reply key={reply.id} reply={reply} commentId={commentId ?? ''} />;
       })}
-      <div className=" flex pt-6 gap-4 w-full justify-end">
-        <ReplyPageBtn totalPage={totalPage} page={page} setPage={setPage} />
-      </div>
+      <ReplyPageBtn totalPage={totalPage} page={page} setPage={setPage} />
     </div>
   );
 };

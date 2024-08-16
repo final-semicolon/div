@@ -1,5 +1,5 @@
 import CustomMDEditor from '@/components/common/CustomMDEditor';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useAuth } from '@/context/auth.context';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -25,13 +25,13 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer }: PostingAnsw
   const [tagList, setTagList] = useState<Array<Ttag>>(TAG_LIST);
   const queryClient = useQueryClient();
 
-  const handleCancleClick = () => {
+  const handleCancleClick = useCallback(() => {
     setIsCancleModalOpen(true);
-  };
+  }, []);
 
-  const handleApproveClick = () => {
+  const handleApproveClick = useCallback(() => {
     setIsApproveModalOpen(true);
-  };
+  }, []);
 
   const postingAnswer = async (): Promise<void> => {
     if (!me?.id) return;
