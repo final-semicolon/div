@@ -1,25 +1,26 @@
 import Down from '@/assets/images/common/Down';
 import SortSetting from '@/assets/images/common/SortSetting';
-import React, { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 type SortingOption = {
-  type: 'time' | 'like' | 'comment';
+  type: 'all' | 'time' | 'like' | 'comment';
   label: string;
 };
 
 type SortingFiltersProps = {
-  sortingType: 'time' | 'like' | 'comment';
-  onTypeChange: (type: 'time' | 'like' | 'comment') => void;
+  sortingType: 'all' | 'time' | 'like' | 'comment';
+  onTypeChange: (type: 'all' | 'time' | 'like' | 'comment') => void;
+  showMenu: boolean;
+  onShowMenu: Dispatch<SetStateAction<boolean>>;
 };
 
-const SortingFilters = ({ sortingType, onTypeChange }: SortingFiltersProps) => {
+const SortingFilters = ({ sortingType, onTypeChange, showMenu, onShowMenu }: SortingFiltersProps) => {
   const menuButtonRef = useRef<HTMLDivElement | null>(null);
-  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     const handleMenuClickOutside = (event: MouseEvent) => {
       if (menuButtonRef.current && !menuButtonRef.current.contains(event.target as Node)) {
-        setShowMenu(false);
+        onShowMenu(false);
       }
     };
 
@@ -30,12 +31,12 @@ const SortingFilters = ({ sortingType, onTypeChange }: SortingFiltersProps) => {
   }, []);
 
   const toggleMenu = () => {
-    setShowMenu(!showMenu);
+    onShowMenu(!showMenu);
   };
 
-  const handleOptionClick = (type: 'time' | 'like' | 'comment') => {
+  const handleOptionClick = (type: 'all' | 'time' | 'like' | 'comment') => {
     onTypeChange(type);
-    setShowMenu(false);
+    onShowMenu(false);
   };
 
   const sortingOptions: SortingOption[] = [
@@ -49,13 +50,13 @@ const SortingFilters = ({ sortingType, onTypeChange }: SortingFiltersProps) => {
       <button
         onClick={toggleMenu}
         className={`flex items-center justify-between p-[8px_16px_8px_16px] w-[140px] h-[40px] mr-6 text-subtitle1 font-medium ${
-          sortingType !== 'time'
+          sortingType !== 'all'
             ? 'text-main-400 border border-main-400 rounded-lg bg-main-50'
             : 'text-neutral-700 border border-neutral-100 rounded-lg bg-white'
         }`}
       >
         <SortSetting />
-        <p>{sortingOptions.find((option) => option.type === sortingType)?.label}</p>
+        {sortingType === 'all' ? '필터' : sortingOptions.find((option) => option.type === sortingType)?.label}
         <Down />
       </button>
       {showMenu && (
@@ -65,7 +66,7 @@ const SortingFilters = ({ sortingType, onTypeChange }: SortingFiltersProps) => {
         >
           <li
             className={`flex items-center justify-between p-[8px_16px_8px_16px] h-[40px] text-subtitle1 font-medium ${
-              sortingType === 'time' ? 'text-main-400' : 'text-neutral-700'
+              sortingType === 'all' ? 'text-main-400' : 'text-neutral-700'
             } cursor-pointer`}
           >
             <SortSetting />
