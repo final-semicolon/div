@@ -126,10 +126,10 @@ const SearchBar = () => {
         </div>
       </div>
       {isFocused && !showSuggestions && searchHistory.length > 0 && (
-        <ul className="search-toggle-list">
+        <ul className="searchbar-toggle-list">
           {searchHistory.map((item, index) => (
             <div key={index} className="flex items-center justify-between">
-              <li className="search-toggle-item" onClick={() => handleHistoryClick(item)}>
+              <li className="searchbar-toggle-item" onClick={() => handleHistoryClick(item)}>
                 {item}
               </li>
               {/* <button className="mb-4 mr-4" onClick={() => handleDeleteSearchHistory(item)}>
@@ -140,9 +140,9 @@ const SearchBar = () => {
         </ul>
       )}
       {showSuggestions && filteredTags.length > 0 && (
-        <ul className="search-toggle-list">
+        <ul className="searchbar-toggle-list">
           {filteredTags.map((tag, index) => (
-            <li key={index} className="search-toggle-item" onClick={() => handleTagClick(tag)}>
+            <li key={index} className="searchbar-toggle-item" onClick={() => handleTagClick(tag)}>
               # {tag}
             </li>
           ))}
