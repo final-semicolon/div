@@ -6,6 +6,7 @@ import PopularQnaPostItem from './PopularQnaPostItem';
 import { Suspense } from 'react';
 import PopularQnaPagination from './PopualrQnaPagination';
 import { NoPostsPlaceholder, PopularQnaPostsSkeleton } from '../skeleton/PopularQnaPostsSkeleton';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
 const Error = ({ message }: { message: string }) => <div>Error: {message}</div>;
 
@@ -32,21 +33,48 @@ const PopularQnaPosts = () => {
   const startIndex = popularPage * pageSize;
 
   return (
-    <div className="w-[1204px] mx-auto p-4">
-      <Suspense fallback={<PopularQnaPostsSkeleton />}>
-        {popularPosts && popularPosts.length > 0 ? (
-          <ul className="grid grid-cols-2">
-            {popularPosts.map((post, index) => (
-              <PopularQnaPostItem key={post.id} post={post} index={index} startIndex={startIndex} />
-            ))}
-          </ul>
-        ) : (
-          // <div>게시물이 없습니다.</div>
-          <NoPostsPlaceholder />
-        )}
-      </Suspense>
-      <PopularQnaPagination totalPages={popularTotalPages} currentPage={popularPage} onPageChange={goToPopularPage} />
-    </div>
+    <>
+      <Default>
+        <div className="w-[1204px] mx-auto p-4 mb-[120px]">
+          <Suspense fallback={<PopularQnaPostsSkeleton />}>
+            {popularPosts && popularPosts.length > 0 ? (
+              <ul className="grid grid-cols-2">
+                {popularPosts.map((post, index) => (
+                  <PopularQnaPostItem key={post.id} post={post} index={index} startIndex={startIndex} />
+                ))}
+              </ul>
+            ) : (
+              <NoPostsPlaceholder />
+            )}
+          </Suspense>
+          <PopularQnaPagination
+            totalPages={popularTotalPages}
+            currentPage={popularPage}
+            onPageChange={goToPopularPage}
+          />
+        </div>
+      </Default>
+      <Mobile>
+        <div className="w-full mx-auto px-5 mb-16">
+          <Suspense fallback={<PopularQnaPostsSkeleton />}>
+            {popularPosts && popularPosts.length > 0 ? (
+              <ul className="grid grid-cols-1">
+                {popularPosts.map((post, index) => (
+                  <PopularQnaPostItem key={post.id} post={post} index={index} startIndex={startIndex} />
+                ))}
+              </ul>
+            ) : (
+              <NoPostsPlaceholder />
+            )}
+          </Suspense>
+          <PopularQnaPagination
+            totalPages={popularTotalPages}
+            currentPage={popularPage}
+            onPageChange={goToPopularPage}
+          />
+        </div>
+      </Mobile>
+    </>
   );
 };
 

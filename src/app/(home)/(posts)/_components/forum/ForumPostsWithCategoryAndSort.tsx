@@ -153,7 +153,7 @@ const ForumPostsWithCategoryAndSort = () => {
         </div>
       </Default>
       <Mobile>
-        <div className="mx-5 mt-6">
+        <div className="mx-5">
           <div className="flex items-center justify-between">
             <div className="flex-grow max-w-[60%]">
               <DraggableScroll>
