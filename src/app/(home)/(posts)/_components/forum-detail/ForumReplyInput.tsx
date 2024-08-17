@@ -2,12 +2,12 @@
 
 import Chip from '@/components/common/Chip';
 import { useAuth } from '@/context/auth.context';
-import { CommentReply } from '@/types/posts/forumDetailTypes';
+import { CommentReply, forumCommentsType } from '@/types/posts/forumDetailTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
 type commentReplyProps = {
@@ -36,8 +36,8 @@ const ForumReplyInput = ({ comment_id, toggle, count, commentsPage }: commentRep
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ['commentReply', comment_id] });
       if (comment_id) {
-        await queryClient.setQueryData(['forumComments', params.id, commentsPage], (oldData: any) => {
-          const newComment = oldData.data.map((comment: any) =>
+        await queryClient.setQueryData(['forumComments', params.id, commentsPage], (oldData: forumCommentsType) => {
+          const newComment = oldData.data.map((comment) =>
             comment.id === comment_id ? { ...comment, reply: [{ count: data?.replyCount }] } : comment
           );
           return { ...oldData, data: newComment };
@@ -46,10 +46,11 @@ const ForumReplyInput = ({ comment_id, toggle, count, commentsPage }: commentRep
     }
   });
 
-  const changReply = (value?: string) => {
+  const changReply = useCallback((value?: string) => {
     setReply(value!);
-  };
-  const onClickReply = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  }, []);
+
+  const onClickReply = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     const commentReply = { user_id: me?.id, comment_id, reply };

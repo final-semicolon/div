@@ -25,7 +25,7 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
   const [retouchPostModal, setRetouchPostModal] = useState<boolean>(false);
 
   const handlePostDelete = async () => {
-    const response = await fetch(`/api/posts/forum-detail/${param.id}`, {
+    await fetch(`/api/posts/forum-detail/${param.id}`, {
       method: 'DELETE',
       body: JSON.stringify({ id: me?.id })
     });

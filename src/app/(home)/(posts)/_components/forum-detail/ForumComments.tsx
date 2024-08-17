@@ -22,6 +22,7 @@ import LoginAlertModal from '@/components/modal/LoginAlertModal';
 import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 import Chip from '@/components/common/Chip';
 import { COMMENT_CANCLE_CONFIRM_TEXT, COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
+import CommentPageButton from '@/components/common/CommentPageButton';
 
 const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -61,7 +62,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   // 댓글 삭제
   const commentDelete = useMutation({
     mutationFn: async ({ id, user_id }: { id: string; user_id: string }) => {
-      const response = await fetch(`/api/posts/forum-detail/forum-comments/${param.id}`, {
+      await fetch(`/api/posts/forum-detail/forum-comments/${param.id}`, {
         method: 'DELETE',
         body: JSON.stringify({ id, user_id })
       });
@@ -94,11 +95,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   };
 
   //댓글 가져오기
-  const {
-    data: comments,
-    isPending,
-    isError
-  } = useQuery({
+  const { data: comments, isPending } = useQuery({
     queryKey: ['forumComments', param.id, commentsPage],
     queryFn: async () => {
       const response = await fetch(`/api/posts/forum-detail/forum-comments/${param.id}?page=${commentsPage}`);
@@ -115,7 +112,10 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   }
   const COMMENT_PAGE = 5;
   const commentsCount = comments?.count ?? 0;
-  const commentsTotalPage: number = Math.ceil(commentsCount / COMMENT_PAGE);
+
+  const handleCommentPage = (newPage: number) => {
+    setCommentsPage(newPage);
+  };
 
   //reply 입력창 toggle
   const handleInputReplyToggle = (id: string, count: number) => {
@@ -139,7 +139,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
       <div className=" mt-10 mb-6 px-6 text-subtitle1 font-medium ">
         {comments && comments.length > 0 && <p>댓글 {comments.count}</p>}
       </div>
-      {comments?.data?.map((comment: any) => (
+      {comments?.data?.map((comment) => (
         <div key={comment.id}>
           <div key={comment.id} className="w-full flex flex-col ">
             <div
@@ -324,6 +324,12 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
           </div>
         </div>
       ))}
+      <CommentPageButton
+        totalItems={commentsCount}
+        itemsPerPage={COMMENT_PAGE}
+        currentPage={commentsPage}
+        onPageChange={handleCommentPage}
+      />
       {loginAlertModal && <LoginAlertModal />}
     </>
   );

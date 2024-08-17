@@ -2,7 +2,7 @@
 
 import KebabButton from '@/assets/images/common/KebabButton';
 import { useAuth } from '@/context/auth.context';
-import { forumReplyType, replyRetouch } from '@/types/posts/forumDetailTypes';
+import { forumCommentsType, forumReplyType, replyRetouch } from '@/types/posts/forumDetailTypes';
 import { timeForToday } from '@/utils/timeForToday';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import MDEditor, { commands } from '@uiw/react-md-editor';
@@ -55,14 +55,7 @@ const ForumReply = ({
 
   const replyRetouchHandle = async (id: string, user_id: string) => {
     replyRetouchMutation.mutate({ id, user_id, replyRetouch });
-
     setReplyEditor({ [id]: false });
-    if (!replyRetouch) {
-      toast.error('댓글을 입력해주세요!', {
-        autoClose: 2000
-      });
-      return;
-    }
   };
 
   //대댓글 삭제
@@ -73,14 +66,13 @@ const ForumReply = ({
         body: JSON.stringify({ id, user_id, comment_id })
       });
       const data = response.json();
-
       return data;
     },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ['commentReply'] });
       if (comment_id) {
-        await queryClient.setQueryData(['forumComments', params.id, commentsPage], (oldData: any) => {
-          const newComment = oldData.data.map((comment: any) =>
+        await queryClient.setQueryData(['forumComments', params.id, commentsPage], (oldData: forumCommentsType) => {
+          const newComment = oldData.data.map((comment) =>
             comment.id === comment_id ? { ...comment, reply: [{ count: data?.replyCount }] } : comment
           );
           return { ...oldData, data: newComment };
@@ -90,16 +82,12 @@ const ForumReply = ({
     }
   });
 
-  const handleReplyDelete = async (id: string, user_id: string, comment_id: string) => {
+  const handleReplyDelete = (id: string, user_id: string, comment_id: string) => {
     commentDelete.mutate({ id, user_id, comment_id });
   };
 
   //대댓글 가져오기
-  const {
-    data: reply,
-    isPending,
-    error
-  } = useQuery({
+  const { data: reply, isPending } = useQuery({
     queryKey: ['commentReply', comment_id, page],
     queryFn: async () => {
       const response = await fetch(`/api/posts/forum-detail/forum-reply/${comment_id}?page=${page}`);
@@ -256,14 +244,14 @@ const ForumReply = ({
                       <p className="text-body1 font-regular text-wrap break-all  ">
                         {cutText(filterSlang(reply.reply), 140)}
                       </p>
-                      {reply.reply.length > 145 ? (
+                      {reply.reply.length > 145 && (
                         <button
                           className="text-subtitle2 font-bold text-neutral-700"
                           onClick={() => setReplyLength(true)}
                         >
                           ...더보기
                         </button>
-                      ) : null}
+                      )}
                     </div>
                   )}
 

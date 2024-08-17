@@ -30,27 +30,8 @@ const InputComments = () => {
       const result = await response.json();
       return result;
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(['forumComments', params.id], (oldData: any) => {
-        console.log('old', oldData);
-        const dd = oldData.pages.map((page: any) => page.data.flat()).flat();
-        const ee = data;
-        ee.push(...dd);
-        const dataArray = (array: any, size: any) => {
-          const Array = [];
-
-          for (let i = 0; i < array.length; i += size) {
-            const chunk = array.slice(i, i + size);
-            Array.push(chunk);
-          }
-          return Array;
-        };
-
-        const tt = [dataArray(ee, 5)];
-        console.log('new', { ...oldData, pages: [{ data: tt }] });
-        return [{ ...oldData, pages: tt }];
-      });
-
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['forumComments', params.id] });
       if (comment) {
         setComment('');
         revalidatePostTag(`forum-detail-${params.id}`);
@@ -66,12 +47,6 @@ const InputComments = () => {
 
     if (!me?.id) {
       toast.error('로그인 후 입력가능합니다.', {
-        autoClose: 2000
-      });
-      return;
-    }
-    if (comment === '') {
-      toast.error('댓글을 입력해주세요!', {
         autoClose: 2000
       });
       return;
