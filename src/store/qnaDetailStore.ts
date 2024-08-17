@@ -17,9 +17,9 @@ export const useQnaDetailStore = create<TuseQnaDetailStore>((set) => ({
   postUser: '',
   seletedComment: '',
   commentPage: 1,
-  setPostId: (postId) => set({ postId: postId }),
-  setPostUser: (postUser) => set({ postUser: postUser }),
-  setSeletedComment: (seletedComment) => set({ seletedComment: seletedComment }),
+  setPostId: (postId) => set({ postId }),
+  setPostUser: (postUser) => set({ postUser }),
+  setSeletedComment: (seletedComment) => set({ seletedComment }),
   setCommentPage: (page) => set({ commentPage: page }),
   clearQnaDetail: () => set({ postId: '', seletedComment: '' })
 }));

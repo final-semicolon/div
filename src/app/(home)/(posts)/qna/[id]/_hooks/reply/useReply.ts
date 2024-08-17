@@ -1,5 +1,5 @@
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useEditReplyMutation from './useEditReplyMutation';
 
 type useReplyProps = {
@@ -20,26 +20,26 @@ const useReply = ({ commentId, replyId, replyContent, replyType }: useReplyProps
 
   const { editReply } = useEditReplyMutation({ commentId, postId, path, content, queryKey });
 
-  const handleContentChange = (value: string | undefined): void => {
+  const handleContentChange = useCallback((value: string | undefined): void => {
     setContent(value!);
-  };
+  }, []);
 
-  const handleCancleClick = () => {
+  const handleCancleClick = useCallback(() => {
     setIsEdit(false);
     setContent(replyContent);
-  };
+  }, [replyContent]);
 
-  const handleSeeMoreClick = () => {
+  const handleSeeMoreClick = useCallback(() => {
     setSeeMore(true);
-  };
+  }, []);
 
-  const handleEditReply = () => {
+  const handleEditReply = useCallback(() => {
     if (content.length === 0) {
       return;
     }
     editReply();
     setIsEdit(false);
-  };
+  }, [content.length, editReply]);
 
   return {
     postUser,

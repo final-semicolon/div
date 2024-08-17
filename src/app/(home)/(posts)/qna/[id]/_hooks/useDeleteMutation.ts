@@ -3,6 +3,7 @@ import { COMMENT_DELETE_ALRERT_TEXT, QNA_ANSWER_DELETE_ALRERT_TEXT } from '@/con
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
 import { InvalidateQueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 
 type replyMutationProps = {
@@ -16,11 +17,6 @@ const useDeleteMutation = ({ path, queryKey, postId, commentId }: replyMutationP
   const { commentPage } = useQnaDetailStore();
   const queryClient = useQueryClient();
   const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail`;
-
-  const deleteQnaData = (): void => {
-    deleteMutate();
-    return;
-  };
 
   const deleteMutation = async () => {
     const response = await fetch(`${BASE_URL}${path}?commentId=${commentId} `, {
@@ -53,6 +49,11 @@ const useDeleteMutation = ({ path, queryKey, postId, commentId }: replyMutationP
       }
     }
   });
+
+  const deleteQnaData = useCallback((): void => {
+    deleteMutate();
+    return;
+  }, [deleteMutate]);
 
   return { deleteQnaData };
 };

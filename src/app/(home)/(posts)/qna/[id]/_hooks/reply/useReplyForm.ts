@@ -1,5 +1,5 @@
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useAddMutation from './useAddReplyMutation';
 
 type useReplyFormProps = {
@@ -19,34 +19,34 @@ const useReplyForm = ({ commentId, userId, replyType }: useReplyFormProps) => {
 
   const { postingReply } = useAddMutation({ content, path, queryKey, commentId, userId, postId });
 
-  const handleChangeContent = (value?: string) => {
+  const handleChangeContent = useCallback((value?: string) => {
     setContent(value!);
-  };
+  }, []);
 
-  const handleOpenCancleModal = (): void => {
+  const handleOpenCancleModal = useCallback((): void => {
     if (content.length === 0) return;
     setIsSelectModalOpen(true);
-  };
+  }, [content.length]);
 
-  const handleCancleModalCancle = (): void => {
+  const handleCancleModalCancle = useCallback((): void => {
     setIsSelectModalOpen(false);
-  };
+  }, []);
 
-  const handleCancleModalApprove = (): void => {
+  const handleCancleModalApprove = useCallback((): void => {
     setContent('');
     setIsSelectModalOpen(false);
-  };
+  }, []);
 
-  const handleLoginModal = (): void => {
+  const handleLoginModal = useCallback((): void => {
     setIsLoginModalOpen(true);
-  };
+  }, []);
 
-  const handlePostingReply = (): void => {
+  const handlePostingReply = useCallback((): void => {
     if (!userId) return;
     postingReply();
     setContent('');
     return;
-  };
+  }, [userId, postingReply]);
 
   return {
     content,
