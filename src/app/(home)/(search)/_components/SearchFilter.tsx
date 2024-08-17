@@ -1,7 +1,6 @@
 import Reset from '@/assets/images/common/Reset';
 import PrimaryCategories from '@/components/categoryfilter/PrimaryCategories';
 import SortingFilters from '@/components/categoryfilter/SortingFilters';
-import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import { useState } from 'react';
 
 type SearchFilterProps = {
@@ -23,20 +22,15 @@ const SearchFilter = ({
 }: SearchFilterProps) => {
   const [showMenu, setShowMenu] = useState(false);
 
-  const handleMobileResetClick = () => {
+  const handleResetClick = () => {
     onTypeChange('all');
     setShowMenu(false);
     onCategoryChange('all');
     onForumCategoryChange(null);
   };
 
-  const handleWebResetClick = () => {
-    onTypeChange('all');
-    setShowMenu(false);
-  };
-
   return (
-    <div className="relative p-[28px_0px_36px] flex justify-between">
+    <div className="relative p-[24px_0px] md:p-[28px_0px_36px] flex justify-between">
       <div className="order-2 md:order-1">
         <PrimaryCategories
           primaryCategory={primaryCategory}
@@ -45,17 +39,14 @@ const SearchFilter = ({
           onForumCategoryChange={onForumCategoryChange}
         />
       </div>
-      <div className="flex order-1 md:order-2 ">
-        <Mobile>
-          <div className="order-2 md:order-1" onClick={handleMobileResetClick}>
+      <div className="flex items-center order-1 md:order-2 ">
+        {primaryCategory === 'all' && sortingType === 'all' ? (
+          <div className="order-2 mx-4 md:order-1 "></div>
+        ) : (
+          <div className="order-2 mx-4 md:order-1 " onClick={handleResetClick}>
             <Reset />
           </div>
-        </Mobile>
-        <Default>
-          <div className="order-2 md:order-1" onClick={handleWebResetClick}>
-            <Reset />
-          </div>
-        </Default>
+        )}
         <div className="order-1 md:order-2">
           <SortingFilters
             sortingType={sortingType}

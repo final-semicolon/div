@@ -96,11 +96,13 @@ const Search = () => {
   if (!data) return <div>Loading...</div>;
 
   return (
-    <div className="max-w-[1204px]">
+    <div className="">
       <div className="flex flex-col">
-        <span className="mb-[88px]">
-          <span className="text-neutral-900 text-h3 font-bold">{searchType === 'title' ? keyword : `#${keyword}`}</span>
-          <span className="text-neutral-700 text-h3 font-normal"> 검색결과</span>
+        <span className=" mb-[40px] md:mb-[88px]">
+          <span className="text-neutral-900 text-body2 md:text-h3 font-bold">
+            {searchType === 'title' ? keyword : `#${keyword}`}
+          </span>
+          <span className="text-neutral-700 text-body2 md:text-h3 font-normal"> 검색결과</span>
         </span>
         <PostCountDisplay
           primaryCategory={filters.primaryCategory}

@@ -37,8 +37,8 @@ const PostCountDisplay: React.FC<Props> = ({ primaryCategory, archiveCount, foru
 
   return (
     <div>
-      <span className="text-subtitle1 font-medium text-neutral-700">{label}</span>
-      <span className="text-subtitle1 font-bold text-neutral-800"> ({count}) </span>
+      <span className="text-subtitle3 md:text-subtitle1 font-medium text-neutral-700">{label}</span>
+      <span className="text-subtitle3 md:text-subtitle1 font-bold text-neutral-800"> ({count}) </span>
     </div>
   );
 };

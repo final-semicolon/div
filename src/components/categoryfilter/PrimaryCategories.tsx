@@ -79,7 +79,7 @@ const PrimaryCategories = ({
       <div>
         <button
           onClick={toggleForumMenu}
-          className={`w-[118px] h-[40px] p-[8px_16px_8px_16px] mr-6 flex items-center justify-between text-subtitle1 font-medium ${
+          className={`w-[75px] md:w-[118px] h-[40px] p-[8px_16px] mr-6 flex items-center justify-between text-subtitle3 md:text-subtitle1 font-medium ${
             primaryCategory === 'forum' ? 'filter-active' : 'filter-inactive'
           }`}
         >
@@ -90,16 +90,16 @@ const PrimaryCategories = ({
         {showForumMenu && (
           <div
             ref={forumMenuRef}
-            className="absolute z-[1000] top-[27px] w-[118px] border border-neutral-100 rounded-lg bg-white  hover:border hover:border-main-400"
+            className="absolute z-[1000] top-[23px] md:top-[27px] w-[75px] md:w-[118px] border border-neutral-100 rounded-lg bg-white  hover:border hover:border-main-400"
           >
             <li
               onClick={() => handleForumCategoryClick('전체')}
-              className={`flex items-center justify-between p-[8px_16px_8px_32px] h-[40px] text-subtitle1 font-medium  ${
+              className={`flex items-center justify-center p-[8px_16px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium  ${
                 primaryForumCategory === '전체' ? ' text-main-400 ' : ' text-neutral-700'
               } cursor-pointer`}
             >
-              포럼
-              <Down />
+              <span className="md:mr-2">포럼</span>
+              <Down strokeWidth={1.5} stroke={`${primaryForumCategory === '전체' ? '#423edf' : '#0F0F0F'}`} />
             </li>
             {forumCategories.map((option) => (
               <li
