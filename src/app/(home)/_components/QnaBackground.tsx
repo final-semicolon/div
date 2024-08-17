@@ -1,5 +1,6 @@
 'use client';
 
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -12,7 +13,16 @@ const QnaBackground = () => {
   }, [pathname]);
 
   if (!isQnaPage) return null;
-  return <div className="absolute top-0 left-0 w-full bg-sub-50 z-[-1]" style={{ height: '408px' }} />;
+  return (
+    <>
+      <Default>
+        <div className="absolute top-0 left-0 w-full bg-sub-50 z-[-1]" style={{ height: '408px' }} />
+      </Default>
+      <Mobile>
+        <div className="absolute top-0 left-0 w-full bg-sub-50 z-[-1]" style={{ height: '180px' }} />
+      </Mobile>
+    </>
+  );
 };
 
 export default QnaBackground;

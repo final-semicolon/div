@@ -10,6 +10,7 @@ import QnaPostItemWaiting from './QnaPostItemWaiting';
 import StatusTabs from './StatusTabs';
 import QnaPostItemSelected from './QnaPostItemSelected';
 import QnaPostItemSkeleton from '../skeleton/QnaPostItemSkeleton';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
 const ResentQnaPosts = () => {
   const [status, setStatus] = useState('waiting');
@@ -81,35 +82,68 @@ const ResentQnaPosts = () => {
   }
 
   return (
-    <div>
-      <StatusTabs status={status} setStatus={setStatus} />
-      <div
-        className={`w-full h-[88px] bg-sub-50 border-t-0 border-r-0 border-b border-l-0 border-sub-100 flex justify-end items-center pr-6`}
-      >
-        <label className="my-6 mr-6">
-          <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
-        </label>
-      </div>
-
-      {sortedPosts.length > 0 ? (
-        <ul>
-          {sortedPosts.map((post: Post) =>
-            status === 'waiting' ? (
-              <QnaPostItemWaiting key={post.id} post={post} />
-            ) : (
-              <QnaPostItemSelected key={post.id} post={post} />
-            )
+    <>
+      <Default>
+        <>
+          <StatusTabs status={status} setStatus={setStatus} />
+          <div
+            className={`w-full h-[88px] bg-sub-50 border-t-0 border-r-0 border-b border-l-0 border-sub-100 flex justify-end items-center pr-6`}
+          >
+            <label className="my-6 mr-6">
+              <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+            </label>
+          </div>
+          {sortedPosts.length > 0 ? (
+            <ul>
+              {sortedPosts.map((post: Post) =>
+                status === 'waiting' ? (
+                  <QnaPostItemWaiting key={post.id} post={post} />
+                ) : (
+                  <QnaPostItemSelected key={post.id} post={post} />
+                )
+              )}
+            </ul>
+          ) : (
+            <div>게시물이 없습니다.</div>
           )}
-        </ul>
-      ) : (
-        <div>게시물이 없습니다.</div>
-      )}
-      <Pagination
-        totalPages={totalPages}
-        currentPage={status === 'waiting' ? waitingPage : selectedPage}
-        onPageChange={setPage}
-      />
-    </div>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={status === 'waiting' ? waitingPage : selectedPage}
+            onPageChange={setPage}
+          />
+        </>
+      </Default>
+      <Mobile>
+        <>
+          <StatusTabs status={status} setStatus={setStatus} />
+          <div
+            className={`mx-5 h-[60px] bg-sub-50 border-t-0 border-r-0 border-b border-l-0 border-sub-100 flex justify-end items-center`}
+          >
+            <label className="my-4 mr-5">
+              <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+            </label>
+          </div>
+          {sortedPosts.length > 0 ? (
+            <ul>
+              {sortedPosts.map((post: Post) =>
+                status === 'waiting' ? (
+                  <QnaPostItemWaiting key={post.id} post={post} />
+                ) : (
+                  <QnaPostItemSelected key={post.id} post={post} />
+                )
+              )}
+            </ul>
+          ) : (
+            <div>게시물이 없습니다.</div>
+          )}
+          <Pagination
+            totalPages={totalPages}
+            currentPage={status === 'waiting' ? waitingPage : selectedPage}
+            onPageChange={setPage}
+          />
+        </>
+      </Mobile>
+    </>
   );
 };
 

@@ -1,3 +1,5 @@
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+
 const PopularQnaPagination = ({
   totalPages,
   currentPage,
@@ -14,18 +16,36 @@ const PopularQnaPagination = ({
   };
 
   return (
-    <div className="flex justify-center items-center gap-4 mt-8">
-      {Array.from({ length: totalPages }, (_, index) => (
-        <button
-          key={index}
-          onClick={() => onPageChange(index)}
-          disabled={index === currentPage}
-          className={buttonClass(index)}
-        >
-          <p className="flex-grow-0 flex-shrink-0 text-body1 font-medium text-left">{index + 1}</p>
-        </button>
-      ))}
-    </div>
+    <>
+      <Default>
+        <div className="flex justify-center items-center gap-4 mt-8">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => onPageChange(index)}
+              disabled={index === currentPage}
+              className={buttonClass(index)}
+            >
+              <p className="flex-grow-0 flex-shrink-0 text-body1 font-medium text-left">{index + 1}</p>
+            </button>
+          ))}
+        </div>
+      </Default>
+      <Mobile>
+        <div className="flex justify-center items-center gap-4 mt-4">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => onPageChange(index)}
+              disabled={index === currentPage}
+              className={buttonClass(index)}
+            >
+              <p className="flex-grow-0 flex-shrink-0 text-body1 font-medium text-left">{index + 1}</p>
+            </button>
+          ))}
+        </div>
+      </Mobile>
+    </>
   );
 };
 
