@@ -15,6 +15,7 @@ import ConfirmModal from '@/components/modal/ConfirmModal';
 import { filterSlang } from '@/utils/markdownCut';
 import TagBlock from '@/components/common/TagBlock';
 import { handleLinkCopy } from '@/utils/handleLinkCopy';
+import { POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 
 const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) => {
   const { me } = useAuth();
@@ -24,7 +25,7 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
   const [retouchPostModal, setRetouchPostModal] = useState<boolean>(false);
 
   const handlePostDelete = async () => {
-    const response = await fetch(`/api/posts/forum-detail/${param.id}`, {
+    await fetch(`/api/posts/forum-detail/${param.id}`, {
       method: 'DELETE',
       body: JSON.stringify({ id: me?.id })
     });
@@ -85,7 +86,7 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
                         isOpen={retouchPostModal}
                         onClose={() => setRetouchPostModal(false)}
                         onConfirm={handlePostDelete}
-                        message={'게시글을 삭제 하겠습니까?'}
+                        message={POST_DELETE_CONFIRM_TEXT}
                       />
                     )}
                   </div>

@@ -1,8 +1,8 @@
 import TopButton from '@/components/common/TopButton';
-import BackClick from '../../_components/archive-detail/BackClick';
 import ForumComments from '../../_components/forum-detail/ForumComments';
 import ForumDetailPost from '../../_components/forum-detail/ForumDetailPost';
 import InputComments from '../../_components/forum-detail/InputComment';
+import BackClick from '@/components/common/BackClick';
 
 const ForumDetailPage = async ({ params }: { params: { id: string } }) => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/forum-detail/${params.id}`, {

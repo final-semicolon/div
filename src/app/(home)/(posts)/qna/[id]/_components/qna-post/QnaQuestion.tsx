@@ -41,9 +41,9 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
               <Image
                 src={questionData.users.profile_image ?? ''}
                 alt="Profile"
-                layout="fill"
-                objectFit="cover"
                 className="rounded-full"
+                width={48}
+                height={48}
               />
             </div>
           ) : null}
@@ -62,12 +62,12 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
       <div className="flex justify-between h-[59px] items-center">
         <span className="text-body1 text-neutral-400">{questionData.updated_at?.slice(0, 10)}</span>
         <div className="flex gap-6 items-center">
-          <button className="flex gap-1">
+          <div className="flex gap-1">
             <LikeButton id={questionData.id} type={'qna'} />
-          </button>
-          <button className="flex gap-1">
+          </div>
+          <div className="flex gap-1">
             <BookmarkButton id={questionData.id} type={'qnaComment'} />
-          </button>
+          </div>
           <button>
             <Share />
           </button>

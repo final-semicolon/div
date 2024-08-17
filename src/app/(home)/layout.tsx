@@ -13,8 +13,8 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
     <div className="min-h-screen flex flex-col justify-center">
       <QnaBackground />
       <HeaderWrapper />
-      <div className="flex justify-center flex-1 w-full" data-color-mode="light">
-        <main className="w-[1204px] pt-14">
+      <div className="flex justify-center flex-1 w-full px-0" data-color-mode="light">
+        <main className="md:max-w-[1204px] max-w-[767px] w-full md:pt-14 pt-6 ">
           {children}
           <ArchiveBackground />
         </main>

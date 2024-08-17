@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { InvalidateQueryFilters } from '@tanstack/react-query';
 import useDeleteMutation from './useDeleteMutation';
@@ -11,46 +11,49 @@ type useReplyKebobProps = {
 };
 
 const useKebob = ({ commentId, replyId, setIsEdit, category }: useReplyKebobProps) => {
-  const { postId } = useQnaDetailStore();
+  const { postId, commentPage } = useQnaDetailStore();
   const [openKebab, setOpenKebab] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const deleteMutationObj = {
-    answer: { path: `/comment/${commentId}`, querykey: ['qnaComments', commentId] as InvalidateQueryFilters },
-    questionReply: { path: `/qna-post-reply/${replyId}`, querykey: ['qnaComments', postId] as InvalidateQueryFilters },
-    answerReply: { path: `/qna-reply/${replyId}`, querykey: ['qnaComments', commentId] as InvalidateQueryFilters }
+    answer: {
+      path: `/comment/${commentId}`,
+      queryKey: ['qnaComments', postId, commentPage]
+    },
+    questionReply: { path: `/qna-post-reply/${replyId}`, queryKey: ['qnaReply', postId] },
+    answerReply: { path: `/qna-reply/${replyId}`, queryKey: ['qnaReply', commentId] }
   };
 
   const path = deleteMutationObj[`${category}`].path;
-  const querykey = deleteMutationObj[`${category}`].querykey;
+  const queryKey = deleteMutationObj[`${category}`].queryKey as (string | number)[];
 
-  const { deleteQnaData } = useDeleteMutation({ path, querykey, postId });
+  const { deleteQnaData } = useDeleteMutation({ path, queryKey, postId, commentId });
 
-  const openModal = () => {
+  const openModal = useCallback(() => {
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const handleKebobClick = () => {
+  const handleKebobClick = useCallback(() => {
     setOpenKebab((prev) => !prev);
-  };
+  }, []);
 
-  const handleEditClick = () => {
+  const handleEditClick = useCallback(() => {
     setIsEdit(true);
     setOpenKebab(false);
-  };
+  }, [setIsEdit]);
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = useCallback(() => {
     openModal();
     setOpenKebab(false);
-  };
+  }, [openModal]);
 
-  const handleDeleteData = () => {
+  const handleDeleteData = useCallback(() => {
     deleteQnaData();
-  };
+  }, [deleteQnaData]);
 
   return {
     openKebab,

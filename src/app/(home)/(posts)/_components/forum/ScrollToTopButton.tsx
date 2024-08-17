@@ -2,6 +2,7 @@
 
 import GoToTop from '@/assets/images/common/GoToTop';
 import GoToTopHover from '@/assets/images/common/GoToTopHover';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import { throttle } from 'lodash';
 import { useEffect, useState } from 'react';
 
@@ -29,14 +30,28 @@ const ScrollToTopButton = () => {
   }, []);
 
   return scrollY > 300 ? (
-    <button
-      onClick={scrollToTop}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="fixed bottom-4 right-20 transition-transform duration-500 ease-in-out transform translate-y-0 opacity-100"
-    >
-      {isHovered ? <GoToTopHover /> : <GoToTop />}
-    </button>
+    <>
+      <Default>
+        <button
+          onClick={scrollToTop}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="fixed bottom-4 right-20 transition-transform duration-500 ease-in-out transform translate-y-0 opacity-100"
+        >
+          {isHovered ? <GoToTopHover /> : <GoToTop />}
+        </button>
+      </Default>
+      <Mobile>
+        <button
+          onClick={scrollToTop}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="fixed bottom-5 right-5 transition-transform duration-500 ease-in-out transform translate-y-0 opacity-100"
+        >
+          {isHovered ? <GoToTopHover width={40} height={40} /> : <GoToTop width={40} height={40} />}
+        </button>
+      </Mobile>
+    </>
   ) : null;
 };
 

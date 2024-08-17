@@ -15,7 +15,10 @@ const getCommentCount = async (postId: string) => {
 
 export const GET = async (request: Request, { params }: { params: { id: string } }) => {
   const supabase = createClient();
-  const { data, error } = await supabase.from('archive_posts').select(`*,user:users(*)`).eq('id', params.id);
+  const { data, error } = await supabase
+    .from('archive_posts')
+    .select(`*,user:users(*),tags:archive_tags(*)`)
+    .eq('id', params.id);
   if (error) {
     console.error('error', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

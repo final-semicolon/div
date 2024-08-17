@@ -14,13 +14,17 @@ import EndOfData from '@/components/common/EndOfData';
 import { useAuth } from '@/context/auth.context';
 import { LikeType } from '@/types/buttons/like';
 import PostCardSkeleton from './skeleton/PostCardSkeleton';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import DraggableScroll from '@/components/common/DraggableScroll';
+import MobileWriteButton from './mobile/MobileWriteButton';
+import PostHeader from './card/PostHeader';
 
 const ForumPostsWithCategoryAndSort = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending, error } = useFetchForumPosts();
   const [activeCategory, setActiveCategory] = useState<ForumCategory>('전체');
   const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [ref, inView] = useInView();
-  const { me } = useAuth();
+  const { me, userData } = useAuth();
   const currentUserId = me?.id;
 
   const categories: ForumCategory[] = ['전체', '일상', '커리어', '자기개발', '토론', '코드 리뷰'];
@@ -29,6 +33,13 @@ const ForumPostsWithCategoryAndSort = () => {
     { value: 'mostComments', label: '댓글순' },
     { value: 'mostLikes', label: '좋아요순' }
   ];
+
+  // const mobileSortOptions: { value: SortOption; label: string }[] = [
+  //   { value: 'latest', label: '최신순' },
+  //   { value: 'mostComments', label: '댓글순' },
+  //   { value: 'mostLikes', label: '좋아요순' },
+  //   { value: 'bestForum', label: '베짱포럼' }
+  // ];
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -93,49 +104,95 @@ const ForumPostsWithCategoryAndSort = () => {
   const filteredAndSortedPost = filterAndSortPosts(allPosts, activeCategory, sortBy);
 
   return (
-    <div className="pl-6">
-      <div className="category-and-sort flex items-center justify-between max-w-[844px] mx-auto">
-        <CategoryTabs
-          categories={categories}
-          activeCategory={activeCategory}
-          handleCategoryClick={handleCategoryClick}
-        />
-        <SortDropdown sortBy={sortBy} handleSortChange={handleSortChange} sortOptions={sortOptions} />
-      </div>
-      <div className="mt-8 mb-8 max-w-[844px] mx-auto border-b-2 border-b-neutral-50">
-        <Link href="/posting" rel="preload">
-          <WriteButton />
-        </Link>
-      </div>
-      <div className="category-items max-w-[844px] mx-auto">
-        {isPending && (
-          <div className="posts-card">
-            {[...Array(5)].map((_, index) => (
-              <PostCardSkeleton key={index} />
-            ))}
-          </div>
-        )}
-        {error && <div>에러 발생</div>}
-        {!isPending && !error && filteredAndSortedPost.length === 0 && <div>게시글이 없습니다.</div>}
-        {!isPending && !error && filteredAndSortedPost.length > 0 && (
-          <div className="posts-card">
-            {filteredAndSortedPost.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                isLiked={post.forum_like.some((like) => like.user_id === currentUserId)}
-                likeCount={post.forum_like_count[0]?.count || 0}
-                onLike={() => handleLikeToggle(post.id, 'forum', 'like')}
-                onUnlike={() => handleLikeToggle(post.id, 'forum', 'unlike')}
+    <>
+      <Default>
+        <div className="pl-6">
+          <div className="category-and-sort flex items-center justify-between min-w-[780px] max-w-[844px] mx-auto">
+            <div className="flex-grow">
+              <CategoryTabs
+                categories={categories}
+                activeCategory={activeCategory}
+                handleCategoryClick={handleCategoryClick}
               />
-            ))}
+            </div>
+            <SortDropdown sortBy={sortBy} handleSortChange={handleSortChange} sortOptions={sortOptions} />
           </div>
-        )}
-        {isFetchingNextPage && <div>추가 게시물 로딩중...</div>}
-        <div ref={ref} className="h-1"></div>
-        {!isPending && !error && !isFetchingNextPage && data && !hasNextPage && <EndOfData />}
-      </div>
-    </div>
+          <div className="mt-8 mb-8 max-w-[844px] mx-auto border-b-2 border-b-neutral-50">
+            <Link href="/posting" rel="preload">
+              <WriteButton />
+            </Link>
+          </div>
+          <div className="category-items max-w-[844px] mx-auto">
+            {isPending && (
+              <div className="posts-card">
+                {[...Array(5)].map((_, index) => (
+                  <PostCardSkeleton key={index} />
+                ))}
+              </div>
+            )}
+            {error && <div>에러 발생</div>}
+            {!isPending && !error && filteredAndSortedPost.length === 0 && <div>게시글이 없습니다.</div>}
+            {!isPending && !error && filteredAndSortedPost.length > 0 && (
+              <>
+                {filteredAndSortedPost.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    isLiked={post.forum_like.some((like) => like.user_id === currentUserId)}
+                    likeCount={post.forum_like_count[0]?.count || 0}
+                    onLike={() => handleLikeToggle(post.id, 'forum', 'like')}
+                    onUnlike={() => handleLikeToggle(post.id, 'forum', 'unlike')}
+                  />
+                ))}
+              </>
+            )}
+            {isFetchingNextPage && <div>추가 게시물 로딩중...</div>}
+            <div ref={ref} className="h-5"></div>
+            {!isPending && !error && !isFetchingNextPage && data && !hasNextPage && <EndOfData />}
+          </div>
+        </div>
+      </Default>
+      <Mobile>
+        <div className="mx-5 mt-6">
+          <div className="flex items-center justify-between">
+            <div className="mr-[18px]">
+              <DraggableScroll>
+                <CategoryTabs
+                  categories={categories}
+                  activeCategory={activeCategory}
+                  handleCategoryClick={handleCategoryClick}
+                />
+              </DraggableScroll>
+            </div>
+            <SortDropdown sortBy={sortBy} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+          </div>
+          <Link href={'/posting'}>
+            <MobileWriteButton userData={userData} />
+          </Link>
+          <div>
+            {error && <div>에러 발생</div>}
+            {!isPending && !error && filteredAndSortedPost.length === 0 && <div>게시글이 없습니다.</div>}
+            {!isPending && !error && filteredAndSortedPost.length > 0 && (
+              <>
+                {filteredAndSortedPost.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    isLiked={post.forum_like.some((like) => like.user_id === currentUserId)}
+                    likeCount={post.forum_like_count[0]?.count || 0}
+                    onLike={() => handleLikeToggle(post.id, 'forum', 'like')}
+                    onUnlike={() => handleLikeToggle(post.id, 'forum', 'unlike')}
+                  />
+                ))}
+              </>
+            )}
+            {isFetchingNextPage && <div>추가 게시물 로딩중...</div>}
+            <div ref={ref} className="h-1"></div>
+            {!isPending && !error && !isFetchingNextPage && data && !hasNextPage && <EndOfData />}
+          </div>
+        </div>
+      </Mobile>
+    </>
   );
 };
 

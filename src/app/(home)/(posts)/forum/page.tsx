@@ -12,10 +12,10 @@ const ScrollToTopButton = dynamic(() => import('../_components/forum/ScrollToTop
 const ForumPage = () => {
   return (
     <div className="flex">
-      <div className="w-1/4 mt-10 z-50">
+      <div className="w-1/4 mt-10 z-10 best-forum-hidden">
         <BestForumPosts />
       </div>
-      <div className="w-3/4">
+      <div className="md:w-3/4 w-full min-w-[375px] max-w-[767px]">
         <ForumPostsWithCategoryAndSort />
       </div>
       <ScrollToTopButton />

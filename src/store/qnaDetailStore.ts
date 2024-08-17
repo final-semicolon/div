@@ -3,19 +3,23 @@ import { create } from 'zustand';
 type TuseQnaDetailStore = {
   postId: string;
   postUser: string;
-  seletedComment: string;
+  selectedComment: string;
+  commentPage: number;
   setPostId: (postId: string) => void;
   setPostUser: (postUser: string) => void;
-  setSeletedComment: (seletedComment: string) => void;
+  setSelectedComment: (selectedComment: string) => void;
+  setCommentPage: (page: number) => void;
   clearQnaDetail: () => void;
 };
 
 export const useQnaDetailStore = create<TuseQnaDetailStore>((set) => ({
   postId: '',
   postUser: '',
-  seletedComment: '',
-  setPostId: (postId) => set({ postId: postId }),
-  setPostUser: (postUser) => set({ postUser: postUser }),
-  setSeletedComment: (seletedComment) => set({ seletedComment: seletedComment }),
-  clearQnaDetail: () => set({ postId: '', seletedComment: '' })
+  selectedComment: '',
+  commentPage: 1,
+  setPostId: (postId) => set({ postId }),
+  setPostUser: (postUser) => set({ postUser }),
+  setSelectedComment: (selectedComment) => set({ selectedComment: selectedComment }),
+  setCommentPage: (page) => set({ commentPage: page }),
+  clearQnaDetail: () => set({ postId: '', selectedComment: '' })
 }));

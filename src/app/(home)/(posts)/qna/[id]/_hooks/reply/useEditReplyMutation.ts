@@ -1,6 +1,7 @@
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 import { InvalidateQueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 
 type useEditReplyMutationProps = {
@@ -14,11 +15,6 @@ type useEditReplyMutationProps = {
 const useEditReplyMutation = ({ commentId, postId, path, queryKey, content }: useEditReplyMutationProps) => {
   const queryClient = useQueryClient();
   const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail`;
-
-  const editReply = (): void => {
-    editMutate({ reply: content });
-    return;
-  };
 
   const editReplyMutation = async ({ reply }: { reply: string }) => {
     const response = await fetch(`${BASE_URL}${path}`, {
@@ -39,6 +35,11 @@ const useEditReplyMutation = ({ commentId, postId, path, queryKey, content }: us
       toast.success(COMMENT_EDIT_ALERT_TEXT);
     }
   });
+
+  const editReply = useCallback((): void => {
+    editMutate({ reply: content });
+    return;
+  }, [content, editMutate]);
 
   return { editReply };
 };

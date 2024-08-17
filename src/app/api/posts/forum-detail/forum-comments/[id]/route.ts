@@ -11,7 +11,7 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
     .select('*, user: users(*), reply: forum_reply(count)')
     .eq('post_id', params.id)
     .order('created_at', { ascending: false })
-    .range(page * 5, (page + 1) * 5 - 1);
+    .range((page - 1) * 5, page * 5 - 1);
 
   const { count, error } = await supabase
     .from('forum_comments')
@@ -19,7 +19,6 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
     .eq('post_id', params.id);
 
   if (error) {
-    // console.error('Error fetching data:', error.message);
     return NextResponse.json({ data: [], count: 0, error: error.message });
   }
 
@@ -33,8 +32,11 @@ export const POST = async (request: Request) => {
   const user_id = data.userComment.user_id as string;
   const post_id = data.userComment.post_id as string;
 
-  const { data: comments } = await supabase.from('forum_comments').insert({ comment, user_id, post_id });
-
+  const { data: comments } = await supabase
+    .from('forum_comments')
+    .insert({ comment, user_id, post_id })
+    .select('*, user: users(*), reply: forum_reply(count)');
+  console.log(comments);
   return NextResponse.json(comments);
 };
 
