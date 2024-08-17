@@ -8,10 +8,6 @@ import Image from 'next/image';
 import Cap from '@/assets/images/main-page_image/qnaicom/Cap';
 import { useEffect, useState } from 'react';
 import SwiperCore from 'swiper';
-import CarouselLeftHover from '@/assets/images/common/CarouselLeftHover';
-import CarouselLeft from '@/assets/images/common/CarouselLeft';
-import CarouselRightHover from '@/assets/images/common/CarouselRightHover';
-import CarouselRight from '@/assets/images/common/CarouselRight';
 import { useQuery } from '@tanstack/react-query';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import RightIconHover from '@/assets/images/common/RightIconHover';
@@ -23,7 +19,6 @@ const TodayQna = () => {
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-  const [isHoveringPrev, setIsHoveringPrev] = useState(false);
   const [isHoveringNext, setIsHoveringNext] = useState(false);
 
   useEffect(() => {
@@ -31,7 +26,6 @@ const TodayQna = () => {
       const handleSlideChange = () => {
         setIsBeginning(swiperInstance.isBeginning);
         setIsEnd(swiperInstance.isEnd);
-        setIsHoveringPrev(false);
         setIsHoveringNext(false);
       };
 
@@ -98,8 +92,6 @@ const TodayQna = () => {
           <div
             className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] left-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
             onClick={handlePrevClick}
-            onMouseEnter={() => setIsHoveringPrev(true)}
-            onMouseLeave={() => setIsHoveringPrev(false)}
           >
             {isHoveringNext ? <LeftIconHover /> : <LeftIcon />}
           </div>
@@ -108,8 +100,6 @@ const TodayQna = () => {
           <div
             className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] right-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
             onClick={handleNextClick}
-            onMouseEnter={() => setIsHoveringNext(true)}
-            onMouseLeave={() => setIsHoveringNext(false)}
           >
             {isHoveringNext ? <RightIconHover /> : <RightIcon />}
           </div>

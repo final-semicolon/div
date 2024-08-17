@@ -68,7 +68,7 @@ const Header = () => {
         </header>
       </Default>
       <Mobile>
-        <header className=" bg-white h-[107px] w-full min-w-[375px] flex flex-col items-center justify-between">
+        <header className=" bg-transparent h-[107px] w-full min-w-[375px] flex flex-col items-center justify-between">
           <div className="w-full flex items-center max-w-[767px] justify-between mx-auto my-5 z-50">
             <Link href={'/'}>
               <div className="h-[40px] flex items-center flex-shrink-0 ml-5">
