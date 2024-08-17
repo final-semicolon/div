@@ -336,7 +336,7 @@ const QnaAnswer = ({
           onConfirm={selectComment}
           message={SELECT_ANSWER_CONFIRM_TEXT}
         />
-        {me?.id === questioner && selectedComment !== qnaComment.id ? (
+        {me?.id === questioner && !selectedComment ? (
           <button
             className="w-[134px] h-[48px] bg-main-50 rounded-md text-main-400 text-subtitle1 font-bold"
             onClick={handelSelectClick}
