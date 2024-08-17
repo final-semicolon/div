@@ -18,7 +18,7 @@ type QnaPostProps = {
 
 const QnaPost = ({ data }: QnaPostProps) => {
   const { me } = useAuth();
-  const { setPostId, setPostUser, setSeletedComment } = useQnaDetailStore();
+  const { setPostId, setPostUser, setSelectedComment: setSeletedComment } = useQnaDetailStore();
   const [content, setContent] = useState<string>('');
 
   useEffect(() => {
