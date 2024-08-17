@@ -304,9 +304,7 @@ const QnaAnswer = ({
       <div className="flex justify-between  h-[59px] items-center">
         <div className={`w-full flex gap-6 items-center`}>
           <span className={`text-body1 text-neutral-400 `}>{qnaComment.created_at?.slice(0, 10)}</span>
-          <div
-            className={`flex gap-[26px]  ${me?.id === questioner && selectedComment !== qnaComment.id ? '' : 'ml-auto'}`}
-          >
+          <div className={`flex gap-[26px]  ${me?.id === questioner && !selectedComment ? '' : 'ml-auto'}`}>
             <div className="flex gap-1 ">
               <LikeButton id={qnaComment.id} type={'qnaComment'} />
             </div>
@@ -337,10 +335,7 @@ const QnaAnswer = ({
           message={SELECT_ANSWER_CONFIRM_TEXT}
         />
         {me?.id === questioner && !selectedComment ? (
-          <button
-            className="w-[134px] h-[48px] bg-main-50 rounded-md text-main-400 text-subtitle1 font-bold"
-            onClick={handelSelectClick}
-          >
+          <button onClick={handelSelectClick}>
             <SelectAnswer />
           </button>
         ) : null}
