@@ -28,8 +28,8 @@ const QnaPost = ({ data }: QnaPostProps) => {
   }, [data]);
 
   return (
-    <div>
-      <div className="mb-8">
+    <div className="bg-neutral-50 md:bg-transparent md:w-full  mx-auto">
+      <div className="md:mb-8 hidden">
         <Link className="mb-4" href={'/qna'}>
           <BackArrowIcon />
         </Link>

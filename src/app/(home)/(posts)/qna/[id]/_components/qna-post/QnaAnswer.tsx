@@ -170,13 +170,13 @@ const QnaAnswer = ({
   }, [qnaComment.qna_comment_tag]);
   return (
     <div
-      className={`w-[1204px]  mb-6 px-6 py-12 border ${selectedComment === qnaComment.id ? 'border-main-400' : ''} rounded-2xl overflow-auto`}
+      className={`bg-white md:max-w-[1204px] md:py-12 py-5 md:mb-8 mb-4 px-5 md:px-6 md:border md:${selectedComment === qnaComment.id ? 'border-main-400' : ''} md:rounded-2xl overflow-auto`}
     >
       <div className="mb-6">
         {index === 0 ? (
-          <div className="flex">
-            <div className="w-[1156px] pb-12 text-h4 font-bold ">총 {qnaCommentsCount}개의 답변</div>
-            <div className="flex min-w-[125px] max-h-[22px] gap-3 text-subtitle2 font-medium">
+          <div className="flex mb-5 md:mb-6 border-b border-neutral-100 pb-5 md:pb-12 md:max-w-[1156px]">
+            <div className=" text-subtitle3 md:text-h4 font-bold ">{qnaCommentsCount}개의 답변</div>
+            <div className="flex gap-3 body-4 text-body4 md:text-subtitle2 font-medium ml-auto">
               <button
                 className={`underline hover:font-bold ${sortedByLikes ? '' : 'font-bold'}`}
                 onClick={handelLikeSortFalse}
@@ -196,11 +196,11 @@ const QnaAnswer = ({
           </div>
         ) : null}
         <div
-          className={`flex gap-4 items-center ${selectedComment === qnaComment.id ? 'bg-main-50 ' : 'bg-neutral-50 '} py-6 px-5 rounded-2xl`}
+          className={`flex gap-4 items-center ${selectedComment === qnaComment.id ? 'bg-main-50 border border-main-400 md:border-none' : 'bg-neutral-50'}  px-3 py-4 md:py-6 md:px-5 rounded-xl md:rounded-2xl`}
         >
           <div>
             {qnaComment.users.profile_image ? (
-              <div className="relative w-12 h-12">
+              <div className="relative md:w-12 md:h-12 w-9 h-9">
                 <Image
                   src={qnaComment.users?.profile_image ?? ''}
                   alt="Profile"
@@ -213,7 +213,7 @@ const QnaAnswer = ({
             ) : null}
           </div>
 
-          <div className="flex flex-col">
+          <div className={`flex flex-col `}>
             <div className="flex">
               {selectedComment === qnaComment.id ? (
                 <div className="flex gap-2 items-center">
@@ -227,9 +227,14 @@ const QnaAnswer = ({
                 </div>
               )}
             </div>
-            <div className="flex gap-5 h-[42px] items-center">
-              <span className="text-subtitle1 text-neutral-900">{qnaComment.users.nickname}</span>
-              <span className="text-body1 text-neutral-500">{timeForToday(qnaComment.updated_at ?? '')}</span>
+            <div className="flex gap-1 md:gap-2 md:py-2 items-center">
+              <span className="text-body3 md:text-subtitle1 text-neutral-900">{qnaComment.users.nickname}</span>
+              <span>
+                <Dot />
+              </span>
+              <span className="text-body3 md:text-body1 text-neutral-500">
+                {timeForToday(qnaComment.updated_at ?? '')}
+              </span>
             </div>
           </div>
           <div className="ml-auto">
@@ -302,26 +307,26 @@ const QnaAnswer = ({
         </div>
       </div>
       <div className="flex justify-between  h-[59px] items-center">
-        <div className={`w-full flex gap-6 items-center`}>
-          <span className={`text-body1 text-neutral-400 `}>{qnaComment.created_at?.slice(0, 10)}</span>
-          <div className={`flex gap-[26px]  ${me?.id === questioner && !selectedComment ? '' : 'ml-auto'}`}>
+        <div className={`w-full flex flex-col md:flex-row gap-6 md:items-center `}>
+          <span
+            className={`text-body3 md:text-body1 text-neutral-400 `}
+          >{`${qnaComment.created_at?.slice(0, 10).split('-').join('. ')}`}</span>
+          <div className={`flex gap-3 md:gap-[26px] ${me?.id === questioner && !selectedComment ? '' : 'md:ml-auto'}`}>
             <div className="flex gap-1 ">
               <LikeButton id={qnaComment.id} type={'qnaComment'} />
             </div>
             <div className="flex gap-1 ">
               <BookmarkButton id={qnaComment.id} type={'qnaComment'} />
             </div>
-            <button className="flex gap-1" onClick={handleReplyClick}>
+            <button className="flex gap-1 md:text-subtitle1 font-medium text-body3 ml-auto" onClick={handleReplyClick}>
               {qnaComment?.qna_reply[0].count !== 0 && openAnswerReply ? (
-                <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>
+                <div className="text-main-400">댓글 모두 숨기기</div>
               ) : qnaComment?.qna_reply[0].count !== 0 ? (
-                <div className="text-main-400 text-subtitle1 font-medium">
-                  {qnaComment?.qna_reply[0].count}개의 댓글
-                </div>
+                <div className="text-main-400">{qnaComment?.qna_reply[0].count}개의 댓글</div>
               ) : openAnswerReply ? (
-                <div className="text-main-400 text-subtitle1 font-medium">댓글 쓰기</div>
+                <div className="text-main-400">댓글 쓰기</div>
               ) : (
-                <div className="text-neutral-400 text-subtitle1 font-medium">댓글 쓰기</div>
+                <div className="text-neutral-400 ">댓글 쓰기</div>
               )}
             </button>
           </div>

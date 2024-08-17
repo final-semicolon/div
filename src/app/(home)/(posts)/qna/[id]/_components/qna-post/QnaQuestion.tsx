@@ -11,6 +11,7 @@ import BookmarkButton from '@/components/common/BookmarkButton';
 import TagBlock from '@/components/common/TagBlock';
 import { filterSlang } from '@/utils/markdownCut';
 import Replies from '../qna-comments/Replies';
+import Dot from '@/assets/images/common/Dot';
 
 type QnaQuestionProps = {
   questionData: TqnaData;
@@ -25,19 +26,19 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
   };
 
   return (
-    <div className="w-[1204px]  mb-6 px-6 py-12 border rounded-2xl bg-white">
-      <div className="mb-6">
-        <div className="w-[1156px] mb-4 flex justify-between">
-          <div>
-            <span className="text-h4 mr-2 font-bold text-main-400">Q.</span>
-            <h2 className="text-h4 font-bold text-neutral-900 inline">{filterSlang(questionData.title)}</h2>
+    <div className="md:max-w-[1204px] md:mb-6 md:px-6 md:py-12 px-5 py-5 md:border md:rounded-2xl bg-white">
+      <div className="md:mb-6 mb-5 flex flex-col gap-2">
+        <div className="md:max-w-[1156px] md:mb-4 mb-2 flex md:justify-between gap-2">
+          <div className="md:text-h4 text-body2 md:font-bold flex gap-2">
+            <span className=" md:mr-2 text-main-400 md:font-bold font-regular ">Q.</span>
+            <h2 className=" text-neutral-900 inline md:font-bold md:max-w-full">{filterSlang(questionData.title)}</h2>
           </div>
           {me?.id === questionData.user_id ? <QuestionKebobBtn /> : null}
         </div>
 
-        <div className="flex gap-4 items-center">
+        <div className="md:text-body1 text-body4 md:font-regular md:text-neutral-500 flex md:gap-4 items-center gap-2">
           {questionData.users.profile_image ? (
-            <div className="relative w-12 h-12">
+            <div className="relative md:w-12 md:h-12 w-7 h-7">
               <Image
                 src={questionData.users.profile_image ?? ''}
                 alt="Profile"
@@ -47,21 +48,24 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
               />
             </div>
           ) : null}
-          <span className="text-body1 text-neutral-500">{questionData.users.nickname}</span>
-          <span className="text-body1 text-neutral-500">{timeForToday(questionData.updated_at ?? '')}</span>
+          <span className="md:text-neutral-500 text-neutral-700 ">{questionData.users.nickname}</span>
+          <span>
+            <Dot />
+          </span>
+          <span className="text-neutral-500">{timeForToday(questionData.updated_at ?? '')}</span>
         </div>
       </div>
-      <div className=" max-w-[1204px] flex my-6">
+      <div className=" md:max-w-[1204px] flex md:my-6 my-5 md:text-body1 text-body3 font-regular">
         <MDEditor.Markdown style={{ maxWidth: '1156px' }} source={filterSlang(questionData.content)} />
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 md:gap-[6px]">
         {questionData.qna_tags
           ? questionData.qna_tags.map((tag) => <TagBlock key={'question' + tag.tag} tag={tag.tag} />)
           : null}
       </div>
-      <div className="flex justify-between h-[59px] items-center">
-        <span className="text-body1 text-neutral-400">{questionData.updated_at?.slice(0, 10)}</span>
-        <div className="flex gap-6 items-center">
+      <div className="w-full flex flex-col md:flex-row justify-between items-center md:items-start md:my-5 md:gap-5">
+        <div className="w-full md:text-body1 md:my-0 my-5 text-body3 text-neutral-400 ">{`${questionData.updated_at?.slice(0, 10).split('-').join('. ')}`}</div>
+        <div className="w-full flex md:justify-end md:gap-6 gap-4 items-center">
           <div className="flex gap-1">
             <LikeButton id={questionData.id} type={'qna'} />
           </div>
@@ -71,19 +75,18 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
           <button>
             <Share />
           </button>
-          <button className="flex gap-1" onClick={handleReplyClick}>
+          <button
+            className="flex gap-1 md:text-subtitle1 font-medium text-body3 ml-auto md:ml-0"
+            onClick={handleReplyClick}
+          >
             {questionData?.qna_post_reply[0].count !== 0 && openQuestionReply ? (
-              <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>
+              <div className="text-main-400 ">댓글 모두 숨기기</div>
             ) : questionData?.qna_post_reply[0].count !== 0 ? (
-              <div className="text-main-400 text-subtitle1 font-medium">
-                {questionData?.qna_post_reply[0].count}개의 댓글
-              </div>
+              <div className="text-main-400  ">{questionData?.qna_post_reply[0].count}개의 댓글</div>
             ) : openQuestionReply ? (
               <div className=" text-subtitle1 font-medium">댓글 쓰기</div>
             ) : (
-              <div className={`${openQuestionReply ? 'text-main-400' : 'text-neutral-400'} text-subtitle1 font-medium`}>
-                댓글 쓰기
-              </div>
+              <div className={`${openQuestionReply ? 'text-main-400' : 'text-neutral-400'} `}>댓글 쓰기</div>
             )}
           </button>
         </div>

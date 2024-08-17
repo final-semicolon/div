@@ -2,10 +2,10 @@ import { cva } from 'class-variance-authority';
 import '@/app/globals.css';
 import { ComponentProps } from 'react';
 
-const largeTagVarients = cva(['text-subtitle2', 'font-medium', 'text-center', 'rounded'], {
+const largeTagVarients = cva(['text-caption3', 'md:text-subtitle2', 'font-medium', 'text-center', 'rounded'], {
   variants: {
     intent: {
-      primary: ['bg-main-400', 'text-white', 'py-1', 'px-3']
+      primary: ['bg-main-400', 'text-white', 'px-1', 'py-[2px]', 'md:py-1', 'md:px-3']
     }
   },
   compoundVariants: [

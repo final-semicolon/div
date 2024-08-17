@@ -107,7 +107,8 @@ const config: Config = {
         overline1: ['14px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
         overline2: ['12px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
         caption1: ['14px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
-        caption2: ['12px', { lineHeight: '150%', letterSpacing: '-0.5px' }]
+        caption2: ['12px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
+        caption3: ['10px', { lineHeight: '15px', letterSpacing: '-1%' }]
       },
 
       fontWeight: {
@@ -123,9 +124,9 @@ const config: Config = {
       },
 
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)'
+        lg: 'var(--radius)', //8px
+        md: 'calc(var(--radius) - 2px)', //6px
+        sm: 'calc(var(--radius) - 4px)' //4px
       },
 
       keyframes: {
