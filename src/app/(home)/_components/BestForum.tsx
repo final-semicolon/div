@@ -26,7 +26,6 @@ const BestForum = () => {
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-  const [isHoveringPrev, setIsHoveringPrev] = useState(false);
   const [isHoveringNext, setIsHoveringNext] = useState(false);
 
   useEffect(() => {
@@ -34,7 +33,6 @@ const BestForum = () => {
       const handleSlideChange = () => {
         setIsBeginning(swiperInstance.isBeginning);
         setIsEnd(swiperInstance.isEnd);
-        setIsHoveringPrev(false);
         setIsHoveringNext(false);
       };
 
@@ -162,8 +160,6 @@ const BestForum = () => {
           <div
             className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] left-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
             onClick={handlePrevClick}
-            onMouseEnter={() => setIsHoveringPrev(true)}
-            onMouseLeave={() => setIsHoveringPrev(false)}
           >
             {isHoveringNext ? <LeftIconHover /> : <LeftIcon />}
           </div>
@@ -172,8 +168,6 @@ const BestForum = () => {
           <div
             className="absolute top-1/2 transform -translate-y-1/2 flex justify-center items-center w-[52px] h-[52px] right-[-26px] shadow-button  bg-neutral-50 hover:bg-neutral-100 rounded-full  z-50"
             onClick={handleNextClick}
-            onMouseEnter={() => setIsHoveringNext(true)}
-            onMouseLeave={() => setIsHoveringNext(false)}
           >
             {isHoveringNext ? <RightIconHover /> : <RightIcon />}
           </div>
