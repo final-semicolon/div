@@ -156,6 +156,10 @@ body .w-md-editor-text-input {
   .search-button-visible {
     display: block;
   }
+
+  .best-forum-hidden {
+    display: none;
+  }
 }
 
 @media (min-width: 1152px) {
@@ -244,4 +248,13 @@ body .w-md-editor-text-input {
 
 .animate-slide-up-to-top {
   animation: slide-up-to-top 0.3s ease-out forwards;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

@@ -1,13 +1,20 @@
-const GoToTop = () => {
+import React from 'react';
+
+interface GoToTopProps {
+  width?: number;
+  height?: number;
+}
+
+const GoToTop = ({ width = 84, height = 84 }: GoToTopProps) => {
   return (
-    <svg width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width={width} height={height} viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g filter="url(#filter0_d_2457_11880)">
-        <rect x="8" y="6" width="68" height="68" rx="34" fill="#F5F5F5" shape-rendering="crispEdges" />
+        <rect x="8" y="6" width="68" height="68" rx="34" fill="#F5F5F5" shapeRendering="crispEdges" />
         <path
           d="M30 46L41.8586 34.1414C41.9367 34.0633 42.0633 34.0633 42.1414 34.1414L54 46"
           stroke="#A8A8A8"
-          stroke-width="3"
-          stroke-linecap="round"
+          strokeWidth="3"
+          strokeLinecap="round"
         />
       </g>
       <defs>
@@ -18,9 +25,9 @@ const GoToTop = () => {
           width="84"
           height="84"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
