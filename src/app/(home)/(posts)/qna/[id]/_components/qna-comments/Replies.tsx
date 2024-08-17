@@ -7,6 +7,8 @@ import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import ReplyForm from './ReplyForm';
 import Reply from './Reply';
 import ReplyPageBtn from '@/components/common/ReplyPageBtn';
+import QnaReplySkeleton from '../skeleton/QnaReplySkeleton';
+import QnaReplyFormSkeleton from '../skeleton/QnaReplyFormSkeleton';
 
 type AnswerCommentsProps = {
   commentId?: string;
@@ -30,13 +32,26 @@ const Replies = ({ commentId, replyCount }: AnswerCommentsProps) => {
       const { data } = await response.json();
       return data;
     },
+    enabled: !!postId,
     gcTime: 5 * 60 * 1000, // 5분
     staleTime: 1 * 60 * 1000, // 1분
     retry: 1
   });
 
+  const skelotonCount = replyCount < 5 ? replyCount : replyCount - page * 5 > 0 ? 5 : page * 5 - replyCount;
   if (isPending) {
-    return <Loading />;
+    return (
+      <>
+        <QnaReplyFormSkeleton />
+        <div className="flex flex-col mt-6 border-t-2">
+          {Array(skelotonCount)
+            .fill(null)
+            .map((_, index) => {
+              return <QnaReplySkeleton key={page + index} />;
+            })}
+        </div>
+      </>
+    );
   }
 
   if (isError) {

@@ -6,8 +6,8 @@ const Top = () => {
           id="Line 51"
           d="M6 24L17.8586 12.1414C17.9367 12.0633 18.0633 12.0633 18.1414 12.1414L30 24"
           stroke="#8F8F8F"
-          stroke-width="3"
-          stroke-linecap="round"
+          strokeWidth="3"
+          strokeLinecap="round"
         />
       </g>
     </svg>

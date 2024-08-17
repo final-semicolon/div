@@ -1,11 +1,12 @@
 import QnaAnswer from './QnaAnswer';
 import { useQuery } from '@tanstack/react-query';
 import NotFound from '@/app/not-found';
-import Loading from '@/app/(home)/loading';
 import { useState } from 'react';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { toast } from 'react-toastify';
+import Loading from '@/app/(home)/loading';
+import QnaAnswerSkeleton from '../skeleton/QnaAnswerSkeleton';
 
 type QnaAnswersProps = {
   qnaCommentsCount: number;
@@ -13,8 +14,9 @@ type QnaAnswersProps = {
 };
 
 const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
-  const { postId, seletedComment } = useQnaDetailStore();
+  const { postId, selectedComment, setCommentPage } = useQnaDetailStore();
   const [page, setPage] = useState<number>(1);
+  const [sortedByLikes, setSortedByLikes] = useState<boolean>(false);
   const pageParamList = [...Array(Math.ceil(qnaCommentsCount / 5))].map((_, idx) => idx + 1);
 
   const {
@@ -22,25 +24,31 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
     isError,
     data: qnaCommentList
   } = useQuery({
-    queryKey: ['qnaComments', postId, page],
+    queryKey: sortedByLikes ? ['qnaComments', postId, page, 'likes'] : ['qnaComments', postId, page],
     queryFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${postId}?page=${page}&selected=${seletedComment}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${postId}?page=${page}&selected=${selectedComment}&sortedByLikes=${sortedByLikes}`
       );
-      const { data, message }: { data: TqnaCommentsWithReplyCount[]; message: string } = await response.json();
+      const {
+        data,
+        message
+      }: { data: TqnaCommentsWithReplyCount[] & { qna_comment_likes?: { count: number } }; message: string } =
+        await response.json();
+
       if (message) {
         toast.error(message);
         return;
       }
       return data;
     },
+    enabled: !!postId,
     gcTime: 5 * 60 * 1000, // 5분
     staleTime: 1 * 60 * 1000, // 1분
     retry: 1
   });
 
   if (isPending) {
-    return <Loading />;
+    return <QnaAnswerSkeleton />;
   }
   if (isError) {
     return <NotFound />;
@@ -53,6 +61,8 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
             return index === 0 ? (
               <QnaAnswer
                 key={qnaComment.id + 'comment'}
+                sortedByLikes={sortedByLikes}
+                setSortedByLikes={setSortedByLikes}
                 qnaComment={qnaComment}
                 questioner={questioner}
                 index={index}
@@ -71,6 +81,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
               key={'replyPage' + pageParam}
               onClick={() => {
                 setPage(pageParam);
+                setCommentPage(pageParam);
               }}
             >
               {pageParam}
