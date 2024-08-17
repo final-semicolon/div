@@ -189,7 +189,7 @@ body .w-md-editor-text-input {
     @apply text-subtitle3 md:text-subtitle1 font-medium cursor-pointer p-[0px_25px_0px_25px];
   }
   .searchbar-toggle-list {
-    @apply absolute top-[50px] z-[1000] pt-4 max-h-52 px-4 mt-1 w-full border border-neutral-200 bg-transparent rounded-md shadow-lg overflow-y-auto;
+    @apply absolute top-[50px] md:top-[60px] z-[1000] pt-4 max-h-52 px-4 mt-1 w-[287px] md:w-[318px] md:ml-10 border border-neutral-200 bg-transparent rounded-md shadow-lg overflow-y-auto scrollbar-hide;
   }
   .searchbar-toggle-item {
     @apply cursor-pointer mb-4 text-body2 font-regular text-neutral-700 hover:bg-neutral-50;
@@ -202,9 +202,6 @@ body .w-md-editor-text-input {
   }
   .filter-inactive {
     @apply text-neutral-700 border border-neutral-100 rounded-lg bg-white;
-  }
-  .searchcard-markdown {
-    @apply text-neutral-400;
   }
 }
 

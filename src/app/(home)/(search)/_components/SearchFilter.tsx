@@ -30,8 +30,8 @@ const SearchFilter = ({
   };
 
   return (
-    <div className="relative p-[24px_0px] md:p-[28px_0px_36px] flex justify-between">
-      <div className="order-2 md:order-1">
+    <div className="relative p-[24px_0px] md:p-[28px_0px_36px] flex justify-between overflow-x-auto">
+      <div className="order-2 md:order-1 flex-shrink-0">
         <PrimaryCategories
           primaryCategory={primaryCategory}
           primaryForumCategory={primaryForumCategory}
@@ -39,7 +39,7 @@ const SearchFilter = ({
           onForumCategoryChange={onForumCategoryChange}
         />
       </div>
-      <div className="flex items-center order-1 md:order-2 ">
+      <div className="flex items-center order-1 md:order-2 flex-shrink-0">
         {primaryCategory === 'all' && sortingType === 'all' ? (
           <div className="order-2 mx-4 md:order-1 "></div>
         ) : (
@@ -47,7 +47,7 @@ const SearchFilter = ({
             <Reset />
           </div>
         )}
-        <div className="order-1 md:order-2">
+        <div className="order-1 md:order-2 flex-shrink-0">
           <SortingFilters
             sortingType={sortingType}
             onTypeChange={onTypeChange}
