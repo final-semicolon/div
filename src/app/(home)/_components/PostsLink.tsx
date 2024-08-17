@@ -62,6 +62,7 @@ const PostsLink = () => {
             <Image
               src={qna}
               alt="Q&A 게시판"
+              priority={true}
               loading="eager"
               width={1500}
               height={500}
