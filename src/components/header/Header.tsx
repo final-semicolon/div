@@ -43,10 +43,7 @@ const Header = () => {
   };
 
   const hideNavLinks =
-    ['/profile', '/search'].includes(pathname) ||
-    pathname.startsWith('/archive/') ||
-    pathname.startsWith('/forum/') ||
-    pathname.startsWith('/qna/');
+    ['/profile', '/search'].includes(pathname) || pathname.startsWith('/archive/') || pathname.startsWith('/forum/');
 
   return (
     <>
@@ -71,14 +68,14 @@ const Header = () => {
         </header>
       </Default>
       <Mobile>
-        <header className=" bg-white h-[107px] w-full min-w-[375px] flex flex-col items-center justify-between px-4 ">
+        <header className=" bg-white h-[107px] w-full min-w-[375px] flex flex-col items-center justify-between">
           <div className="w-full flex items-center max-w-[767px] justify-between mx-auto my-5 z-50">
             <Link href={'/'}>
               <div className="h-[40px] flex items-center flex-shrink-0 ml-5">
                 <MobileLogo />
               </div>
             </Link>
-            <div className="flex items-center space-x-4  flex-shrink-0">
+            <div className="flex items-center space-x-4  flex-shrink-0 mr-5">
               <Link href="/write">
                 <div className="h-6 w-6">
                   <Link href="/posting">
@@ -98,7 +95,7 @@ const Header = () => {
             <HeaderModal isOpen={isModalOpen} onClose={handleCloseModal} />
           </div>
           {!hideNavLinks && (
-            <div className="w-full mt-[9px]">
+            <div className="w-full mt-[9px] border-b">
               <NavLinks getLinkClasses={getMobileLinkClasses} />
             </div>
           )}
