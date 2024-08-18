@@ -1,8 +1,7 @@
 import MDEditor from '@uiw/react-md-editor';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
-import Share from '@/assets/images/common/Share';
 import LikeButton from '@/components/common/LikeButton';
 import { useAuth } from '@/context/auth.context';
 import { timeForToday } from '@/utils/timeForToday';
@@ -33,17 +32,27 @@ import {
 } from '@/constants/confirmModal';
 import KebobBtn from '../kebob-btn/KebobBtn';
 import Replies from '../qna-comments/Replies';
+import Dot from '@/assets/images/common/Dot';
 
 type QnaAnswerProps = {
+  sortedByLikes?: boolean;
+  setSortedByLikes?: Dispatch<SetStateAction<boolean>>;
   qnaComment: TqnaCommentsWithReplyCount;
   questioner: string;
   index?: number;
   qnaCommentsCount?: number;
 };
 
-const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswerProps) => {
+const QnaAnswer = ({
+  sortedByLikes,
+  setSortedByLikes,
+  qnaComment,
+  questioner,
+  index,
+  qnaCommentsCount
+}: QnaAnswerProps) => {
   const { me } = useAuth();
-  const { postId, seletedComment, setSeletedComment } = useQnaDetailStore();
+  const { postId, selectedComment, setSelectedComment } = useQnaDetailStore();
   const [openAnswerReply, setOpenAnswerReply] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [content, setContent] = useState(qnaComment.comment);
@@ -52,6 +61,13 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
   const [isCancleModalOpen, setIsCancleModalOpen] = useState<boolean>(false);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
+
+  const handelLikeSortTrue = () => {
+    index === 0 && setSortedByLikes ? setSortedByLikes(true) : null;
+  };
+  const handelLikeSortFalse = () => {
+    index === 0 && setSortedByLikes ? setSortedByLikes(false) : null;
+  };
 
   const handleReplyClick = () => {
     setOpenAnswerReply((prev) => !prev);
@@ -71,9 +87,9 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
   };
 
   const selectComment = async (): Promise<void> => {
-    setSeletedComment(qnaComment.id);
+    setSelectedComment(qnaComment.id);
     selectMutate();
-    // await revalidatePostTag(`qna-detail-${postId}`);
+    await revalidatePostTag(`qna-detail-${postId}`);
   };
 
   const selectCommentMutation = async () => {
@@ -152,15 +168,35 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
       })
     );
   }, [qnaComment.qna_comment_tag]);
-
   return (
     <div
-      className={`w-[1204px]  mb-6 px-6 py-12 border ${seletedComment === qnaComment.id ? 'border-main-400' : ''} rounded-2xl overflow-auto`}
+      className={`w-[1204px]  mb-6 px-6 py-12 border ${selectedComment === qnaComment.id ? 'border-main-400' : ''} rounded-2xl overflow-auto`}
     >
       <div className="mb-6">
-        {index === 0 ? <div className="w-[1156px] pb-12 text-h4 font-bold">총 {qnaCommentsCount}개의 답변</div> : null}
+        {index === 0 ? (
+          <div className="flex">
+            <div className="w-[1156px] pb-12 text-h4 font-bold ">총 {qnaCommentsCount}개의 답변</div>
+            <div className="flex min-w-[125px] max-h-[22px] gap-3 text-subtitle2 font-medium">
+              <button
+                className={`underline hover:font-bold ${sortedByLikes ? '' : 'font-bold'}`}
+                onClick={handelLikeSortFalse}
+              >
+                {selectedComment ? '채택순' : '답변순'}
+              </button>
+              <div className="flex items-center">
+                <Dot />
+              </div>
+              <button
+                className={`underline hover:font-bold ${sortedByLikes ? 'font-bold' : ''}`}
+                onClick={handelLikeSortTrue}
+              >
+                좋아요순
+              </button>
+            </div>
+          </div>
+        ) : null}
         <div
-          className={`flex gap-4 items-center ${seletedComment === qnaComment.id ? 'bg-main-50 ' : 'bg-neutral-50 '} py-6 px-5 rounded-2xl`}
+          className={`flex gap-4 items-center ${selectedComment === qnaComment.id ? 'bg-main-50 ' : 'bg-neutral-50 '} py-6 px-5 rounded-2xl`}
         >
           <div>
             {qnaComment.users.profile_image ? (
@@ -168,9 +204,10 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
                 <Image
                   src={qnaComment.users?.profile_image ?? ''}
                   alt="Profile"
-                  layout="fill"
-                  objectFit="cover"
+                  fill
                   className="rounded-full"
+                  sizes="48px,48px"
+                  loading="lazy"
                 />
               </div>
             ) : null}
@@ -178,7 +215,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
 
           <div className="flex flex-col">
             <div className="flex">
-              {seletedComment === qnaComment.id ? (
+              {selectedComment === qnaComment.id ? (
                 <div className="flex gap-2 items-center">
                   <BlueCheck />
                   <Tag intent="primary" label="채택된 답변" />
@@ -265,28 +302,31 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
         </div>
       </div>
       <div className="flex justify-between  h-[59px] items-center">
-        <div className="flex gap-6 items-center ">
-          <span className="text-body1 text-neutral-400">{qnaComment.created_at?.slice(0, 10)}</span>
-          <button className="flex gap-1 ">
-            <LikeButton id={qnaComment.id} type={'qnaComment'} />
-          </button>
-          <button className="flex gap-1 ">
-            <BookmarkButton id={qnaComment.id} type={'qnaComment'} />
-          </button>
-          <button className="flex gap-1 ">
-            <Share />
-          </button>
-          <button className="flex gap-1" onClick={handleReplyClick}>
-            {qnaComment?.qna_reply[0].count !== 0 && openAnswerReply ? (
-              <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>
-            ) : qnaComment?.qna_reply[0].count !== 0 ? (
-              <div className="text-main-400 text-subtitle1 font-medium">{qnaComment?.qna_reply[0].count}개의 댓글</div>
-            ) : openAnswerReply ? (
-              <div className="text-main-400 text-subtitle1 font-medium">댓글 쓰기</div>
-            ) : (
-              <div className="text-neutral-400 text-subtitle1 font-medium">댓글 쓰기</div>
-            )}
-          </button>
+        <div className={`w-full flex gap-6 items-center`}>
+          <span className={`text-body1 text-neutral-400 `}>{qnaComment.created_at?.slice(0, 10)}</span>
+          <div
+            className={`flex gap-[26px]  ${me?.id === questioner && selectedComment !== qnaComment.id ? '' : 'ml-auto'}`}
+          >
+            <div className="flex gap-1 ">
+              <LikeButton id={qnaComment.id} type={'qnaComment'} />
+            </div>
+            <div className="flex gap-1 ">
+              <BookmarkButton id={qnaComment.id} type={'qnaComment'} />
+            </div>
+            <button className="flex gap-1" onClick={handleReplyClick}>
+              {qnaComment?.qna_reply[0].count !== 0 && openAnswerReply ? (
+                <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>
+              ) : qnaComment?.qna_reply[0].count !== 0 ? (
+                <div className="text-main-400 text-subtitle1 font-medium">
+                  {qnaComment?.qna_reply[0].count}개의 댓글
+                </div>
+              ) : openAnswerReply ? (
+                <div className="text-main-400 text-subtitle1 font-medium">댓글 쓰기</div>
+              ) : (
+                <div className="text-neutral-400 text-subtitle1 font-medium">댓글 쓰기</div>
+              )}
+            </button>
+          </div>
         </div>
         <ConfirmModal
           isOpen={isSelectModalOpen}
@@ -296,7 +336,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount }: QnaAnswe
           onConfirm={selectComment}
           message={SELECT_ANSWER_CONFIRM_TEXT}
         />
-        {me?.id === questioner && seletedComment !== qnaComment.id ? (
+        {me?.id === questioner && selectedComment !== qnaComment.id ? (
           <button
             className="w-[134px] h-[48px] bg-main-50 rounded-md text-main-400 text-subtitle1 font-bold"
             onClick={handelSelectClick}

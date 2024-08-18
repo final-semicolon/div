@@ -45,17 +45,21 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
       className={`relative py-6 px-5 left-0 border-b ${reply.user_id === me?.id ? 'bg-sub-50' : 'bg-white'}`}
     >
       <div className="flex h-[86px]  items-center gap-4 ">
-        <div className="relative w-12 h-12">
-          <Image
-            src={reply.users?.profile_image ?? ''}
-            alt="Profile"
-            layout="fill"
-            objectFit="cover"
-            className="rounded-full"
-          />
-        </div>
+        {reply.users.profile_image ? (
+          <div className="relative w-12 h-12">
+            <Image
+              src={reply.users?.profile_image ?? ''}
+              alt="Profile"
+              fill
+              className="rounded-full"
+              sizes="48px,48px"
+              loading="lazy"
+            />
+          </div>
+        ) : null}
+
         <div className="flex flex-col gap-1">
-          {postUser === reply.user_id ? <Tag intent="primary" label="글쓴이" /> : null}
+          <div className="w-[66px]">{postUser === reply.user_id ? <Tag intent="primary" label="글쓴이" /> : null}</div>
           <div className="text-subtitle1 text-neutral-900">{reply.users.nickname}</div>
           <div className="text-body2 text-neutral-300">{timeForToday(reply.updated_at!)}</div>
         </div>

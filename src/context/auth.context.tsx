@@ -4,7 +4,7 @@ import { createClient } from '@/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 
-type UserData = {
+export type UserData = {
   nickname: string | null;
   profile_image: string | null;
   info: string | null;

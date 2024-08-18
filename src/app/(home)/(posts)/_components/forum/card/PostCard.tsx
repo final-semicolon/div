@@ -16,6 +16,7 @@ import { handleLinkCopy } from '@/utils/handleLinkCopy';
 import { PostCardProps } from '@/types/posts/forumTypes';
 import PostTags from './PostTags';
 import PostHeader from './PostHeader';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
 const PostCard = ({
   post,
@@ -69,37 +70,78 @@ const PostCard = ({
   }, []);
 
   return (
-    <div className="post-card max-w-[844px] mx-auto p-4 bg-white mb-1 border-b-2 border-b-neutral-50">
-      <Link href={`/forum/${post.id}`} rel="preload">
-        <PostHeader post={post} />
-        {post.thumbnail && (
-          <div className="post-image mt-2">
-            <Image src={post.thumbnail} alt="Post Thumbnail" width={300} height={300} objectFit="cover" />
+    <>
+      <Default>
+        <div className="max-w-[844px] mx-auto p-4 bg-white mb-1 border-b-2 border-b-neutral-50">
+          <Link href={`/forum/${post.id}`} rel="preload">
+            <PostHeader post={post} />
+            {post.thumbnail && (
+              <div className="post-image mt-2">
+                <Image src={post.thumbnail} alt="Post Thumbnail" width={300} height={300} objectFit="cover" />
+              </div>
+            )}
+            <h2 className="text-h4 font-bold text-neutral-900 mt-3 line-clamp-1">{filterSlang(post.title)}</h2>
+            <div className="post-content mt-2 custom-markdown" data-color-mode="light">
+              <MDEditor.Markdown source={markdownFilterSlang(markdownCutText(processedContent, 500))} />
+            </div>
+            {post.forum_tags && <PostTags tags={post.forum_tags} />}
+          </Link>
+          <div className="flex items-center justify-between max-w-[844px] mx-auto">
+            <div className="post-date mt-1 text-body1 text-neutral-400">
+              {dayjs(post.created_at).format('YYYY-MM-DD')}
+            </div>
+            <div className="post-stats mt-2 flex items-center">
+              <NewLikeButton isLiked={isLiked} likeCount={likeCount} onClick={handleLike} />
+              <BookmarkButton id={post.id} type="forum" />
+              <button onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/forum/${post.id}`)}>
+                <Share />
+              </button>
+              <span className="flex items-center justify-center ml-2">
+                <CommentBubble />
+                <span className="ml-1 text-subtitle1 font-medium text-neutral-400">
+                  {post.forum_comment[0]?.count || 0}
+                </span>
+              </span>
+            </div>
           </div>
-        )}
-        <h2 className="text-h4 font-bold text-neutral-900 mt-3">{filterSlang(post.title)}</h2>
-        <div className="post-content mt-2 custom-markdown" data-color-mode="light">
-          <MDEditor.Markdown source={markdownFilterSlang(markdownCutText(processedContent, 500))} />
         </div>
-        {post.forum_tags && <PostTags tags={post.forum_tags} />}
-      </Link>
-      <div className="flex items-center justify-between max-w-[844px] mx-auto">
-        <div className="post-date mt-1 text-body1 text-neutral-400">{dayjs(post.created_at).format('YYYY-MM-DD')}</div>
-        <div className="post-stats mt-2 flex items-center">
-          <NewLikeButton isLiked={isLiked} likeCount={likeCount} onClick={handleLike} />
-          <BookmarkButton id={post.id} type="forum" />
-          <button onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/forum/${post.id}`)}>
-            <Share />
-          </button>
-          <span className="flex items-center justify-center ml-2">
-            <CommentBubble />
-            <span className="ml-1 text-subtitle1 font-medium text-neutral-400">
-              {post.forum_comment[0]?.count || 0}
-            </span>
-          </span>
+      </Default>
+      <Mobile>
+        <div className="max-w-[767px] mx-auto p-5 bg-white mb-1 border-b border-b-neutral-50">
+          <Link href={`/forum/${post.id}`} rel="preload">
+            <PostHeader post={post} />
+            {post.thumbnail && (
+              <div className="mt-2 w-full h-[446px]">
+                <Image src={post.thumbnail} alt="Post Thumbnail" width={295} height={446} objectFit="cover" />
+              </div>
+            )}
+            <h2 className="text-subtitle2 font-bold text-neutral-900 mt-5 line-clamp-1">{filterSlang(post.title)}</h2>
+            <div className="post-content mt-6 custom-markdown" data-color-mode="light">
+              <MDEditor.Markdown source={markdownFilterSlang(markdownCutText(processedContent, 500))} />
+            </div>
+            {post.forum_tags && <PostTags tags={post.forum_tags} />}
+          </Link>
+          <div className="post-date mt-1 text-body3 font-regular text-neutral-400">
+            {dayjs(post.created_at).format('YYYY-MM-DD')}
+          </div>
+          <div className="flex items-center justify-end max-w-[844px]">
+            <div className="post-stats mt-2 flex items-center gap-3">
+              <NewLikeButton isLiked={isLiked} likeCount={likeCount} onClick={handleLike} />
+              <BookmarkButton id={post.id} type="forum" />
+              <button onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/forum/${post.id}`)}>
+                <Share />
+              </button>
+              <span className="flex items-center justify-center">
+                <CommentBubble />
+                <span className="ml-[2px] text-body3 font-medium text-neutral-400">
+                  {post.forum_comment[0]?.count || 0}
+                </span>
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </Mobile>
+    </>
   );
 };
 

@@ -37,7 +37,6 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer }: PostingAnsw
     if (!me?.id) return;
     addMutate({ user_id: me.id, content, tags: tagList.filter((tag) => tag.selected) });
     toast.success(QNA_ANSWER_ALERT_TEXT);
-    await revalidatePostTag(`qna-detail-${postId}`);
     return;
   };
 
@@ -72,10 +71,11 @@ const PostingAnswerArea = ({ content, setContent, setToggleAnswer }: PostingAnsw
 
   const { mutate: addMutate } = useMutation({
     mutationFn: postingAnswerMutation,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
       setToggleAnswer(false);
       setContent('');
-      queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+      await revalidatePostTag(`qna-detail-${postId}`);
     }
   });
 

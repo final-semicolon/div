@@ -40,9 +40,10 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
             <Image
               src={userData?.profile_image ?? ''}
               alt="Profile"
-              layout="fill"
-              objectFit="cover"
+              fill
               className="rounded-full"
+              sizes="48px,48px"
+              loading="lazy"
             />
           </div>
         ) : null}
