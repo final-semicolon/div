@@ -1,6 +1,5 @@
-import SortSetting from '@/assets/images/common/SortSetting';
 import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
-import DownResponsive from '../common/DownResponsive';
+import OptionsResponsive from '../common/OptionsResponsive';
 
 type SortingOption = {
   type: 'all' | 'time' | 'like' | 'comment';
@@ -44,17 +43,17 @@ const SortingFilters = ({ sortingType, onTypeChange, showMenu, onShowMenu }: Sor
     <div className="flex">
       <button
         onClick={toggleMenu}
-        className={`flex items-center justify-center p-[8px_0px] w-[109px] md:w-[140px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium flex-shrink-0 ${
+        className={`flex items-center justify-center p-[8px_0px] w-[109px] md:w-[140px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium ${
           sortingType !== 'all'
             ? 'text-main-400 border border-main-400 rounded-lg bg-main-50'
             : 'text-neutral-700 border border-neutral-100 rounded-lg bg-white'
         }`}
       >
-        <SortSetting stroke={`${sortingType !== 'all' ? '#423edf' : '#0F0F0F'}`} />
-        <span className="mx-2">
-          {sortingType === 'all' ? '필터' : sortingOptions.find((option) => option.type === sortingType)?.label}
-        </span>
-        <DownResponsive stroke={sortingType !== 'all' ? '#423edf' : '#0F0F0F'} />
+        <OptionsResponsive
+          isType="sort"
+          stroke={sortingType !== 'all' ? '#423edf' : '#0F0F0F'}
+          options={sortingType === 'all' ? '필터' : sortingOptions.find((option) => option.type === sortingType)?.label}
+        />
       </button>
       {showMenu && (
         <div
@@ -66,11 +65,13 @@ const SortingFilters = ({ sortingType, onTypeChange, showMenu, onShowMenu }: Sor
               sortingType === 'all' ? 'text-neutral-700' : ' text-main-400'
             } cursor-pointer`}
           >
-            <SortSetting stroke={`${sortingType !== 'all' ? '#423edf' : '#0F0F0F'}`} />
-            <span className="mx-2">
-              {sortingType === 'all' ? '필터' : sortingOptions.find((option) => option.type === sortingType)?.label}
-            </span>
-            <DownResponsive stroke={sortingType !== 'all' ? '#423edf' : '#0F0F0F'} />
+            <OptionsResponsive
+              isType="sort"
+              stroke={sortingType !== 'all' ? '#423edf' : '#0F0F0F'}
+              options={
+                sortingType === 'all' ? '필터' : sortingOptions.find((option) => option.type === sortingType)?.label
+              }
+            />
           </li>
           {sortingOptions.map((option) => (
             <p

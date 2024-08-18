@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import DownResponsive from '../common/DownResponsive';
+import OptionsResponsive from '../common/OptionsResponsive';
 
 type primaryForumOption = {
   type: '전체' | '일상' | '커리어' | '자기개발' | '토론' | '코드리뷰';
@@ -74,8 +74,11 @@ const ForumToggle = ({
           primaryCategory === 'forum' ? 'filter-active' : 'filter-inactive'
         }`}
       >
-        <p className="min-w-[32px] max-w-[90px] whitespace-nowrap">{currentForumCategoryLabel}</p>
-        <DownResponsive stroke={primaryForumCategory === '전체' ? '#423edf' : '#0F0F0F'} />
+        <OptionsResponsive
+          className="min-w-[32px] max-w-[90px] whitespace-nowrap"
+          stroke={primaryForumCategory === '전체' ? '#423edf' : '#0F0F0F'}
+          options={currentForumCategoryLabel}
+        />
         {showForumMenu && (
           <div
             ref={forumMenuRef}
@@ -87,8 +90,11 @@ const ForumToggle = ({
                 primaryForumCategory === '전체' ? ' text-main-400 ' : ' text-neutral-700'
               } cursor-pointer`}
             >
-              <span className="md:mr-2">포럼</span>
-              <DownResponsive stroke={primaryForumCategory === '전체' ? '#423edf' : '#0F0F0F'} />
+              <OptionsResponsive
+                className="md:mr-2"
+                stroke={primaryForumCategory === '전체' ? '#423edf' : '#0F0F0F'}
+                options={'포럼'}
+              />
             </li>
             {forumCategories.map((option) => (
               <li

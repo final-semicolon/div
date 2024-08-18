@@ -48,7 +48,8 @@ const Search = () => {
   }, [data]);
 
   const sortedItems = useMemo(() => {
-    return combined.sort((a, b) => {
+    if (!combined) return [];
+    return [...combined].sort((a, b) => {
       switch (filters.sortingType) {
         case 'time':
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
@@ -86,7 +87,7 @@ const Search = () => {
           <SearchPostCard
             key={post.id}
             post={post}
-            isLiked={post.isLiked.user_id === currentUserId}
+            isLiked={post.isLiked.some((like) => like.user_id === currentUserId)}
             currentUserId={currentUserId}
             primaryCategory={filters.primaryCategory}
           />
@@ -114,13 +115,18 @@ const Search = () => {
 
   return (
     <>
-      <div className="">
+      <div className="p-5">
+        <Mobile>
+          <div className="mb-10 ">
+            <SearchBar />
+          </div>
+        </Mobile>
         <div className="flex flex-col">
           <span className=" mb-[40px] md:mb-[88px]">
             <span className="text-neutral-900 text-body2 md:text-h3 font-bold">
               {searchType === 'title' ? keyword : `#${keyword}`}
             </span>
-            <span className="text-neutral-700 text-body2 md:text-h3 font-normal"> 검색결과</span>
+            <span className="text-neutral-700 text-body2 md:text-h3 font-regular"> 검색결과</span>
           </span>
           <PostCountDisplay
             primaryCategory={filters.primaryCategory}
@@ -128,19 +134,19 @@ const Search = () => {
             forumCount={data.forum.length}
             qnaCount={data.qna.length}
           />
-          <div className="relative">
-            <SearchFilter
-              primaryCategory={filters.primaryCategory}
-              primaryForumCategory={filters.primaryForumCategory}
-              sortingType={filters.sortingType}
-              onCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryCategory: value }))}
-              onForumCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryForumCategory: value }))}
-              onTypeChange={(value) => setFilters((prev) => ({ ...prev, sortingType: value }))}
-            />
-          </div>
         </div>
-        {renderItems}
       </div>
+      <div className="relative ml-5">
+        <SearchFilter
+          primaryCategory={filters.primaryCategory}
+          primaryForumCategory={filters.primaryForumCategory}
+          sortingType={filters.sortingType}
+          onCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryCategory: value }))}
+          onForumCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryForumCategory: value }))}
+          onTypeChange={(value) => setFilters((prev) => ({ ...prev, sortingType: value }))}
+        />
+      </div>
+      {renderItems}
     </>
   );
 };
