@@ -28,7 +28,7 @@ const ProfileImage = ({ profileImage, onImageClick, onImageUpload, inputRef }: P
       <div className="relative">
         <div
           onClick={onImageClick}
-          className="absolute cursor-pointer border border-sub-50 rounded-full right-[-75px] top-[-50px]"
+          className="absolute cursor-pointer right-[-10px] md:right-[-75px] top-[-50px] md:top-[-50px]"
         >
           <EditIcon />
         </div>

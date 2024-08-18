@@ -3,9 +3,10 @@ import DeleteAccountButton from '../_components/setting/DeleteAccountButton';
 
 const ProfilePage = () => {
   return (
-    <div className="ml-[100px] ">
+    <div className="mb-3 md:p-14">
       <ProfileSetting />
       <DeleteAccountButton />
+      <div className="h-2 bg-neutral-50" />
     </div>
   );
 };
