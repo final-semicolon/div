@@ -139,7 +139,7 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
     }
 
     return (
-      <div className="flex items-center ml-1">
+      <div className="flex items-center">
         <span>{IconComponent}</span>
         <p className={`ml-2 ${messageColor} body2-regular-16px`}>{nicknameMessage}</p>
       </div>
@@ -163,24 +163,26 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
     <Modal isOpen={isOpen}>
       <Default>
         <div className="w-[500px] h-[398px] p-[40px]">
-          <h2 className="mb-10 pl-4 text-h4 font-bold text-neutral-900">닉네임 설정</h2>
-          <h2 className={`pl-2 mb-1 subtitle2-bold-16px ${getTitleColor()}`}>새로운 닉네임</h2>
-          <input
-            type="text"
-            value={nickname}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            onChange={handleNicknameChange}
-            className={`block w-[353px] outline-transparent border-2 rounded-md px-2 py-1 mb-4 ${getBorderColor()}`}
-            placeholder="변경할 닉네임을 입력하세요."
-          />
-          {renderValidationMessage()}
+          <h2 className="mb-10 pl-4 ml-8 text-h4 font-bold text-neutral-900">닉네임 설정</h2>
+          <h2 className={`ml-8 pl-2 mb-2 subtitle2-bold-16px ${getTitleColor()}`}>새로운 닉네임</h2>
+          <div className="mx-auto flex flex-col items-center ">
+            <input
+              type="text"
+              value={nickname}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              onChange={handleNicknameChange}
+              className={`block w-[353px] outline-transparent border-2 rounded-md px-2 py-1 mb-4 ${getBorderColor()}`}
+              placeholder="변경할 닉네임을 입력하세요."
+            />
+          </div>
+          <div className="ml-10"> {renderValidationMessage()}</div>
 
-          <div className="flex justify-end mt-4 px-4 mr-24">
+          <div className="flex justify-end ">
             <button
               onClick={handleSubmit}
               disabled={!isCheckedNickname}
-              className="border bg-main-400 text-white py-4 px-6 hover:bg-main-500 rounded disabled:bg-main-100"
+              className="border bg-main-400 text-white py-4 px-6 mt-24 hover:bg-main-500 rounded disabled:bg-main-100"
             >
               설정하기
             </button>
