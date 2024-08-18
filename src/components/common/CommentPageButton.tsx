@@ -55,7 +55,7 @@ const CommentPageButton = ({ totalItems, itemsPerPage, currentPage, onPageChange
         disabled={currentPage === 1}
         className={`w-8 h-8 rounded ${
           currentPage === 1
-            ? 'stroke-neutral-100 '
+            ? 'bg-neutral-50 stroke-neutral-100 '
             : 'bg-neutral-50 stroke-neutral-500 hover:stroke-main-400 hover:bg-main-50 active:bg-main-50 active:stroke-main-400'
         }`}
       >
