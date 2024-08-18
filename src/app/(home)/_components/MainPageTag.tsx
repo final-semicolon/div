@@ -79,7 +79,7 @@ const MainPageTag = () => {
   };
 
   return (
-    <div className="flex flex-col md:ml-0 ml-5">
+    <div className="flex flex-col md:ml-0 ml-5 relative">
       <div className="flex justify-start  mb-6 md:mb-8 gap-[6px]">
         <h1 className=" text-subtitle1 font-bold md:text-h4 md:font-bold text-neutral-900 ">
           태그로 간편하게 검색해 보세요!
@@ -134,14 +134,7 @@ const MainPageTag = () => {
       </Default>
       <Mobile>
         <div>
-          <Swiper
-            onSwiper={setSwiperInstance}
-            loop={true}
-            modules={[Navigation]}
-            slidesPerView={2}
-            spaceBetween={8}
-            className="mySwiper"
-          >
+          <Swiper loop={true} slidesPerView={2} spaceBetween={8} className="mySwiper">
             {tagList.map((tag, index) => (
               <SwiperSlide key={index}>
                 <div className="h-[172px] mb-[8px] ">
