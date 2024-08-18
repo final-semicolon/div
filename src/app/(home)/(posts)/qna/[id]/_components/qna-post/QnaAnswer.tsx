@@ -33,6 +33,7 @@ import {
 import KebobBtn from '../kebob-btn/KebobBtn';
 import Replies from '../qna-comments/Replies';
 import Dot from '@/assets/images/common/Dot';
+import CommentBubble from '@/assets/images/common/CommentBubble';
 
 type QnaAnswerProps = {
   sortedByLikes?: boolean;
@@ -308,27 +309,37 @@ const QnaAnswer = ({
       </div>
       <div className="flex justify-between  h-[59px] items-center">
         <div className={`w-full flex flex-col md:flex-row gap-6 md:items-center `}>
-          <span
-            className={`text-body3 md:text-body1 text-neutral-400 `}
-          >{`${qnaComment.created_at?.slice(0, 10).split('-').join('. ')}`}</span>
-          <div className={`flex gap-3 md:gap-[26px] ${me?.id === questioner && !selectedComment ? '' : 'md:ml-auto'}`}>
+          <span className="text-body3 md:text-body1 text-neutral-400 md:min-w-24">
+            {qnaComment.created_at?.slice(0, 10).split('-').join('. ')}
+          </span>
+          <div className={`w-full flex gap-2 md:gap-4 h-10 md:h-12 items-center`}>
             <div className="flex gap-1 ">
               <LikeButton id={qnaComment.id} type={'qnaComment'} />
             </div>
             <div className="flex gap-1 ">
               <BookmarkButton id={qnaComment.id} type={'qnaComment'} />
             </div>
-            <button className="flex gap-1 md:text-subtitle1 font-medium text-body3 ml-auto" onClick={handleReplyClick}>
+            <button
+              className={`flex gap-1 md:text-subtitle1 font-medium text-body3 ${me?.id === questioner && !selectedComment ? 'mr-auto ml-0' : 'ml-auto'}`}
+              onClick={handleReplyClick}
+            >
               {qnaComment?.qna_reply[0].count !== 0 && openAnswerReply ? (
                 <div className="text-main-400">댓글 모두 숨기기</div>
               ) : qnaComment?.qna_reply[0].count !== 0 ? (
-                <div className="text-main-400">{qnaComment?.qna_reply[0].count}개의 댓글</div>
+                <div className="flex gap-[2px] md:gap-1 text-neutral-400">
+                  <CommentBubble /> {qnaComment?.qna_reply[0].count}
+                </div>
               ) : openAnswerReply ? (
                 <div className="text-main-400">댓글 쓰기</div>
               ) : (
                 <div className="text-neutral-400 ">댓글 쓰기</div>
               )}
             </button>
+            {me?.id === questioner && !selectedComment ? (
+              <button onClick={handelSelectClick}>
+                <SelectAnswer />
+              </button>
+            ) : null}
           </div>
         </div>
         <ConfirmModal
@@ -339,11 +350,6 @@ const QnaAnswer = ({
           onConfirm={selectComment}
           message={SELECT_ANSWER_CONFIRM_TEXT}
         />
-        {me?.id === questioner && !selectedComment ? (
-          <button onClick={handelSelectClick}>
-            <SelectAnswer />
-          </button>
-        ) : null}
       </div>
       {openAnswerReply ? <Replies commentId={qnaComment.id} replyCount={qnaComment?.qna_reply[0].count} /> : null}
     </div>

@@ -53,13 +53,13 @@ const QuestionKebobBtn = () => {
 
   return (
     <>
-      <div className=" relative">
-        <button onClick={handleKebobClick}>
+      <div className="relative ml-auto ">
+        <button className="px-[10px]" onClick={handleKebobClick}>
           <KebabButton />
         </button>
 
         <ul
-          className={`${openKebab ? 'border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute  -right-[6px] text-center hover:border-main-400 text-body2`}
+          className={`${openKebab ? 'border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute  -right-[6px] text-center hover:border-main-400 text-body4 md:text-body2 z-50`}
         >
           <ConfirmModal
             isOpen={isEditModalOpen}
@@ -68,7 +68,7 @@ const QuestionKebobBtn = () => {
             message={EDIT_MOVE_CONFIRM_TEXT}
           />
           <li
-            className={` content-center ${openKebab ? '' : 'hidden'} box-content px-4 py-[10px] w-[73px] h-6  hover:bg-main-100 hover:text-main-400 rounded-t-lg cursor-pointer`}
+            className={` content-center ${openKebab ? '' : 'hidden'} box-content px-2 py-2 md:px-4 md:py-[10px] w-[66px] md:w-[73px] md:h-6  hover:bg-main-100 hover:text-main-400 rounded-t-lg cursor-pointer`}
             onClick={handleEditClick}
           >
             게시글 수정
@@ -82,7 +82,7 @@ const QuestionKebobBtn = () => {
           />
 
           <li
-            className={` content-center ${openKebab ? '' : 'hidden'}box-content px-4 py-[10px] w-[73px] h-6 hover:bg-main-100 hover:text-main-400 rounded-b-lg cursor-pointer`}
+            className={` content-center ${openKebab ? '' : 'hidden'}box-content px-2 py-2 md:px-4 md:py-[10px] w-[66px] md:w-[73px] md:h-6 hover:bg-main-100 hover:text-main-400 rounded-b-lg cursor-pointer`}
             onClick={handleDeleteClick}
           >
             게시글 삭제

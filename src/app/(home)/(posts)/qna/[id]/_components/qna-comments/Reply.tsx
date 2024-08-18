@@ -42,11 +42,11 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
   return (
     <div
       key={reply.id}
-      className={`relative py-6 px-5 left-0 border-b ${reply.user_id === me?.id ? 'bg-sub-50' : 'bg-white'}`}
+      className={`relative py-[10px] md:py-6 px-5 left-0 border-b ${reply.user_id === me?.id ? 'bg-sub-50' : 'bg-white'}`}
     >
-      <div className="flex h-[86px]  items-center gap-4 ">
+      <div className="flex items-center gap-4 mb-2 md:mb-4">
         {reply.users.profile_image ? (
-          <div className="relative w-12 h-12">
+          <div className="relative min-w-9 min-h-9 md:min-w-12 md:min-h-12">
             <Image
               src={reply.users?.profile_image ?? ''}
               alt="Profile"
@@ -59,9 +59,11 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
         ) : null}
 
         <div className="flex flex-col gap-1">
-          <div className="w-[66px]">{postUser === reply.user_id ? <Tag intent="primary" label="글쓴이" /> : null}</div>
-          <div className="text-subtitle1 text-neutral-900">{reply.users.nickname}</div>
-          <div className="text-body2 text-neutral-300">{timeForToday(reply.updated_at!)}</div>
+          <div className="md:w-[66px] w-[34px]">
+            {postUser === reply.user_id ? <Tag intent="primary" label="글쓴이" /> : null}
+          </div>
+          <div className="text-body4 font-medium md:text-subtitle1 text-neutral-900">{reply.users.nickname}</div>
+          <div className="text-body4 md:text-body2 text-neutral-300">{timeForToday(reply.updated_at!)}</div>
         </div>
         {me?.id === reply.user_id ? (
           <div className="flex ml-auto mb-auto">
@@ -76,14 +78,14 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
       </div>
 
       {isEdit ? (
-        <div className="flex flex-col  mb-6 mx-5  gap-[16px] ">
-          <div className="bg-white border border-neutral-100 rounded-2xl">
+        <div className="flex flex-col  mb-6  gap-4 ">
+          <div className="bg-white border border-neutral-100 rounded-lg md:rounded-2xl">
             <MDEditor
               value={content}
               onChange={handleContentChange}
               preview="edit"
               commands={commands.getCommands().filter((command) => {
-                return command.name !== 'image';
+                return command.name !== 'image' && command.name !== 'help';
               })}
               textareaProps={{ maxLength: 1000 }}
               extraCommands={commands.getCommands().filter(() => false)}
@@ -100,14 +102,16 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col mb-6 mx-5  gap-[16px]">
+        <div className="flex flex-col mb-6  gap-4">
           {seeMore ? (
             <MDEditor.Markdown source={filterSlang(replyContent)} />
           ) : (
             <>
-              <MDEditor.Markdown source={cutText(replyContent, 344)} />
+              <div className=" max-h-[105px] md:max-h-[130px] overflow-hidden">
+                <MDEditor.Markdown source={filterSlang(replyContent)} />
+              </div>
               <button
-                className={`${content.length > 350 ? '' : 'hidden'} text-start text-subtitle2 text-neutral-700`}
+                className={`${content.length > 350 ? '' : 'hidden'} text-start text-subtitle3 md:text-subtitle2 font-bold text-neutral-700 md:hover:underline`}
                 onClick={handleSeeMoreClick}
               >
                 ...더 보기
@@ -115,7 +119,9 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
             </>
           )}
 
-          <div className="text-neutral-400">{reply.created_at.slice(0, 10)}</div>
+          <div className="text-neutral-400 text-body3 md:text-body1">
+            {reply.created_at.slice(0, 10).split('-').join('. ')}
+          </div>
         </div>
       )}
     </div>
