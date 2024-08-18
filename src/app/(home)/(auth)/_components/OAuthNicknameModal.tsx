@@ -5,6 +5,7 @@ import Vector from '@/assets/images/auth/Vector';
 import CheckVector from '@/assets/images/auth/CheckVector';
 import RedX from '@/assets/images/auth/RedX';
 import { isNicknameValid } from '@/utils/validateBannedWords';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
 type ModalProps = {
   isOpen: boolean;
@@ -16,7 +17,7 @@ const Modal = ({ isOpen, children }: ModalProps) => {
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-[32px] w-[500px]">{children}</div>
+      <div className="bg-white p-6 rounded-[32px] ">{children}</div>
     </div>,
     document.body
   );
@@ -138,7 +139,7 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
     }
 
     return (
-      <div className="flex items-center mt-2">
+      <div className="flex items-center ml-1">
         <span>{IconComponent}</span>
         <p className={`ml-2 ${messageColor} body2-regular-16px`}>{nicknameMessage}</p>
       </div>
@@ -160,31 +161,61 @@ const OAuthNicknameModal = ({ isOpen, currentNickname, onNicknameUpdate, userId 
 
   return (
     <Modal isOpen={isOpen}>
-      <div className="w-[581px] h-[398px] p-[40px]">
-        <h2 className="mb-10 pl-4 text-h4 font-bold text-neutral-900">닉네임 설정</h2>
-        <h2 className={`pl-2 mb-1 subtitle2-bold-16px ${getTitleColor()}`}>새로운 닉네임</h2>
+      <Default>
+        <div className="w-[500px] h-[398px] p-[40px]">
+          <h2 className="mb-10 pl-4 text-h4 font-bold text-neutral-900">닉네임 설정</h2>
+          <h2 className={`pl-2 mb-1 subtitle2-bold-16px ${getTitleColor()}`}>새로운 닉네임</h2>
+          <input
+            type="text"
+            value={nickname}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onChange={handleNicknameChange}
+            className={`block w-[353px] outline-transparent border-2 rounded-md px-2 py-1 mb-4 ${getBorderColor()}`}
+            placeholder="변경할 닉네임을 입력하세요."
+          />
+          {renderValidationMessage()}
 
-        <input
-          type="text"
-          value={nickname}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          onChange={handleNicknameChange}
-          className={`block w-[353px] outline-transparent border-2 rounded-md px-2 py-1 mb-4 ${getBorderColor()}`}
-          placeholder="변경할 닉네임을 입력하세요."
-        />
-        {renderValidationMessage()}
-
-        <div className="flex justify-end mt-4 px-4 mr-24">
-          <button
-            onClick={handleSubmit}
-            disabled={!isCheckedNickname}
-            className="border bg-main-400 text-white py-4 px-6 hover:bg-main-500 rounded disabled:bg-main-100"
-          >
-            설정하기
-          </button>
+          <div className="flex justify-end mt-4 px-4 mr-24">
+            <button
+              onClick={handleSubmit}
+              disabled={!isCheckedNickname}
+              className="border bg-main-400 text-white py-4 px-6 hover:bg-main-500 rounded disabled:bg-main-100"
+            >
+              설정하기
+            </button>
+          </div>
         </div>
-      </div>
+      </Default>
+      <Mobile>
+        <div>
+          <div className="w-[280px] h-[270px] p-[10px] mx-auto my-auto">
+            <h2 className="mb-8 mt-2 text-h4 font-bold text-neutral-900">닉네임 설정</h2>
+            <h2 className={`mb-1 pl-1 subtitle2-bold-16px ${getTitleColor()}`}>새로운 닉네임</h2>
+            <div className="mx-auto flex flex-col items-center ">
+              <input
+                type="text"
+                value={nickname}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                onChange={handleNicknameChange}
+                className={`block w-[270px] outline-transparent border-2 rounded-md px-2 py-1 mb-2 ${getBorderColor()}`}
+                placeholder="변경할 닉네임을 입력하세요."
+              />
+            </div>
+            {renderValidationMessage()}
+            <div className="flex justify-end ">
+              <button
+                onClick={handleSubmit}
+                disabled={!isCheckedNickname}
+                className="border bg-main-400 text-white py-4 px-6 mt-8 hover:bg-main-500 rounded-lg disabled:bg-main-100"
+              >
+                설정하기
+              </button>
+            </div>
+          </div>
+        </div>
+      </Mobile>
     </Modal>
   );
 };
