@@ -106,17 +106,17 @@ const SearchBar = () => {
 
   return (
     <div ref={searchBarRef} className=" relative flex flex-col items-center text-neutral-400">
-      <div className=" flex items-center border border-neutral-200 rounded-md w-[318px] h-[56px] ml-10">
+      <div className=" flex items-center border border-neutral-200 rounded-md w-[287px] md:w-[318px] h-[48px] md:h-[56px] md:ml-10">
         <div className="flex items-center ml-4">
-          <SearchButton />
+          <SearchButton stroke="#8F8F8F" />
           <input
             type="text"
-            placeholder="검색어를 입력하세요"
+            placeholder="검색하기"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={handleSearch}
             onFocus={() => setIsFocused(true)}
-            className="mx-2 pr-4 w-[222px] font-bold focus:outline-none bg-transparent"
+            className="mx-2 pr-4 w-[191px] md:w-[222px] text-body2 font-regular focus:outline-none bg-white"
           />
           {!keyword || (
             <button className="my-4 mr-4" onClick={handleClearKeyword}>
@@ -126,9 +126,9 @@ const SearchBar = () => {
         </div>
       </div>
       {isFocused && !showSuggestions && searchHistory.length > 0 && (
-        <ul className="searchbar-toggle-list">
+        <ul className="searchbar-toggle-list ">
           {searchHistory.map((item, index) => (
-            <div key={index} className="flex items-center justify-between">
+            <div key={index} className="flex items-center justify-between ">
               <li className="searchbar-toggle-item" onClick={() => handleHistoryClick(item)}>
                 {item}
               </li>

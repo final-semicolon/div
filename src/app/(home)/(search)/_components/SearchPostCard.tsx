@@ -1,6 +1,7 @@
 import CommentBubble from '@/assets/images/common/CommentBubble';
 import NewLikeButton from '@/components/common/NewLikeButton';
 import useDebounce from '@/hooks/common/useDebounce';
+import { LikeType } from '@/types/buttons/like';
 import { SearchPost } from '@/types/search/SearchType';
 import { cutText, markdownFilterSlang } from '@/utils/markdownCut';
 import MDEditor from '@uiw/react-md-editor';
@@ -25,50 +26,41 @@ const SearchPostCard = ({ post, isLiked: initialIsLiked, currentUserId, primaryC
   const debouncedLastAction = useDebounce(lastAction, 1000);
 
   useEffect(() => {
-    if (debouncedLastAction === 'like') {
-      handleLike(post.id, post.category);
-    } else if (debouncedLastAction === 'unlike') {
-      handleUnlike(post.id, post.category);
+    if (debouncedLastAction) {
+      handleLikeToggle(post.id, post.category, debouncedLastAction);
     }
   }, [debouncedLastAction, post.id, post.category]);
 
   useEffect(() => {
     setIsLiked(initialIsLiked);
-  }, [initialIsLiked]);
+    setLikeCount(post.likesCount);
+  }, [initialIsLiked, post.likesCount]);
 
-  const handleLike = useCallback(
-    async (postId: string, type: 'archive' | 'forum' | 'qna') => {
+  const handleLikeToggle = useCallback(
+    async (postId: string, type: LikeType, action: 'like' | 'unlike') => {
       if (!currentUserId) return;
       try {
+        const method = action === 'like' ? 'POST' : 'DELETE';
         const response = await fetch('/api/common/like/new-like', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ postId, userId: currentUserId, type })
+          method,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            postId,
+            userId: currentUserId,
+            type
+          })
         });
-        if (!response.ok) throw new Error('Failed to like the post');
-        const data = await response.json();
-        console.log(`Liked post with ID: ${postId}`, data);
-      } catch (error) {
-        console.error(`Error liking post with ID: ${postId}`, error);
-      }
-    },
-    [currentUserId]
-  );
 
-  const handleUnlike = useCallback(
-    async (postId: string, type: 'archive' | 'forum' | 'qna') => {
-      if (!currentUserId) return;
-      try {
-        const response = await fetch('/api/common/like/new-like', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ postId, userId: currentUserId, type })
-        });
-        if (!response.ok) throw new Error('Failed to unlike the post');
+        if (!response.ok) {
+          throw new Error(`Failed to ${action} the post`);
+        }
+
         const data = await response.json();
-        console.log(`Unliked post with ID: ${postId}`, data);
+        console.log(`${action === 'like' ? 'Liked' : 'Unliked'} post with ID: ${postId}`, data);
       } catch (error) {
-        console.error(`Error unliking post with ID: ${postId}`, error);
+        console.error(`Error ${action === 'like' ? 'liking' : 'unliking'} post with ID: ${postId}`, error);
       }
     },
     [currentUserId]
@@ -100,8 +92,8 @@ const SearchPostCard = ({ post, isLiked: initialIsLiked, currentUserId, primaryC
   const tags = post.tag?.map((tag) => tag.tag) || [];
 
   return (
-    <Link href={`/${post.category}/${post.id}`}>
-      <div className="p-[20px_24px] w-full max-w-[335px] md:max-w-[592px] mx-auto md:h-[381px] h-auto border border-neutral-100 rounded-2xl flex flex-col">
+    <div className="p-[20px_24px] w-full max-w-[335px] md:max-w-[592px] mx-auto md:h-[381px] h-auto border border-neutral-100 rounded-2xl flex flex-col">
+      <Link href={`/${post.category}/${post.id}`}>
         <div className="flex-1">
           <div className="mb-4 md:mb-5">
             <div className="flex items-center text-body3 md:text-body1 font-regular text-neutral-500">
@@ -180,8 +172,8 @@ const SearchPostCard = ({ post, isLiked: initialIsLiked, currentUserId, primaryC
             </span>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 
