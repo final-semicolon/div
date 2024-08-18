@@ -7,7 +7,7 @@ import { useBookmark } from '@/hooks/bookmark/useBookmark';
 import { BookmarkButtonProps, BookmarkType } from '@/types/buttons/bookmark';
 import { toast } from 'react-toastify';
 
-const BookmarkButton = ({ id, type }: BookmarkButtonProps) => {
+const ArchiveBookmarkButton = ({ id, type }: BookmarkButtonProps) => {
   const { me } = useAuth();
   const { bookmarks, setBookmarks } = useBookmark();
 
@@ -69,7 +69,15 @@ const BookmarkButton = ({ id, type }: BookmarkButtonProps) => {
       setBookmarks(previousBookmarks);
     }
   };
-  return <button onClick={handleBookmark}>{isBookmarked ? <FilledBookmark /> : <UnfilledBookmark />}</button>;
+  return (
+    <button onClick={handleBookmark}>
+      {isBookmarked ? (
+        <FilledBookmark width={36} height={36} />
+      ) : (
+        <UnfilledBookmark width={36} height={36} stroke="#ffffff" />
+      )}
+    </button>
+  );
 };
 
-export default BookmarkButton;
+export default ArchiveBookmarkButton;
