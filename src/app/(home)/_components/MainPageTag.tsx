@@ -134,7 +134,7 @@ const MainPageTag = () => {
       </Default>
       <Mobile>
         <div>
-          <Swiper loop={true} slidesPerView={2} spaceBetween={8} className="mySwiper">
+          <Swiper slidesPerView={2} spaceBetween={8} className="mySwiper">
             {tagList.map((tag, index) => (
               <SwiperSlide key={index}>
                 <div className="h-[172px] mb-[8px] ">

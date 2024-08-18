@@ -120,7 +120,7 @@ const TodayQna = () => {
           <p className="text-subtitle3 font-medium">지식을 공유하러 가볼까요?</p>
         </div>
         <div className="relative w-full h-[178px]">
-          <Swiper loop={true} slidesPerView={1.1} spaceBetween={8} className="mySwiper">
+          <Swiper slidesPerView={1.1} spaceBetween={8} className="mySwiper">
             {todayQna?.map((post) => (
               <SwiperSlide key={post.id}>
                 <Link href={`/qna/${post.id}`}>
