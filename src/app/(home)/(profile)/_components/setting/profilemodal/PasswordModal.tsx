@@ -7,6 +7,8 @@ import NewPassword from './NewPassword';
 import CheckCurrentPassword from './CheckCurrentPassword';
 import Chip from '@/components/common/Chip';
 import { PASSWORD, MODAL_MESSAGES } from '@/constants/auth';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import MobileModal from '@/components/modal/MobileModal';
 
 type PasswordModalProps = {
   isOpen: boolean;
@@ -65,32 +67,67 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={handleClose} type="myPage">
-        <div className="relative  w-[581px] h-[632px] p-[40px_80px]">
-          <div className="flex justify-between">
-            <h2 className="mb-10 text-h4 font-bold text-neutral-900">비밀번호 변경</h2>
-            <div onClick={handleClose} className="mt-[5px] cursor-pointer">
-              <X width={20} height={20} />
+      <Mobile>
+        <MobileModal isOpen={isOpen} onClose={handleClose}>
+          <div className="w-screen h-screen p-5">
+            <div className="flex justify-between">
+              <div onClick={handleClose} className="mt-[5px] cursor-pointer">
+                <X width={14} height={14} />
+              </div>
+              <h2 className="mb-10 text-subtitle2 font-bold text-center text-neutral-900">비밀번호 변경</h2>
+              <div className="w-5 h-5"></div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div>
+                <CheckCurrentPassword onValidationChange={setValidationMessage} />
+                <NewPassword
+                  newPassword={newPassword}
+                  onNewPasswordChange={setNewPassword}
+                  confirmPassword={confirmPassword}
+                  onConfirmPasswordChange={setConfirmPassword}
+                />
+              </div>
+            </div>
+            <div className="flex justify-end mt-4">
+              <Chip
+                type="button"
+                intent={`${validation ? 'primary' : 'primary_disabled'}`}
+                size={'large'}
+                label="변경하기"
+                onClick={handlePassword}
+              />
             </div>
           </div>
-          <CheckCurrentPassword onValidationChange={setValidationMessage} />
-          <NewPassword
-            newPassword={newPassword}
-            onNewPasswordChange={setNewPassword}
-            confirmPassword={confirmPassword}
-            onConfirmPasswordChange={setConfirmPassword}
-          />
-          <div className="absolute bottom-[40px] right-[64px] flex justify-end gap-2 mt-4 px-4">
-            <Chip
-              type="button"
-              intent={`${validation ? 'primary' : 'primary_disabled'}`}
-              size={'large'}
-              label="변경하기"
-              onClick={handlePassword}
+        </MobileModal>
+      </Mobile>
+      <Default>
+        <Modal isOpen={isOpen} onClose={handleClose} type="myPage">
+          <div className="relative  w-[581px] h-[632px] p-[40px_80px]">
+            <div className="flex justify-between">
+              <h2 className="mb-10 text-h4 font-bold text-neutral-900">비밀번호 변경</h2>
+              <div onClick={handleClose} className="mt-[5px] cursor-pointer">
+                <X width={20} height={20} />
+              </div>
+            </div>
+            <CheckCurrentPassword onValidationChange={setValidationMessage} />
+            <NewPassword
+              newPassword={newPassword}
+              onNewPasswordChange={setNewPassword}
+              confirmPassword={confirmPassword}
+              onConfirmPasswordChange={setConfirmPassword}
             />
+            <div className="absolute bottom-[40px] right-[64px] flex justify-end gap-2 mt-4 px-4">
+              <Chip
+                type="button"
+                intent={`${validation ? 'primary' : 'primary_disabled'}`}
+                size={'large'}
+                label="변경하기"
+                onClick={handlePassword}
+              />
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      </Default>
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         onClose={handleCancelClose}
