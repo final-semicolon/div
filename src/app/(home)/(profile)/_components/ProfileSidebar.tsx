@@ -36,7 +36,7 @@ const ProfileSidebar = () => {
       </Desktop>
       <Tablet>
         <div className="relative">
-          <button onClick={toggleSidebar} className="absolute p-4">
+          <button aria-label="HamburgerButton" onClick={toggleSidebar} className="absolute p-4">
             <MobileHamburgerButton />
           </button>
           {isSidebarVisible && (

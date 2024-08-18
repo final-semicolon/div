@@ -2,6 +2,7 @@
 
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import { useAuth } from '@/context/auth.context';
+import { Mobile } from '@/hooks/common/useMediaQuery';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -45,6 +46,9 @@ const DeleteAccountButton = () => {
       >
         회원탈퇴
       </button>
+      <Mobile>
+        <div className="h-2 bg-neutral-50 mb-7" />
+      </Mobile>
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         onClose={handleCancelClose}
