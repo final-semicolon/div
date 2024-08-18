@@ -102,7 +102,7 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col mb-6  gap-4">
+        <div className="flex flex-col mb-[10px] md:mb-0  gap-4">
           {seeMore ? (
             <MDEditor.Markdown source={filterSlang(replyContent)} />
           ) : (

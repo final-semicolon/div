@@ -1,5 +1,4 @@
 import Down from '@/assets/images/common/Down';
-import Up from '@/assets/images/common/Up';
 import X from '@/assets/images/common/X';
 import { Dispatch, MouseEventHandler, SetStateAction, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -44,12 +43,12 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
 
   return (
     <div
-      className=" w-full h-[51px] flex flex-col text-neutral-900 text-body1 border rounded-xl border-neutral-100 focus:border-main-400 outline-none relative"
+      className=" w-full h-[37px] md:h-[51px] flex flex-col text-neutral-900 text-body3 md:text-body1 border rounded-md md:rounded-xl border-neutral-100 focus:border-main-400 outline-none relative "
       id="tag"
       onClick={handleOpenTag}
     >
-      <div className=" h-[51px] flex items-center gap-2 px-6 py-3 cursor-pointer ">
-        <p className={`${selectedCount > 0 ? 'hidden' : ''} text-neutral-400 text-body1`}>
+      <div className=" h-[37px] md:h-[51px] flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 cursor-pointer ">
+        <p className={`${selectedCount > 0 ? 'hidden' : ''} text-neutral-400 `}>
           태그를 선택하세요! (최대 3개까지 가능해요)
         </p>
         {tagList
@@ -58,9 +57,9 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
             return (
               <div
                 key={'selectedTag' + tag.name}
-                className="flex items-center text-subtitle2 text-neutral-700 font-medium gap-1 bg-neutral-50 px-3 py-1 rounded "
+                className="flex items-center text-neutral-700 font-medium gap-1 bg-neutral-50 px-3 py-1 rounded "
               >
-                <span>#{tag.name}</span>
+                <span className="text-caption2 md:text-subtitle2">#{tag.name}</span>
                 <button
                   type="button"
                   className="w-4 h-4 p-1"
@@ -79,23 +78,29 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
         </div>
       </div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 ">
         <ul
-          className={`${openTag ? '' : 'hidden '} w-full h-[271px] mt-2 flex flex-col gap-2 absolute overflow-auto bg-white py-3 border rounded-xl `}
+          className={`${openTag ? '' : 'hidden '} w-full h-[185px] md:h-[271px] mt-2 flex flex-col gap-2 absolute overflow-auto bg-white md:py-3 border rounded-md md:rounded-xl shadow-[2px_2px_8px_0px_rgba(0,0,0,0.25)] `}
           id="select-tag-list"
         >
           {tagList
             .filter((tag) => tag.selected === false)
-            .map((tag) => {
+            .map((tag, index, selectedTagList) => {
               return (
                 <li
-                  className="px-6 py-2 hover:bg-main-100 text-neutral-900 hover:text-neutral-700 cursor-pointer "
+                  className={`${
+                    index === 0
+                      ? 'rounded-t-md md:rounded-none'
+                      : index === selectedTagList.length - 1
+                        ? 'rounded-b-md md:rounded-none'
+                        : ''
+                  } px-4 md:px-6 py-2 hover:bg-main-100 text-neutral-900 hover:text-neutral-700 cursor-pointer `}
                   key={tag.name}
                   onClick={() => {
                     handleSelect(tag);
                   }}
                 >
-                  <span className="h-[27px] text-body1 ">{tag.name}</span>
+                  <div className="text-body3 md:text-body1  ">{tag.name}</div>
                 </li>
               );
             })}

@@ -4,11 +4,12 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import PostingAnswerArea from './PostingAnswerArea';
 
 type PostingQnaAnswerProps = {
+  title?: string;
   content: string;
   setContent: Dispatch<SetStateAction<string>>;
 };
 
-const PostingQnaAnswer = ({ content, setContent }: PostingQnaAnswerProps) => {
+const PostingQnaAnswer = ({ title, content, setContent }: PostingQnaAnswerProps) => {
   const { userData: answer } = useAuth();
   const [toggleAnswer, setToggleAnswer] = useState<boolean>(false);
 
@@ -18,11 +19,13 @@ const PostingQnaAnswer = ({ content, setContent }: PostingQnaAnswerProps) => {
 
   return (
     <div
-      className={`bg-white my-4 md:max-w-[1204px] md:max-h-[1224px] md:mt-0 md:mb-6 md:px-6 px-5 md:py-6 md:border md:rounded-2xl md:overflow-y-auto md:overflow-x-hidden ${toggleAnswer ? 'border-main-400' : ''}`}
+      className={` bg-white my-4 md:max-w-[1204px] md:max-h-[1224px] md:mt-0 md:mb-6 md:px-6 px-5 md:py-6 md:border md:rounded-2xl md:overflow-y-auto md:overflow-x-hidden ${toggleAnswer ? 'border-main-400' : ''}`}
     >
-      <div className={`flex md:py-6 py-4 gap-x-4 md:max-w-[1154px] items-center ${toggleAnswer ? 'border-b' : ''} `}>
+      <div
+        className={`flex md:py-6 py-4 gap-x-4 md:max-w-[1154px] items-center ${toggleAnswer ? 'border-b hidden md:flex md:border-none' : ''} `}
+      >
         {answer ? (
-          <div className="relative md:min-w-12 md:min-h-12 min-h-9 min-w-9">
+          <div className="relative min-h-9 min-w-9 md:min-w-12 md:min-h-12">
             <Image
               src={answer?.profile_image ?? ''}
               alt="Profile"
@@ -51,7 +54,7 @@ const PostingQnaAnswer = ({ content, setContent }: PostingQnaAnswerProps) => {
         )}
       </div>
       {toggleAnswer ? (
-        <PostingAnswerArea content={content} setContent={setContent} setToggleAnswer={setToggleAnswer} />
+        <PostingAnswerArea title={title} content={content} setContent={setContent} setToggleAnswer={setToggleAnswer} />
       ) : null}
     </div>
   );
