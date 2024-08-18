@@ -8,6 +8,7 @@ import SwiperCore from 'swiper';
 import SwiperNavigationButton from './SwiperNavigationButton';
 import ArchivePostCard from './ArchivePostCard';
 import PopularArchiveSwiperSkeleton from './skeleton/PopularArchiveSwiperSkeleton';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
 const PopularArchiveSwiper = () => {
   const { data, error, isPending } = usePopularArchivePosts();
@@ -54,40 +55,55 @@ const PopularArchiveSwiper = () => {
   }
 
   return (
-    <div className="relative">
-      <Swiper
-        onSwiper={setSwiperInstance}
-        modules={[Navigation]}
-        slidesPerView={3}
-        spaceBetween={10}
-        loop={false}
-        className="ArchiveSwiper"
-      >
-        {data.data.map((post) => (
-          <SwiperSlide key={post.id}>
-            <ArchivePostCard post={post} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      {!isBeginning && (
-        <SwiperNavigationButton
-          direction="prev"
-          isHovering={isHoveringPrev}
-          onClick={handlePrevClick}
-          onMouseEnter={() => setIsHoveringPrev(true)}
-          onMouseLeave={() => setIsHoveringPrev(false)}
-        />
-      )}
-      {!isEnd && (
-        <SwiperNavigationButton
-          direction="next"
-          isHovering={isHoveringNext}
-          onClick={handleNextClick}
-          onMouseEnter={() => setIsHoveringNext(true)}
-          onMouseLeave={() => setIsHoveringNext(false)}
-        />
-      )}
-    </div>
+    <>
+      <Default>
+        <div className="relative">
+          <Swiper
+            onSwiper={setSwiperInstance}
+            modules={[Navigation]}
+            slidesPerView={3}
+            spaceBetween={10}
+            loop={false}
+            className="ArchiveSwiper"
+          >
+            {data.data.map((post) => (
+              <SwiperSlide key={post.id}>
+                <ArchivePostCard post={post} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          {!isBeginning && (
+            <SwiperNavigationButton
+              direction="prev"
+              isHovering={isHoveringPrev}
+              onClick={handlePrevClick}
+              onMouseEnter={() => setIsHoveringPrev(true)}
+              onMouseLeave={() => setIsHoveringPrev(false)}
+            />
+          )}
+          {!isEnd && (
+            <SwiperNavigationButton
+              direction="next"
+              isHovering={isHoveringNext}
+              onClick={handleNextClick}
+              onMouseEnter={() => setIsHoveringNext(true)}
+              onMouseLeave={() => setIsHoveringNext(false)}
+            />
+          )}
+        </div>
+      </Default>
+      <Mobile>
+        <div className="relative">
+          <Swiper slidesPerView={1.4} spaceBetween={8} centeredSlides={true} loop={false} className="ArchiveSwiper">
+            {data.data.map((post) => (
+              <SwiperSlide key={post.id}>
+                <ArchivePostCard post={post} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </Mobile>
+    </>
   );
 };
 
