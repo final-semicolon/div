@@ -64,12 +64,10 @@ function LoginForm() {
           onClose: () => router.replace('/')
         });
       } else {
-        setError('로그인 실패');
-        toast.error('로그인 중 에러가 발생했어요.');
+        toast.error('이메일과 비밀번호를 확인해주세요');
       }
     } catch (err) {
-      setError('로그인 실패');
-      toast.error('로그인 중 에러가 발생했어요.');
+      toast.error('이메일과 비밀번호를 확인해주세요');
     }
   };
 
@@ -85,14 +83,12 @@ function LoginForm() {
       });
 
       if (error) {
-        setError(`Failed to log in with ${provider}. ${error.message}`);
         toast.error(`Failed to log in with ${provider}.`);
       } else {
         localStorage.setItem('oauthProvider', provider);
       }
     } catch (err) {
-      setError('OAuth 로그인 실패');
-      toast.error('OAuth 로그인 중 에러가 발생했습니다.');
+      toast.error('로그인 중 오류가 발생했어요');
     }
   };
 
@@ -115,7 +111,7 @@ function LoginForm() {
           </div>
           {error && <p className="text-red mb-4">{error}</p>}
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-6 w-[420px] h-[56]w-[420px] h-[56] mx-auto mx-auto relative">
+            <div className="mb-6 w-[420px] h-[56] mx-auto mx-auto relative">
               <label className={`block subtitle2-bold-16px ${errors.email ? 'text-red' : 'text-gray-900'}`}>
                 이메일
               </label>
@@ -199,13 +195,13 @@ function LoginForm() {
         <div className="w-[768px] ">
           <div className="flex items-center justify-center mt-[36px] mb-[80px]">
             <Link href="/">
-              <Logo />
+              <Logo width={92} height={64} />
             </Link>
           </div>
           {error && <p className="text-red mb-4">{error}</p>}
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mx-auto flex flex-col items-center ">
-              <div className=" h-[71px] ml-20 mr-20">
+              <div className=" h-[71px] mx-20">
                 <label className={`block subtitle2-bold-16px mb-2 ${errors.email ? 'text-red' : 'text-gray-900'}`}>
                   이메일
                 </label>
@@ -234,7 +230,7 @@ function LoginForm() {
                   )}
                 </div>
               </div>
-              <div className="h-[71px] mt-8 ml-20 mr-20">
+              <div className="h-[71px] mt-8 mx-20">
                 <label className={`block subtitle2-bold-16px mb-2  ${errors.password ? 'text-red' : 'text-gray-900'}`}>
                   비밀번호
                 </label>
@@ -271,21 +267,19 @@ function LoginForm() {
               </div>
               <button
                 type="submit"
-                className="w-[335px] h-[46px] ml-20 mr-20 p-3 mt-10 mb-10 text-white rounded-lg bg-main-400 hover:bg-main-500"
+                className="w-[335px] h-[46px] px-5 py-3 mx-20 my-10 text-white rounded-lg bg-main-400 hover:bg-main-500"
               >
                 로그인
               </button>
-              <div className="text-center border-t-2 ml-20 mr-20 w-[335px] h-[124px]">
+              <div className="text-center border-t-2 mx-20 w-[335px] h-[124px]">
                 <OAuthButtons handleLogin={handleOAuthLogin} title="SNS 계정으로 로그인/회원가입" />
               </div>
             </div>
           </form>
-          <div className="mt-4 text-center">
-            <span>
-              <Link className="body4-regular-13px text-gray-500 underline " href="/signup">
-                이메일로 가입하기
-              </Link>
-            </span>
+          <div className="mt-6 text-center">
+            <Link className="body4-regular-13px text-gray-500 underline " href="/signup">
+              이메일로 가입하기
+            </Link>
           </div>
         </div>
       </Mobile>
