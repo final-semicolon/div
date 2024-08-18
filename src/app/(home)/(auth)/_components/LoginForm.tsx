@@ -115,7 +115,7 @@ function LoginForm() {
           </div>
           {error && <p className="text-red mb-4">{error}</p>}
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-6 relative">
+            <div className="mb-6 w-[420px] h-[56]w-[420px] h-[56] mx-auto mx-auto relative">
               <label className={`block subtitle2-bold-16px ${errors.email ? 'text-red' : 'text-gray-900'}`}>
                 이메일
               </label>
@@ -144,11 +144,11 @@ function LoginForm() {
                 )}
               </div>
             </div>
-            <div className="mb-10 relative">
+            <div className="mb-10 w-[420px] h-[56]w-[420px] h-[56] mx-auto mx-auto relative">
               <label className={`block subtitle2-bold-16px ${errors.password ? 'text-red' : 'text-gray-900'}`}>
                 비밀번호
               </label>
-              <div className="relative">
+              <div className="relative ">
                 <input
                   type="password"
                   placeholder="비밀번호를 입력해 주세요"
@@ -179,7 +179,10 @@ function LoginForm() {
                 </div>
               )}
             </div>
-            <button type="submit" className="w-full p-3 text-white rounded-md bg-main-400 hover:bg-main-500">
+            <button
+              type="submit"
+              className="w-[420px] h-[56px] p-3 text-white rounded-lg bg-main-400 hover:bg-main-500"
+            >
               로그인
             </button>
           </form>
@@ -202,8 +205,8 @@ function LoginForm() {
           {error && <p className="text-red mb-4">{error}</p>}
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mx-auto flex flex-col items-center ">
-              <div className="mb-5  ml-20 mr-20 relative">
-                <label className={`block subtitle2-bold-16px ${errors.email ? 'text-red' : 'text-gray-900'}`}>
+              <div className=" h-[71px] ml-20 mr-20">
+                <label className={`block subtitle2-bold-16px mb-2 ${errors.email ? 'text-red' : 'text-gray-900'}`}>
                   이메일
                 </label>
                 <div className="relative w-[335px] h-[44px]">
@@ -231,8 +234,8 @@ function LoginForm() {
                   )}
                 </div>
               </div>
-              <div className=" relative  ml-20 mr-20">
-                <label className={`block subtitle2-bold-16px ${errors.password ? 'text-red' : 'text-gray-900'}`}>
+              <div className="h-[71px] mt-8 ml-20 mr-20">
+                <label className={`block subtitle2-bold-16px mb-2  ${errors.password ? 'text-red' : 'text-gray-900'}`}>
                   비밀번호
                 </label>
                 <div className="relative w-[335px] h-[44px] ">
@@ -268,11 +271,11 @@ function LoginForm() {
               </div>
               <button
                 type="submit"
-                className="w-[335px] h-[46px] ml-20 mr-20 p-3 mt-10 text-white rounded-md bg-main-400 hover:bg-main-500"
+                className="w-[335px] h-[46px] ml-20 mr-20 p-3 mt-10 mb-10 text-white rounded-lg bg-main-400 hover:bg-main-500"
               >
                 로그인
               </button>
-              <div className="text-center border-t-2 mt-10 ml-20 mr-20  w-[335px] h-[124px]">
+              <div className="text-center border-t-2 ml-20 mr-20 w-[335px] h-[124px]">
                 <OAuthButtons handleLogin={handleOAuthLogin} title="SNS 계정으로 로그인/회원가입" />
               </div>
             </div>
