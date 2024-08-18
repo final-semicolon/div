@@ -79,13 +79,16 @@
 
 @import 'swiper/css';
 @import 'swiper/css/navigation';
+@import 'swiper/swiper-bundle.css';
 
-.swiper-pagination-bullet {
-  background-color: #ced7e3 !important;
+.custom-pagination {
+  display: flex !important;
+  justify-content: center !important;
+  margin-top: 16px !important;
 }
 
 .swiper-pagination-bullet-active {
-  background-color: #ced7e3 !important;
+  background-color: #423edf !important;
 }
 
 .w-md-editor {

@@ -8,7 +8,7 @@ import TopButton from '@/components/common/TopButton';
 const HomePage = async () => {
   return (
     <div className={`flex flex-col justify-center items-center relative`}>
-      <div className="w-[1204px] flex flex-col gap-20">
+      <div className="w-full flex flex-col md:gap-20">
         <PostsLink />
         <BestForum />
         <TodayQna />
