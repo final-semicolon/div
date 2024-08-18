@@ -1,6 +1,5 @@
-import Down from '@/assets/images/common/Down';
-import SortSetting from '@/assets/images/common/SortSetting';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import OptionsResponsive from '../common/OptionsResponsive';
 
 type SortingOption = {
   type: 'all' | 'time' | 'like' | 'comment';
@@ -25,15 +24,10 @@ const SortingFilters = ({ sortingType, onTypeChange, showMenu, onShowMenu }: Sor
     };
 
     document.addEventListener('mousedown', handleMenuClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleMenuClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleMenuClickOutside);
   }, []);
 
-  const toggleMenu = () => {
-    onShowMenu(!showMenu);
-  };
-
+  const toggleMenu = () => onShowMenu(!showMenu);
   const handleOptionClick = (type: 'all' | 'time' | 'like' | 'comment') => {
     onTypeChange(type);
     onShowMenu(false);
@@ -49,29 +43,35 @@ const SortingFilters = ({ sortingType, onTypeChange, showMenu, onShowMenu }: Sor
     <div className="flex">
       <button
         onClick={toggleMenu}
-        className={`flex items-center justify-between p-[8px_16px_8px_16px] w-[140px] h-[40px] mr-6 text-subtitle1 font-medium ${
+        className={`flex items-center justify-center p-[8px_0px] w-[109px] md:w-[140px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium ${
           sortingType !== 'all'
             ? 'text-main-400 border border-main-400 rounded-lg bg-main-50'
             : 'text-neutral-700 border border-neutral-100 rounded-lg bg-white'
         }`}
       >
-        <SortSetting />
-        {sortingType === 'all' ? '필터' : sortingOptions.find((option) => option.type === sortingType)?.label}
-        <Down />
+        <OptionsResponsive
+          isType="sort"
+          stroke={sortingType !== 'all' ? '#423edf' : '#0F0F0F'}
+          options={sortingType === 'all' ? '필터' : sortingOptions.find((option) => option.type === sortingType)?.label}
+        />
       </button>
       {showMenu && (
         <div
           ref={menuButtonRef}
-          className="absolute z-[1000] top-[28px] w-[140px] border overflow-hidden border-neutral-100 rounded-lg bg-white  hover:border hover:border-main-400 "
+          className="absolute z-[1000] top-[24px] md:top-[28px] w-[109px] md:w-[140px] border overflow-hidden border-neutral-100 rounded-lg bg-white hover:border hover:border-main-400 "
         >
           <li
-            className={`flex items-center justify-between p-[8px_16px_8px_16px] h-[40px] text-subtitle1 font-medium ${
-              sortingType === 'all' ? 'text-main-400' : 'text-neutral-700'
+            className={`flex items-center justify-center p-[8px_0px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium ${
+              sortingType === 'all' ? 'text-neutral-700' : ' text-main-400'
             } cursor-pointer`}
           >
-            <SortSetting />
-            필터
-            <Down />
+            <OptionsResponsive
+              isType="sort"
+              stroke={sortingType !== 'all' ? '#423edf' : '#0F0F0F'}
+              options={
+                sortingType === 'all' ? '필터' : sortingOptions.find((option) => option.type === sortingType)?.label
+              }
+            />
           </li>
           {sortingOptions.map((option) => (
             <p

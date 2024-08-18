@@ -7,6 +7,7 @@ import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { toast } from 'react-toastify';
 import Loading from '@/app/(home)/loading';
 import QnaAnswerSkeleton from '../skeleton/QnaAnswerSkeleton';
+import CommentPageButton from '@/components/common/CommentPageButton';
 
 type QnaAnswersProps = {
   qnaCommentsCount: number;
@@ -18,6 +19,10 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
   const [page, setPage] = useState<number>(1);
   const [sortedByLikes, setSortedByLikes] = useState<boolean>(false);
   const pageParamList = [...Array(Math.ceil(qnaCommentsCount / 5))].map((_, idx) => idx + 1);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
   const {
     isPending,
@@ -73,21 +78,13 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
             );
           })
         : null}
-      <div className=" flex pt-6 gap-4 w-full justify-end">
-        {pageParamList.map((pageParam) => {
-          return (
-            <button
-              className={`text-subtitle1 ${page === pageParam ? 'text-main-400 bg-main-50' : 'bg-neutral-50 text-neutral-500'} w-8 h-8 rounded-md`}
-              key={'replyPage' + pageParam}
-              onClick={() => {
-                setPage(pageParam);
-                setCommentPage(pageParam);
-              }}
-            >
-              {pageParam}
-            </button>
-          );
-        })}
+      <div className=" flex pb-[76px] w-full justify-center">
+        <CommentPageButton
+          currentPage={page}
+          itemsPerPage={5}
+          totalItems={qnaCommentsCount}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

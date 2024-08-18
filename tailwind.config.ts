@@ -120,6 +120,7 @@ const config: Config = {
       boxShadow: {
         custom: '-2px 0px 1px 0px rgba(234, 234, 234, 0.25), 2px 0px 1px 0px rgba(234, 234, 234, 0.25)',
         'custom-light': '0px 0px 4px 0px rgba(234, 234, 234, 0.25)',
+        'custom-search': '2px 2px 8px 0px rgba(0, 0, 0, 0.25)',
         button: '0px 2px 8px 0px rgba(0, 0, 0, 0.25)'
       },
 
