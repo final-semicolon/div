@@ -113,7 +113,6 @@ const ArchivePosts = () => {
               </label>
             </div>
           </div>
-
           {sortedPosts.length > 0 ? (
             <div className="flex flex-col mx-5">
               {sortedPosts.map((post) => (
