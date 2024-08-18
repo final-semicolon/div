@@ -1,6 +1,13 @@
 const Top = () => {
   return (
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="36"
+      height="36"
+      viewBox="0 0 36 36"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-5 h-5 md:w-9 md:h-9"
+    >
       <g id="icon(36*36)">
         <path
           id="Line 51"
