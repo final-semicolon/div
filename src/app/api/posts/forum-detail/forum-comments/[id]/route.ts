@@ -36,7 +36,6 @@ export const POST = async (request: Request) => {
     .from('forum_comments')
     .insert({ comment, user_id, post_id })
     .select('*, user: users(*), reply: forum_reply(count)');
-  console.log(comments);
   return NextResponse.json(comments);
 };
 

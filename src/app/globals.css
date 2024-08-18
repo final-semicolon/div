@@ -186,25 +186,22 @@ body .w-md-editor-text-input {
     @apply flex flex-col justify-center items-center;
   }
   .profile-like-bookmark {
-    @apply text-subtitle1 font-medium cursor-pointer p-[0px_25px_0px_25px];
+    @apply text-subtitle3 md:text-subtitle1 font-medium cursor-pointer p-[0px_25px_0px_25px];
   }
   .searchbar-toggle-list {
-    @apply absolute top-[50px] z-[1000] pt-4 max-h-52 px-4 mt-1 w-full border border-neutral-200 bg-transparent rounded-md shadow-lg overflow-y-auto;
+    @apply absolute top-[50px] md:top-[60px] z-[1000] pt-4 max-h-52 mt-1 w-[287px] md:w-[318px] md:ml-10 border bg-white border-neutral-200 rounded-md shadow-custom-search overflow-y-auto scrollbar-hide;
   }
   .searchbar-toggle-item {
-    @apply cursor-pointer mb-4 text-body2 font-regular text-neutral-700 hover:bg-neutral-50;
+    @apply cursor-pointer mb-4 p-[4px_16px] text-body2 font-regular w-full text-neutral-700 hover:bg-neutral-50;
   }
   .filters-item {
-    @apply p-[8px_8px_8px_8px] h-[40px] text-subtitle1 font-medium cursor-pointer center-alignment;
+    @apply p-[8px_8px_8px_8px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium cursor-pointer center-alignment;
   }
   .filter-active {
     @apply text-main-400 border border-main-400 rounded-lg bg-main-50;
   }
   .filter-inactive {
     @apply text-neutral-700 border border-neutral-100 rounded-lg bg-white;
-  }
-  .searchcard-markdown {
-    @apply text-neutral-400;
   }
 }
 

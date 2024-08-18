@@ -3,10 +3,12 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import SearchPostCard from './SearchPostCard';
 import SearchFilter from './SearchFilter';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth.context';
 import PostCountDisplay from './PostCountDisplay';
 import { SearchData } from '@/types/search/SearchType';
+import SearchBar from '@/components/header/SearchBar';
+import { Mobile } from '@/hooks/common/useMediaQuery';
 
 const Search = () => {
   const [data, setData] = useState<SearchData | null>(null);
@@ -18,7 +20,7 @@ const Search = () => {
 
   const { me } = useAuth();
   const currentUserId = me?.id;
-
+  const router = useRouter();
   const searchParams = useSearchParams();
   const searchType = searchParams.get('searchType');
   const keyword = searchParams.get('keyword');
@@ -46,7 +48,8 @@ const Search = () => {
   }, [data]);
 
   const sortedItems = useMemo(() => {
-    return combined.sort((a, b) => {
+    if (!combined) return [];
+    return [...combined].sort((a, b) => {
       switch (filters.sortingType) {
         case 'time':
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
@@ -84,7 +87,7 @@ const Search = () => {
           <SearchPostCard
             key={post.id}
             post={post}
-            isLiked={post.isLiked.user_id === currentUserId}
+            isLiked={post.isLiked.some((like) => like.user_id === currentUserId)}
             currentUserId={currentUserId}
             primaryCategory={filters.primaryCategory}
           />
@@ -93,34 +96,58 @@ const Search = () => {
     );
   }, [categoryFilteredItems, keyword, currentUserId, filters.primaryCategory]);
 
-  if (!data) return <div>Loading...</div>;
+  const handleBack = () => {
+    router.back();
+  };
+
+  if (!searchType) {
+    return (
+      <Mobile>
+        <div className="flex justify-center">
+          <SearchBar />
+          <button className=" ml-5" onClick={handleBack}>
+            취소
+          </button>
+        </div>
+      </Mobile>
+    );
+  } else if (!data) return <div>Loading...</div>;
 
   return (
-    <div className="max-w-[1204px]">
-      <div className="flex flex-col">
-        <span className="mb-[88px]">
-          <span className="text-neutral-900 text-h3 font-bold">{searchType === 'title' ? keyword : `#${keyword}`}</span>
-          <span className="text-neutral-700 text-h3 font-normal"> 검색결과</span>
-        </span>
-        <PostCountDisplay
-          primaryCategory={filters.primaryCategory}
-          archiveCount={data.archive.length}
-          forumCount={data.forum.length}
-          qnaCount={data.qna.length}
-        />
-        <div className="relative">
-          <SearchFilter
+    <>
+      <div className="p-5">
+        <Mobile>
+          <div className="mb-10 ">
+            <SearchBar />
+          </div>
+        </Mobile>
+        <div className="flex flex-col">
+          <span className=" mb-[40px] md:mb-[88px]">
+            <span className="text-neutral-900 text-body2 md:text-h3 font-bold">
+              {searchType === 'title' ? keyword : `#${keyword}`}
+            </span>
+            <span className="text-neutral-700 text-body2 md:text-h3 font-regular"> 검색결과</span>
+          </span>
+          <PostCountDisplay
             primaryCategory={filters.primaryCategory}
-            primaryForumCategory={filters.primaryForumCategory}
-            sortingType={filters.sortingType}
-            onCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryCategory: value }))}
-            onForumCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryForumCategory: value }))}
-            onTypeChange={(value) => setFilters((prev) => ({ ...prev, sortingType: value }))}
+            archiveCount={data.archive.length}
+            forumCount={data.forum.length}
+            qnaCount={data.qna.length}
           />
         </div>
       </div>
+      <div className="relative ml-5">
+        <SearchFilter
+          primaryCategory={filters.primaryCategory}
+          primaryForumCategory={filters.primaryForumCategory}
+          sortingType={filters.sortingType}
+          onCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryCategory: value }))}
+          onForumCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryForumCategory: value }))}
+          onTypeChange={(value) => setFilters((prev) => ({ ...prev, sortingType: value }))}
+        />
+      </div>
       {renderItems}
-    </div>
+    </>
   );
 };
 

@@ -93,7 +93,7 @@ const getPopularQnaPost = async (page: number) => {
 
   return NextResponse.json({
     data: paginatedPosts,
-    count: 18,
+    count: 30,
     nextPage: paginatedPosts.length === limit ? page + 1 : null
   });
 };

@@ -4,7 +4,7 @@ import { memo } from 'react';
 
 const NavLinks = ({ getLinkClasses }: NavLinksProps) => {
   return (
-    <div className="flex w-[417px] h-[56px] ml-5">
+    <div className="flex w-[417px] ml-5">
       <Link href={'/'}>
         <div className="mr-6 md:mx-10 md:my-3">
           <div className={`border-0 ${getLinkClasses('/')}`}>메인</div>

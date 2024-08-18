@@ -13,9 +13,7 @@ export type SearchPost = {
   forum_category?: string;
   likesCount: number;
   commentsCount: number;
-  isLiked: {
-    user_id: string;
-  };
+  isLiked: { user_id: string }[];
   user: User;
   tag?: { tag: string }[];
 };
