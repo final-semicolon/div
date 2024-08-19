@@ -16,9 +16,6 @@ import { filterSlang } from '@/utils/markdownCut';
 import TagBlock from '@/components/common/TagBlock';
 import { handleLinkCopy } from '@/utils/handleLinkCopy';
 import { POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
-import { Default, Mobile } from '@/hooks/common/useMediaQuery';
-import BackClick from '@/components/common/BackClick';
-import KebabWhite from '@/assets/images/common/KebabWhite';
 
 const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) => {
   const { me } = useAuth();
@@ -42,177 +39,86 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
 
   return (
     <div className="flex flex-col gap-5 md:gap-6">
-      <Default>
-        <BackClick />
-        {forumDetail?.map((post) => (
-          <div key={post.id} className="w-full flex flex-col gap-6 border-b-[1px] ">
-            <div className="flex  justify-between items-center   ">
-              <div className="flex gap-4">
-                <Image
-                  src={post.user.profile_image}
-                  alt="forumUserImage"
-                  width={50}
-                  height={50}
-                  className="rounded-full w-[48px] h-[48px] "
-                />
-                <div className=" flex flex-col gap-2">
-                  <p className="text-subtitle1 font-medium">{post.user.nickname}</p>
-                  <div className=" flex justify-start items-center gap-2">
-                    <p className="text-body2 font-regular text-neutral-300">{post.forum_category}</p>
-                    <p className="text-neutral-100">•</p>
-                    <p className="text-body2 font-regular text-neutral-300">
-                      {timeForToday(post.updated_at ? post.updated_at : post.created_at)}
-                      <span>{post.updated_at !== post.created_at && '(수정됨)'}</span>
-                    </p>
-                  </div>
+      {forumDetail?.map((post) => (
+        <div key={post.id} className="w-full flex flex-col gap-6 border-b-[1px] ">
+          <div className="flex  justify-between items-center   ">
+            <div className="flex gap-4">
+              <Image
+                src={post.user.profile_image}
+                alt="forumUserImage"
+                width={50}
+                height={50}
+                className="rounded-full w-[48px] h-[48px] "
+              />
+              <div className=" flex flex-col gap-2">
+                <p className="text-subtitle1 font-medium">{post.user.nickname}</p>
+                <div className=" flex justify-start items-center gap-2">
+                  <p className="text-body2 font-regular text-neutral-300">{post.forum_category}</p>
+                  <p className="text-neutral-100">•</p>
+                  <p className="text-body2 font-regular text-neutral-300">
+                    {timeForToday(post.updated_at ? post.updated_at : post.created_at)}
+                    <span>{post.updated_at !== post.created_at && '(수정됨)'}</span>
+                  </p>
                 </div>
               </div>
-              {post.user_id === me?.id && (
-                <div className="relative">
-                  <div className="p-4" onClick={() => setKebobToggle(!kebobToggle)}>
-                    <KebabButton />
-                  </div>
-                  {kebobToggle ? (
-                    <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center bg-white z-50 shadow-lg border rounded-lg ">
-                      <button
-                        className="h-[44px] w-full rounded-t-lg hover:bg-main-50 hover:text-main-400 "
-                        onClick={handlePostRetouch}
-                      >
-                        게시글 수정
-                      </button>
-                      <button
-                        className="h-[44px]  w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
-                        onClick={() => setRetouchPostModal(true)}
-                      >
-                        게시글 삭제
-                      </button>
-                      {retouchPostModal && (
-                        <ConfirmModal
-                          isOpen={retouchPostModal}
-                          onClose={() => setRetouchPostModal(false)}
-                          onConfirm={handlePostDelete}
-                          message={POST_DELETE_CONFIRM_TEXT}
-                        />
-                      )}
-                    </div>
-                  ) : null}
+            </div>
+            {post.user_id === me?.id && (
+              <div className="relative">
+                <div className="p-4" onClick={() => setKebobToggle(!kebobToggle)}>
+                  <KebabButton />
                 </div>
-              )}
-            </div>
-            <div className="flex flex-col gap-6  whitespace-pre-wrap break-words" data-color-mode="light">
-              <p className="text-h4 font-bold">{filterSlang(post.title)}</p>
-              <MDEditor.Markdown source={filterSlang(post.content)} className="text-body1 font-regular" />
-            </div>
-            <div className="flex justify-start items-start gap-2">
-              {post.tags?.map((tag) => <div key={tag.id}>{tag && <TagBlock tag={tag.tag} />}</div>)}
-            </div>
-            <div className="flex justify-between items-center mb-6">
-              <p className="text-body1 font-regular text-neutral-400">
-                {post.created_at.slice(0, 10).replace(/-/g, '.')}
-              </p>
-              <div className="flex gap-5">
-                <LikeButton id={post.id} type="forum" />
-                <BookmarkButton id={post.id} type="forum" />
-                <button
-                  type="button"
-                  onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/forum/${post.id}`)}
-                >
-                  <Share />
-                </button>
-                <p className="text-subtitle1 font-medium text-main-400"> {post.comment[0].count}개의 댓글</p>
+                {kebobToggle ? (
+                  <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center bg-white z-50 shadow-lg border rounded-lg ">
+                    <button
+                      className="h-[44px] w-full rounded-t-lg hover:bg-main-50 hover:text-main-400 "
+                      onClick={handlePostRetouch}
+                    >
+                      게시글 수정
+                    </button>
+                    <button
+                      className="h-[44px]  w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
+                      onClick={() => setRetouchPostModal(true)}
+                    >
+                      게시글 삭제
+                    </button>
+                    {retouchPostModal && (
+                      <ConfirmModal
+                        isOpen={retouchPostModal}
+                        onClose={() => setRetouchPostModal(false)}
+                        onConfirm={handlePostDelete}
+                        message={POST_DELETE_CONFIRM_TEXT}
+                      />
+                    )}
+                  </div>
+                ) : null}
               </div>
-            </div>
+            )}
           </div>
-        ))}
-      </Default>
-      <Mobile>
-        {forumDetail?.map((post) => (
-          <div key={post.id} className="w-full flex flex-col gap-6 border-b-[1px] ">
-            <div
-              className={`flex flex-col justify-between p-5  h-[250px] w-full bg-cover  ${post.thumbnail ? 'none' : 'bg-sub-200'} `}
-              style={{ backgroundImage: `url(${post.thumbnail})` }}
-            >
-              <div className="flex justify-between items-center">
-                <BackClick />
-                {post.user_id === me?.id && (
-                  <div className="relative">
-                    <div className="p-4" onClick={() => setKebobToggle(!kebobToggle)}>
-                      <KebabWhite />
-                    </div>
-                    {kebobToggle ? (
-                      <div className="w-[82px] right-0 absolute flex flex-col justify-center text-body4 font-regular bg-white z-50 items-center shadow-lg border rounded-lg ">
-                        <button
-                          className="h-[36px] w-full rounded-t-lg hover:bg-main-50 hover:text-main-400 "
-                          onClick={handlePostRetouch}
-                        >
-                          게시글 수정
-                        </button>
-                        <button
-                          className="h-[36px]  w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
-                          onClick={() => setRetouchPostModal(true)}
-                        >
-                          게시글 삭제
-                        </button>
-                        {retouchPostModal && (
-                          <ConfirmModal
-                            isOpen={retouchPostModal}
-                            onClose={() => setRetouchPostModal(false)}
-                            onConfirm={handlePostDelete}
-                            message={POST_DELETE_CONFIRM_TEXT}
-                          />
-                        )}
-                      </div>
-                    ) : null}
-                  </div>
-                )}
-              </div>
-              <p className="text-subtitle1 font-bold text-white h-12 overflow-hidden ">{filterSlang(post.title)}</p>
-              <div className="flex  items-center gap-3">
-                <Image
-                  src={post.user.profile_image}
-                  alt="forumUserImage"
-                  width={50}
-                  height={50}
-                  className="rounded-full w-[36px] h-[36px] "
-                />
-                <div className=" flex flex-col gap-1">
-                  <p className="text-subtitle1 font-medium text-white">{post.user.nickname}</p>
-                  <div className=" flex justify-start items-center gap-2">
-                    <p className="text-body2 font-regular text-neutral-100">{post.forum_category}</p>
-                    <p className="text-neutral-100">•</p>
-                    <p className="text-body2 font-regular text-neutral-100">
-                      {timeForToday(post.updated_at ? post.updated_at : post.created_at)}
-                      <span>{post.updated_at !== post.created_at && '(수정됨)'}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-6  whitespace-pre-wrap break-words" data-color-mode="light">
-              <MDEditor.Markdown source={filterSlang(post.content)} className="text-body1 font-regular" />
-            </div>
-            <div className="flex justify-start items-start gap-[6px]">
-              {post.tags?.map((tag) => <div key={tag.id}>{tag && <TagBlock tag={tag.tag} />}</div>)}
-            </div>
+          <div className="flex flex-col gap-6  whitespace-pre-wrap break-words" data-color-mode="light">
+            <p className="text-h4 font-bold">{filterSlang(post.title)}</p>
+            <MDEditor.Markdown source={filterSlang(post.content)} className="text-body1 font-regular" />
+          </div>
+          <div className="flex justify-start items-start gap-2">
+            {post.tags?.map((tag) => <div key={tag.id}>{tag && <TagBlock tag={tag.tag} />}</div>)}
+          </div>
+          <div className="flex justify-between items-center mb-6">
             <p className="text-body1 font-regular text-neutral-400">
               {post.created_at.slice(0, 10).replace(/-/g, '.')}
             </p>
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex gap-5">
-                <LikeButton id={post.id} type="forum" />
-                <BookmarkButton id={post.id} type="forum" />
-                <button
-                  type="button"
-                  onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/forum/${post.id}`)}
-                >
-                  <Share />
-                </button>
-              </div>
+            <div className="flex gap-5">
+              <LikeButton id={post.id} type="forum" />
+              <BookmarkButton id={post.id} type="forum" />
+              <button
+                type="button"
+                onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/forum/${post.id}`)}
+              >
+                <Share />
+              </button>
               <p className="text-subtitle1 font-medium text-main-400"> {post.comment[0].count}개의 댓글</p>
             </div>
           </div>
-        ))}
-      </Mobile>
+        </div>
+      ))}
     </div>
   );
 };

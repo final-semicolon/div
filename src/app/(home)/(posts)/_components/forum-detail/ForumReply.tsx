@@ -124,13 +124,13 @@ const ForumReply = ({
   };
 
   return (
-    <div className="flex flex-col justify-end items-end">
+    <div className="flex flex-col justify-end items-end mx-5 md:mx-0 ">
       {reply?.reply.map((reply) => (
         <div key={reply.id} className="w-full">
           {reply.comment_id === comment_id && (
             <div
               key={reply.id}
-              className={`flex flex-col justify-between  border-l-4 border-[#C7DCF5] border-b-[1px] gap-4 p-6 ${reply.user_id === me?.id ? 'bg-[#F2F7FD]' : 'bg-white'}`}
+              className={`flex flex-col justify-between  border-l-4 border-[#C7DCF5] border-b-[1px] gap-2 px-6 ${post_user_id === reply.user_id ? 'pt-[10px] pb-5' : 'py-5'} md:gap-4 md:p-6 ${reply.user_id === me?.id ? 'bg-sub-50' : 'bg-white'}`}
             >
               <div className="flex justify-between ">
                 <div className=" flex justify-start items-center gap-4">
@@ -139,36 +139,38 @@ const ForumReply = ({
                     alt="replyUserImage"
                     width={48}
                     height={48}
-                    className="rounded-full "
+                    className="rounded-full w-9 h-9 md:w-10 md:h-10 "
                   />
                   <div className=" flex flex-col">
                     {post_user_id === reply.user_id && (
-                      <p className=" text-subtitle2 font-medium  px-[12px] py-[4px] text-white bg-main-500 text-center rounded-[4px]  ">
+                      <p className="  text-subtitle4 font-semibold md:text-subtitle2 md:font-medium p-1  md:px-[12px] md:py-[4px] text-white bg-main-500 text-center rounded-[4px]  ">
                         글쓴이
                       </p>
                     )}
-                    <p className="text-subtitle1 font-medium">{reply.user.nickname}</p>
-                    <p className="text-body2 font-regular">{timeForToday(reply.updated_at)}</p>
+                    <p className="text-body4 md:text-subtitle1 font-medium text-neutral-900">{reply.user.nickname}</p>
+                    <p className="text-body4 md:text-body2 font-regular text-neutral-300">
+                      {timeForToday(reply.updated_at)}
+                    </p>
                   </div>
                 </div>
                 <div className=" relative  ">
                   {me?.id === reply.user_id && (
                     <>
                       {replyEditor[reply.id] ? null : (
-                        <div onClick={() => toggleEditingOptions(reply.id)} className="  p-4 ">
+                        <div onClick={() => toggleEditingOptions(reply.id)} className="  p-2 ">
                           <KebabButton />
                         </div>
                       )}
                       {replyEditorToggle[reply.id] && (
-                        <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center border-main-400 bg-white shadow-lg border rounded-lg">
+                        <div className="w-[82px] md:w-[105px] right-0 absolute flex flex-col justify-center text-body4 md:text-body2 font-regular items-center border-main-400 bg-white shadow-lg border rounded-lg z-50">
                           <button
-                            className="h-[44px] w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
+                            className="h-9 md:h-11  w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
                             onClick={() => toggleReplyEditing(reply.id, reply.reply)}
                           >
                             댓글 수정
                           </button>
                           <button
-                            className="h-[44px] w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
+                            className="h-9 md:h-11  w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
                             onClick={() => setConfirmModal(true)}
                           >
                             댓글 삭제
@@ -236,17 +238,15 @@ const ForumReply = ({
                   </div>
                 </>
               ) : (
-                <div className="flex flex-col  gap-4">
+                <div className="flex flex-col gap-2  md:gap-4 w-full text-body3 md:text-body1 font-regular whitespace-pre-wrap break-words text-neutral-900">
                   {replyLength ? (
-                    <p className="text-body1 font-regular text-wrap break-all  ">{filterSlang(reply.reply)}</p>
+                    <p>{filterSlang(reply.reply)}</p>
                   ) : (
                     <div className="flex flex-col justify-start items-start">
-                      <p className="text-body1 font-regular text-wrap break-all  ">
-                        {cutText(filterSlang(reply.reply), 140)}
-                      </p>
+                      <p className="w-full">{cutText(filterSlang(reply.reply), 140)}</p>
                       {reply.reply.length > 145 && (
                         <button
-                          className="text-subtitle2 font-bold text-neutral-700"
+                          className="text-subtitle3 md:text-subtitle2 font-bold md:mt-4 mt-2 text-neutral-700"
                           onClick={() => setReplyLength(true)}
                         >
                           ...더보기
@@ -255,7 +255,7 @@ const ForumReply = ({
                     </div>
                   )}
 
-                  <p className="text-body1 font-regular text-neutral-400">
+                  <p className="text-body3 md:text-body1 font-regular text-neutral-400">
                     {reply.created_at.slice(0, 10).replace(/-/g, '.')}
                   </p>
                 </div>
