@@ -2,7 +2,14 @@ import React from 'react';
 
 const Cap = () => {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-6 h-6 md:w-10 md:h-10"
+    >
       <g clipPath="url(#clip0_3003_70216)">
         <path
           fillRule="evenodd"

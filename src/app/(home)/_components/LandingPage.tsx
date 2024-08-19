@@ -1,18 +1,26 @@
+'use client';
+
 import Image from 'next/image';
 import mainPageLanding from '/public/images/mainPageImages/mainPageLanding.webp';
+import mobileLanding from '@/assets/images/main-page_image/mobileLanding.svg';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
 const LandingPage = () => {
   return (
-    <div className=" relative overflow-hidden  justify-center w-full h-60">
+    <div className=" relative  justify-center w-full md:h-60 h-[150px] my-10">
       <a href="https://nbcamp.spartacodingclub.kr/" target="_blank">
-        <Image
-          src={mainPageLanding}
-          alt="Landing"
-          width={2400}
-          height={235}
-          style={{ width: '1204px', height: '235px' }}
-          className=" rounded-2xl"
-        />
+        <Default>
+          <Image
+            src={mainPageLanding}
+            alt="Landing"
+            width={2400}
+            height={235}
+            className=" rounded-2xl w-full h-auto  "
+          />
+        </Default>
+        <Mobile>
+          <Image src={mobileLanding} alt="Landing" width={700} height={235} className=" w-full h-auto  " />
+        </Mobile>
       </a>
     </div>
   );
