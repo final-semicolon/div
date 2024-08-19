@@ -9,8 +9,10 @@ const ArchiveDetailPage = async ({ params }: { params: { id: string } }) => {
   const data = await response.json();
 
   return (
-    <div className="flex flex-col justify-center w-[1200px]  ">
-      <BackClick />
+    <div className="flex flex-col justify-center md:w-[1200px]  ">
+      <div className="hidden md:block">
+        <BackClick />
+      </div>
       <div className=" border rounded-xl p-6 ">
         <ArchiveDetailPost />
         <ArchiveInputComments />
