@@ -28,14 +28,16 @@ const QnaPost = ({ data }: QnaPostProps) => {
   }, [data]);
 
   return (
-    <div>
-      <div className="mb-8">
+    <div className="bg-neutral-50 md:bg-transparent md:w-full  mx-auto">
+      <div className="md:mb-8 hidden">
         <Link className="mb-4" href={'/qna'}>
           <BackArrowIcon />
         </Link>
       </div>
       <QnaQuestion questionData={data} />
-      {me && me.id !== data.user_id ? <PostingQnaAnswer content={content} setContent={setContent} /> : null}
+      {me && me.id !== data.user_id ? (
+        <PostingQnaAnswer title={data.title} content={content} setContent={setContent} />
+      ) : null}
       <QnaAnswers qnaCommentsCount={data.qna_comments[0].count} questioner={data.user_id} />
       <TopButton />
     </div>

@@ -17,27 +17,27 @@ const KebobBtn = ({ commentId, replyId, setIsEdit, category }: QuestionReplyKebo
 
   return (
     <>
-      <div className="relative">
+      <div className="relative ">
         <ConfirmModal
           isOpen={isModalOpen}
           onClose={closeModal}
           onConfirm={handleDeleteData}
           message={category === 'answer' ? POST_DELETE_CONFIRM_TEXT : COMMENT_DELETE_CONFIRM_TEXT}
         />
-        <button className="mb-[6px]" onClick={handleKebobClick}>
+        <button className="px-[10px]" onClick={handleKebobClick}>
           <KebabButton />
         </button>
         <ul
-          className={`${openKebab ? 'border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute -right-[6px] text-center hover:border-main-400 text-body2 z-10`}
+          className={`${openKebab ? 'border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute -right-[6px] text-center hover:border-main-400 text-body4 md:text-body2 z-10`}
         >
           <li
-            className={`content-center ${openKebab ? '' : 'hidden'} ${category === 'answer' ? ' px-4 py-[10px] w-[73px]' : 'px-[23px] py-[10px] w-[59px]'} box-content h-6 hover:bg-main-100 hover:text-main-400 rounded-t-lg cursor-pointer`}
+            className={`content-center ${openKebab ? '' : 'hidden'} ${category === 'answer' ? ' px-2 py-2 md:px-4 md:py-[10px] w-[66px] md:w-[73px]' : 'px-2 py-2 w-[66px] md:px-[23px] md:py-[10px] md:w-[59px]'} box-content h-5 md:h-6 hover:bg-main-100 hover:text-main-400 rounded-t-lg cursor-pointer`}
             onClick={handleEditClick}
           >
             {category === 'answer' ? '게시글 수정' : '댓글 수정'}
           </li>
           <li
-            className={` content-center ${openKebab ? '' : 'hidden'} ${category === 'answer' ? ' px-4 py-[10px] w-[73px]' : 'px-[23px] py-[10px] w-[59px]'}  box-content h-6 hover:bg-main-100 hover:text-main-400 rounded-b-lg cursor-pointer`}
+            className={` content-center ${openKebab ? '' : 'hidden'} ${category === 'answer' ? ' px-2 py-2 md:px-4 md:py-[10px] w-[66px] md:w-[73px]' : ' px-2 py-2 w-[66px] md:px-[23px] md:py-[10px] md:w-[59px]'}  box-content h-5 md:h-6 hover:bg-main-100 hover:text-main-400 rounded-b-lg cursor-pointer`}
             onClick={handleDeleteClick}
           >
             {category === 'answer' ? '게시글 삭제' : '댓글 삭제'}

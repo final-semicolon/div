@@ -25,6 +25,7 @@ const FormTitleInput = ({ title, setTitle }: FormTitleInputProps) => {
         type="text"
         name="title"
         id="title"
+        maxLength={50}
         placeholder="제목을 입력해 주세요"
         value={title}
         onChange={handleTitleChange}

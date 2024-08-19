@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority';
 import '@/app/globals.css';
 import { ComponentProps } from 'react';
 
-const largeChipVarients = cva(['text-subtitle1', 'font-bold', 'text-center'], {
+const largeChipVarients = cva(['text-subtitle3', 'md:text-subtitle1', 'font-bold', 'text-center'], {
   variants: {
     intent: {
       primary: ['bg-main-400', 'text-white', 'hover:bg-main-500', 'active:bg-main-500'],
@@ -21,8 +21,8 @@ const largeChipVarients = cva(['text-subtitle1', 'font-bold', 'text-center'], {
       default_disabled: ['bg-white', 'border border-neutral-200', 'text-neutral-100']
     },
     size: {
-      large: 'px-6 py-4  rounded-lg',
-      medium: 'px-5 py-3  rounded-md',
+      large: ' px-5 py-3 rounded-md md:px-6 md:py-4  md:rounded-lg',
+      medium: 'px-4 py-2 rounded md:px-5 md:py-3 md:rounded-md',
       small: 'px-4 py-2  rounded'
     }
   },
