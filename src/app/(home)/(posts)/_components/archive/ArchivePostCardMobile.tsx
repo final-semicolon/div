@@ -8,6 +8,8 @@ import DefaultThumbnail from '../../../../../../public/images/archive/default_th
 import { useRouter } from 'next/navigation';
 import { Mobile } from '@/hooks/common/useMediaQuery';
 import ArchiveBookmarkButton from './ArchiveBookmarkButton';
+import Tag from '@/components/common/Tag';
+import TagBlock from '@/components/common/TagBlock';
 
 const ArchivePostCardMobile = ({ post }: { post: Post }) => {
   const router = useRouter();
@@ -44,17 +46,11 @@ const ArchivePostCardMobile = ({ post }: { post: Post }) => {
                   : post.user.nickname
                 : 'unknown user'}
             </div>
-            <div className="flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 flex-wrap h-[26px] overflow-hidden mx-5 mb-3">
+            <div className="flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 flex-wrap min-h-[26px] gap-[6px] overflow-hidden mx-5 mb-3">
               {post.archive_tags && post.archive_tags.length > 0 ? (
-                post.archive_tags.map((tag) => (
-                  <span
-                    key={tag.id}
-                    className="bg-neutral-50 px-2 py-1 rounded text-caption font-regular text-neutral-700 mr-2"
-                    style={{ maxWidth: '100%' }}
-                  >
-                    #{tag.tag}
-                  </span>
-                ))
+                post.archive_tags
+                  .filter((tag) => tag.tag !== null)
+                  .map((tag) => <TagBlock key={tag.id} tag={tag.tag || ''} />)
               ) : (
                 <span className="h-[26px]"></span>
               )}
