@@ -1,16 +1,17 @@
 'use client';
 
-import GradCap from '@/assets/images/qna/GradCap';
 import useFetchQnaPosts from '@/hooks/qna/useFetchQnaPosts';
 import PopularQnaPostItem from './PopularQnaPostItem';
 import { Suspense } from 'react';
-import PopularQnaPagination from './PopualrQnaPagination';
 import { NoPostsPlaceholder, PopularQnaPostsSkeleton } from '../skeleton/PopularQnaPostsSkeleton';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import CommentPageButton from '@/components/common/CommentPageButton';
 
 const Error = ({ message }: { message: string }) => <div>Error: {message}</div>;
 
 const PopularQnaPosts = () => {
+  const pageSize = 6;
+
   const {
     data: popularPosts,
     error: popularError,
@@ -19,7 +20,7 @@ const PopularQnaPosts = () => {
     page: popularPage,
     totalPages: popularTotalPages,
     goToPage: goToPopularPage
-  } = useFetchQnaPosts('popular');
+  } = useFetchQnaPosts('popular', pageSize);
 
   if (isPendingPopular) {
     return <PopularQnaPostsSkeleton />;
@@ -29,8 +30,7 @@ const PopularQnaPosts = () => {
     return <Error message={popularError?.message || 'Unknown error occurred'} />;
   }
 
-  const pageSize = 6;
-  const startIndex = popularPage * pageSize;
+  const startIndex = (popularPage - 1) * pageSize;
 
   return (
     <>
@@ -47,8 +47,9 @@ const PopularQnaPosts = () => {
               <NoPostsPlaceholder />
             )}
           </Suspense>
-          <PopularQnaPagination
-            totalPages={popularTotalPages}
+          <CommentPageButton
+            totalItems={popularTotalPages * pageSize}
+            itemsPerPage={pageSize}
             currentPage={popularPage}
             onPageChange={goToPopularPage}
           />
@@ -67,8 +68,9 @@ const PopularQnaPosts = () => {
               <NoPostsPlaceholder />
             )}
           </Suspense>
-          <PopularQnaPagination
-            totalPages={popularTotalPages}
+          <CommentPageButton
+            totalItems={popularTotalPages * pageSize}
+            itemsPerPage={pageSize}
             currentPage={popularPage}
             onPageChange={goToPopularPage}
           />
