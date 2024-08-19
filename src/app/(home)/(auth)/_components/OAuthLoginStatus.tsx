@@ -29,8 +29,8 @@ const OAuthLoginStatus = () => {
 
   return (
     <div className="flex items-center justify-between p-[16px_0]">
-      <span className="text-neutral-900 text-subtitle1 font-medium">로그인 계정</span>
-      <span className="center-alignment w-[40px] h-[40px] border border-main-50 rounded-full">
+      <span className="text-neutral-900 text-subtitle2 md:text-subtitle1 font-medium">로그인 계정</span>
+      <span className="center-alignment w-[32px] h-[32px] md:w-[40px] md:h-[40px] border border-main-50 rounded-full">
         {getProviderMessage(provider)}
       </span>
     </div>

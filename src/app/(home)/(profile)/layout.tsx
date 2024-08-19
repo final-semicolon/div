@@ -1,5 +1,9 @@
+'use client';
+
 import React from 'react';
 import ProfileSidebar from './_components/ProfileSidebar';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import HaderMobile from './_components/SidebarResponsive/HaderMobile';
 
 type ProfileLayoutProps = {
   children: React.ReactNode;
@@ -7,13 +11,21 @@ type ProfileLayoutProps = {
 
 const ProfileLayout = ({ children }: ProfileLayoutProps) => {
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-[250px] fixed h-screen">
-        <ProfileSidebar />
-      </aside>
-      <div className="flex-1 ml-[250px]">
-        <main className="w-full">{children}</main>
-      </div>
+    <div className="">
+      <Default>
+        <div className="flex h-screen">
+          <ProfileSidebar />
+          <main className="pr-10">{children}</main>
+        </div>
+      </Default>
+      <Mobile>
+        <div className="flex flex-col">
+          <header className="w-full">
+            <HaderMobile />
+          </header>
+          <main className="w-full">{children}</main>
+        </div>
+      </Mobile>
     </div>
   );
 };
