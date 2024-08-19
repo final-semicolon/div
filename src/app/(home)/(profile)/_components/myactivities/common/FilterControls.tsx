@@ -1,9 +1,7 @@
-import Down from '@/assets/images/common/Down';
 import Reset from '@/assets/images/common/Reset';
-import SortSetting from '@/assets/images/common/SortSetting';
 import ContentFilters from '@/components/categoryfilter/ContentFilters';
 import PrimaryCategories from '@/components/categoryfilter/PrimaryCategories';
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 
 type FilterControlsProps = {
   primaryCategory: 'all' | 'qna' | 'forum' | 'archive';

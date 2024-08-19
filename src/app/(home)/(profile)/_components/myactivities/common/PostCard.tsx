@@ -46,7 +46,7 @@ const PostCard = ({
   });
 
   return (
-    <div className="w-[850px] border-b p-4 ">
+    <div className="min-w-[375px] max-w-[850px] border-b p-4 ">
       <div className="flex ">
         <div className="mr-4">
           <input
