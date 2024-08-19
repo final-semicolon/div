@@ -100,21 +100,14 @@
   border-top-left-radius: 20px !important;
   border-top-right-radius: 20px !important;
 }
+.w-md-editor-bar {
+  display: none !important;
+}
 
 .w-md-editor-content {
   background-color: transparent !important;
 }
 
-body .w-md-editor-text-pre > code,
-body .w-md-editor-text-input {
-  min-height: 512px !important;
-  -ms-overflow-style: none;
-  line-height: 150% !important;
-  letter-spacing: -0.5px !important;
-  font-family: 'Pretendard' !important ;
-  font-size: 18px !important;
-  font-weight: 400 !important;
-}
 .w-md-editor-input {
   -ms-overflow-style: none;
 }
@@ -129,6 +122,7 @@ body .w-md-editor-text-input {
   background-color: transparent !important;
   color-scheme: white;
 }
+
 @media (min-width: 375px) {
   .wmde-markdown {
     font-family: 'Pretendard' !important ;
@@ -136,6 +130,24 @@ body .w-md-editor-text-input {
     font-weight: 400 !important;
     background-color: transparent !important;
     color-scheme: white;
+  }
+  .w-md-editor-show-edit {
+    max-height: 116px !important;
+    -ms-overflow-style: none;
+    line-height: 21px !important;
+    letter-spacing: -1px !important;
+    font-family: 'Pretendard' !important ;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+  }
+  #post-content {
+    max-height: 250px !important;
+    -ms-overflow-style: none;
+    line-height: 21px !important;
+    letter-spacing: -1px !important;
+    font-family: 'Pretendard' !important ;
+    font-size: 14px !important;
+    font-weight: 400 !important;
   }
 }
 @media (min-width: 768px) {
@@ -145,6 +157,34 @@ body .w-md-editor-text-input {
     font-weight: 400 !important;
     background-color: transparent !important;
     color-scheme: white;
+  }
+  .w-md-editor-show-edit {
+    max-height: 512px !important;
+    -ms-overflow-style: none;
+    line-height: 150% !important;
+    letter-spacing: -0.5px !important;
+    font-family: 'Pretendard' !important ;
+    font-size: 18px !important;
+    font-weight: 400 !important;
+  }
+  #post-content {
+    max-height: 512px !important;
+    -ms-overflow-style: none;
+    line-height: 150% !important;
+    letter-spacing: -0.5px !important;
+    font-family: 'Pretendard' !important ;
+    font-size: 18px !important;
+    font-weight: 400 !important;
+  }
+  body .w-md-editor-text-pre > code,
+  body .w-md-editor-text-input {
+    min-height: 512px !important;
+    -ms-overflow-style: none;
+    line-height: 150% !important;
+    letter-spacing: -0.5px !important;
+    font-family: 'Pretendard' !important ;
+    font-size: 18px !important;
+    font-weight: 400 !important;
   }
 }
 #select-tag-list::-webkit-scrollbar {

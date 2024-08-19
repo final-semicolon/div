@@ -18,7 +18,7 @@ type useAddMutationProps = {
 const useAddMutation = ({ content, path, queryKey, commentId, userId, postId }: useAddMutationProps) => {
   const queryClient = useQueryClient();
   const { commentPage } = useQnaDetailStore();
-  const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail`;
+  const BASE_URL = `/api/posts/qna-detail`;
 
   const postReplyMutation = async ({
     user_id,

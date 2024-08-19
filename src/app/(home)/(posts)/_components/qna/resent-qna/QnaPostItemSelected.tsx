@@ -110,7 +110,7 @@ const QnaPostItemSelected = ({ post }: { post: SelectedPost }) => (
               </div>
             </div>
             {post.qna_tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-3 max-h-[26px] overflow-hidden">
+              <div className="flex flex-wrap gap-1.5 mb-3 min-h-[26px]">
                 {post.qna_tags.map((tag) => (
                   <span
                     key={tag.id}

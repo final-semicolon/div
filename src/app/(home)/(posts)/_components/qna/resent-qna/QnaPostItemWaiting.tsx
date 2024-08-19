@@ -1,12 +1,8 @@
 import MDEditor from '@uiw/react-md-editor';
 import Link from 'next/link';
-import Image from 'next/image';
 import dayjs from 'dayjs';
-import BlueCheck from '@/assets/images/common/BlueCheck';
 import CommentBubble from '@/assets/images/common/CommentBubble';
-import Dot from '@/assets/images/common/Dot';
 import { cutText, processMarkdown } from '@/utils/markdownCut';
-import { timeForToday } from '@/utils/timeForToday';
 import { Post } from '@/types/posts/qnaTypes';
 import { memo } from 'react';
 import FilledLike from '@/assets/images/like/FilledLike';
@@ -83,7 +79,7 @@ const QnaPostItemWaiting = ({ post }: { post: Post }) => (
             </div>
           </div>
           {post.qna_tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-3 max-h-[26px] overflow-hidden">
+            <div className="flex flex-wrap gap-1.5 mb-3 min-h-[26px]">
               {post.qna_tags.map((tag) => (
                 <span
                   key={tag.id}

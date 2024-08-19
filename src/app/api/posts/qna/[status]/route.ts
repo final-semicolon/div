@@ -69,9 +69,8 @@ const getWaitingQnaPosts = async (page: number) => {
   return NextResponse.json({ data: posts, count, nextPage: posts.length === limit ? page + 1 : null });
 };
 
-const getPopularQnaPost = async (page: number) => {
+const getPopularQnaPost = async (page: number, limit: number) => {
   const supabase = createClient();
-  const limit = 6;
   const oneYearAgo = dayjs().subtract(1, 'year').toISOString();
 
   const { data: posts, error } = await supabase
@@ -101,6 +100,7 @@ const getPopularQnaPost = async (page: number) => {
 export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page') || '0');
+  const limit = parseInt(searchParams.get('limit') || '6');
   const status = req.nextUrl.pathname.split('/').pop();
 
   if (status === 'selected') {
@@ -108,7 +108,7 @@ export const GET = async (req: NextRequest) => {
   } else if (status === 'waiting') {
     return await getWaitingQnaPosts(page);
   } else if (status === 'popular') {
-    return await getPopularQnaPost(page);
+    return await getPopularQnaPost(page, limit);
   } else {
     return NextResponse.json({ data: [], count: 0 });
   }

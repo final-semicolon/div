@@ -14,7 +14,7 @@ type useEditReplyMutationProps = {
 
 const useEditReplyMutation = ({ commentId, postId, path, queryKey, content }: useEditReplyMutationProps) => {
   const queryClient = useQueryClient();
-  const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail`;
+  const BASE_URL = `/api/posts/qna-detail`;
 
   const editReplyMutation = async ({ reply }: { reply: string }) => {
     const response = await fetch(`${BASE_URL}${path}`, {
