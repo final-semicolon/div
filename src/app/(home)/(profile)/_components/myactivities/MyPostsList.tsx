@@ -12,12 +12,12 @@ import Check from '@/assets/images/common/Check';
 
 type MyPostsListProps = {
   onTotalsChange?: (postCount: number, commentCount: number) => void;
-  selectedCategory: 'all' | 'qna' | 'forum' | 'archive';
-  selectedForumCategory: string | null;
-  selectedType: 'all' | 'post' | 'comment';
+  primaryCategory: 'all' | 'qna' | 'forum' | 'archive';
+  primaryForumCategory: string | null;
+  contentType: 'all' | 'post' | 'comment';
 };
 
-const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, selectedType }: MyPostsListProps) => {
+const MyPostsList = ({ onTotalsChange, primaryCategory, primaryForumCategory, contentType }: MyPostsListProps) => {
   const { me, userData } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState<Map<string, { category: string; type: string }>>(new Map());
@@ -28,7 +28,7 @@ const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, 
   useEffect(() => {
     setCurrentPage(1);
     setSelectedItems(new Map());
-  }, [selectedCategory, selectedForumCategory, selectedType]);
+  }, [primaryCategory, primaryForumCategory, contentType]);
 
   useEffect(() => {
     setSelectedItems(new Map());
@@ -73,20 +73,18 @@ const MyPostsList = ({ onTotalsChange, selectedCategory, selectedForumCategory, 
   if (postError || commentError) return <div>Error: {postError?.message || commentError?.message}</div>;
 
   const categoryFilteredItems =
-    selectedCategory === 'all'
+    primaryCategory === 'all'
       ? combinedItems
-      : selectedCategory === 'forum'
+      : primaryCategory === 'forum'
         ? combinedItems.filter(
             (item) =>
               item.category === 'forum' &&
-              (selectedForumCategory === '전체' ||
-                !selectedForumCategory ||
-                item.forum_category === selectedForumCategory)
+              (primaryForumCategory === '전체' || !primaryForumCategory || item.forum_category === primaryForumCategory)
           )
-        : combinedItems.filter((item) => item.category === selectedCategory);
+        : combinedItems.filter((item) => item.category === primaryCategory);
 
   const typeFilteredItems =
-    selectedType === 'all' ? categoryFilteredItems : categoryFilteredItems.filter((item) => item.type === selectedType);
+    contentType === 'all' ? categoryFilteredItems : categoryFilteredItems.filter((item) => item.type === contentType);
 
   const itemsPerPage = 4;
   const totalPages = Math.ceil(typeFilteredItems.length / itemsPerPage);
