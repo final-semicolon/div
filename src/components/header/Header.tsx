@@ -3,7 +3,7 @@
 import Logo from '@/assets/images/header/Logo';
 import { useAuth } from '@/context/auth.context';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { memo, useCallback, useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import NavLinks from './NavLinks';
@@ -96,7 +96,6 @@ const Header = () => {
                 <MobileHamburgerButton />
               </button>
             </div>
-            <HeaderModal isOpen={isModalOpen} onClose={handleCloseModal} />
           </div>
           {!hideNavLinks && (
             <div className="w-full mt-[9px] border-b">
@@ -104,6 +103,7 @@ const Header = () => {
             </div>
           )}
         </header>
+        <HeaderModal isOpen={isModalOpen} onClose={handleCloseModal} />
       </Mobile>
     </>
   );
