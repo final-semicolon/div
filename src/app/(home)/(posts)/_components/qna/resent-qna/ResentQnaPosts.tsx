@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import SortDropdown from '@/components/common/SortDropdownGrey';
+import SortDropdownGrey from '@/components/common/SortDropdownGrey';
 import useFetchQnaPosts from '@/hooks/qna/useFetchQnaPosts';
 import { Post, SortOption } from '@/types/posts/qnaTypes';
 import dayjs from 'dayjs';
@@ -93,7 +93,7 @@ const ResentQnaPosts = () => {
             className={`w-full h-[88px] bg-sub-50 border-t-0 border-r-0 border-b border-l-0 border-sub-100 flex justify-end items-center pr-6`}
           >
             <label className="my-6 mr-6">
-              <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+              <SortDropdownGrey sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
             </label>
           </div>
           {sortedPosts.length > 0 ? (
@@ -124,7 +124,7 @@ const ResentQnaPosts = () => {
             className={`mx-5 h-[60px] bg-sub-50 border-t-0 border-r-0 border-b border-l-0 border-sub-100 flex justify-end items-center`}
           >
             <label className="my-4 mr-5">
-              <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+              <SortDropdownGrey sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
             </label>
           </div>
           {sortedPosts.length > 0 ? (

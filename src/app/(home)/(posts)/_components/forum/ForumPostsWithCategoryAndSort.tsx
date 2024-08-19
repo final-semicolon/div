@@ -7,7 +7,7 @@ import { ForumCategory, Post, SortOption } from '@/types/posts/forumTypes';
 import PostCard from './card/PostCard';
 import Link from 'next/link';
 import { useInView } from 'react-intersection-observer';
-import SortDropdown from '@/components/common/SortDropdownGrey';
+import SortDropdownGrey from '@/components/common/SortDropdownGrey';
 import CategoryTabs from './CategoryTabs';
 import WriteButton from '@/assets/images/forum/WriteButton';
 import EndOfData from '@/components/common/EndOfData';
@@ -17,7 +17,6 @@ import PostCardSkeleton from './skeleton/PostCardSkeleton';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import DraggableScroll from '@/components/common/DraggableScroll';
 import MobileWriteButton from './mobile/MobileWriteButton';
-import PostHeader from './card/PostHeader';
 
 const ForumPostsWithCategoryAndSort = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending, error } = useFetchForumPosts();
@@ -115,7 +114,7 @@ const ForumPostsWithCategoryAndSort = () => {
                 handleCategoryClick={handleCategoryClick}
               />
             </div>
-            <SortDropdown sortBy={sortBy} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+            <SortDropdownGrey sortBy={sortBy} handleSortChange={handleSortChange} sortOptions={sortOptions} />
           </div>
           <div className="mt-8 mb-8 max-w-[844px] mx-auto border-b-2 border-b-neutral-50">
             <Link href="/posting" rel="preload">
@@ -146,7 +145,7 @@ const ForumPostsWithCategoryAndSort = () => {
                 ))}
               </>
             )}
-            {isFetchingNextPage && <div>추가 게시물 로딩중...</div>}
+            {isFetchingNextPage && <PostCardSkeleton />}
             <div ref={ref} className="h-5"></div>
             {!isPending && !error && !isFetchingNextPage && data && !hasNextPage && <EndOfData />}
           </div>
@@ -164,12 +163,19 @@ const ForumPostsWithCategoryAndSort = () => {
                 />
               </DraggableScroll>
             </div>
-            <SortDropdown sortBy={sortBy} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+            <SortDropdownGrey sortBy={sortBy} handleSortChange={handleSortChange} sortOptions={sortOptions} />
           </div>
           <Link href={'/posting'}>
             <MobileWriteButton userData={userData} />
           </Link>
           <div>
+            {isPending && (
+              <div className="posts-card">
+                {[...Array(5)].map((_, index) => (
+                  <PostCardSkeleton key={index} />
+                ))}
+              </div>
+            )}
             {error && <div>에러 발생</div>}
             {!isPending && !error && filteredAndSortedPost.length === 0 && <div>게시글이 없습니다.</div>}
             {!isPending && !error && filteredAndSortedPost.length > 0 && (
@@ -186,7 +192,7 @@ const ForumPostsWithCategoryAndSort = () => {
                 ))}
               </>
             )}
-            {isFetchingNextPage && <div>추가 게시물 로딩중...</div>}
+            {isFetchingNextPage && <PostCardSkeleton />}
             <div ref={ref} className="h-1"></div>
             {!isPending && !error && !isFetchingNextPage && data && !hasNextPage && <EndOfData />}
           </div>
