@@ -43,10 +43,11 @@ const Header = () => {
   };
 
   const hideNavLinks =
-    ['/profile', '/search'].includes(pathname) ||
+    ['/search'].includes(pathname) ||
     pathname.startsWith('/archive/') ||
     pathname.startsWith('/forum/') ||
-    pathname.startsWith('/activities');
+    pathname.startsWith('/activities') ||
+    pathname.startsWith('/profile');
 
   return (
     <>
