@@ -126,7 +126,7 @@ const PostingAnswerArea = ({ title, content, setContent, setToggleAnswer }: Post
         </div>
       </Default>
       <Mobile>
-        <div className="bg-white h-full fixed z-[1000] px-5 py-5 left-0 top-0">
+        <div className="bg-white w-full h-full min-h-[501px] fixed z-[1000] px-5 py-5 left-0 top-0 ">
           <ConfirmModal
             isOpen={isCancleModalOpen}
             onClose={() => {
@@ -168,7 +168,7 @@ const PostingAnswerArea = ({ title, content, setContent, setToggleAnswer }: Post
           <div className="border rounded-2xl border-neutral-100">
             <CustomMDEditor content={content} setContent={setContent} />
           </div>
-          <div className="h-[182px] mt-12 flex flex-col gap-2">
+          <div className="min-w-full whitespace-nowrap h-[182px] mt-12 flex flex-col gap-2">
             <h5 className="text-subtitle3 font-bold text-neutral-900">태그</h5>
             <SelectTagInput tagList={tagList} setTagList={setTagList} />
           </div>

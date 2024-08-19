@@ -18,10 +18,10 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
   const { postId, selectedComment, setCommentPage } = useQnaDetailStore();
   const [page, setPage] = useState<number>(1);
   const [sortedByLikes, setSortedByLikes] = useState<boolean>(false);
-  const pageParamList = [...Array(Math.ceil(qnaCommentsCount / 5))].map((_, idx) => idx + 1);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
+    setCommentPage(newPage);
   };
 
   const {
@@ -78,7 +78,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
             );
           })
         : null}
-      <div className=" flex pb-[76px] w-full justify-center">
+      <div className={`${qnaCommentsCount <= 5 ? 'hidden' : 'flex'} pb-[76px] w-full justify-center`}>
         <CommentPageButton
           currentPage={page}
           itemsPerPage={5}

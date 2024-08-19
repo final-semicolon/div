@@ -301,7 +301,7 @@ const QnaAnswer = ({
             source={filterSlang(qnaComment.comment)}
           />
         )}
-        <div className={`flex gap-[6px] my-6 ${isEdit ? 'hidden' : ''}`}>
+        <div className={`flex flex-wrap gap-[6px] my-6 ${isEdit ? 'hidden' : ''}`}>
           {qnaComment.qna_comment_tag.map((tag) => (
             <TagBlock key={'answer' + tag.tag} tag={tag.tag} />
           ))}
