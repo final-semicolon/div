@@ -16,7 +16,7 @@ type replyMutationProps = {
 const useDeleteMutation = ({ path, queryKey, postId, commentId }: replyMutationProps) => {
   const { commentPage } = useQnaDetailStore();
   const queryClient = useQueryClient();
-  const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail`;
+  const BASE_URL = `/api/posts/qna-detail`;
 
   const deleteMutation = async () => {
     const response = await fetch(`${BASE_URL}${path}?commentId=${commentId} `, {

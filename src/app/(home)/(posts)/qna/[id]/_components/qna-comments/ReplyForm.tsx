@@ -26,7 +26,10 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
   } = useReplyForm({ commentId, userId: me?.id ?? '', replyType: commentId ? 'answer' : 'question' });
 
   return (
-    <div className="py-6 w-[1156px] flex flex-col border-y" onClick={me?.id ? () => {} : handleLoginModal}>
+    <div
+      className="my-[21.5px]  md:my-0 py-5 md:py-6 md:max-w-[1156px] flex flex-col border-b md:border-y"
+      onClick={me?.id ? () => {} : handleLoginModal}
+    >
       {isLoginModalOpen ? <LoginAlertModal /> : ''}
       <ConfirmModal
         isOpen={isSelectModalOpen}
@@ -34,9 +37,9 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
         onConfirm={handleCancleModalApprove}
         message={COMMENT_CANCLE_CONFIRM_TEXT}
       />
-      <div className="flex items-center gap-4 mb-6">
+      <div className=" flex items-center gap-4 mb-6 ">
         {me?.id ? (
-          <div className="relative w-12 h-12">
+          <div className="relative w-12 h-12 hidden md:block">
             <Image
               src={userData?.profile_image ?? ''}
               alt="Profile"
@@ -48,21 +51,22 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
           </div>
         ) : null}
 
-        <div className="border border-neutral-100 rounded-xl focus-within:border-main-400">
+        <div className="w-full max-h-[116px] md:max-h-[176px] border border-neutral-100 rounded-lg md:rounded-xl focus-within:border-main-400 ">
           {me?.id ? (
             <MDEditor
               value={content}
               onChange={handleChangeContent}
               height={176}
-              style={{ width: '1092px' }}
               preview="edit"
+              commands={commands.getCommands().filter((command) => {
+                return command.name !== 'image' && command.name !== 'help';
+              })}
               extraCommands={commands.getCommands().filter(() => false)}
               textareaProps={{ maxLength: 1000, placeholder: '자유롭게 소통해 보세요!' }}
             />
           ) : (
             <MDEditor
               height={176}
-              style={{ width: '1156px' }}
               preview="edit"
               extraCommands={commands.getCommands().filter(() => false)}
               textareaProps={{ maxLength: 0, placeholder: '로그인 후 자유롭게 소통해 보세요!' }}
