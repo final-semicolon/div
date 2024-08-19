@@ -62,7 +62,7 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
       <div className=" md:max-w-[1204px] flex md:my-6 my-5 md:text-body1 text-body3 font-regular">
         <MDEditor.Markdown style={{ maxWidth: '100%' }} source={filterSlang(questionData.content)} />
       </div>
-      <div className="flex gap-2 md:gap-[6px]">
+      <div className="flex flex-wrap gap-2 md:gap-[6px]">
         {questionData.qna_tags
           ? questionData.qna_tags.map((tag) => <TagBlock key={'question' + tag.tag} tag={tag.tag} />)
           : null}

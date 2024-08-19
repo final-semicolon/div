@@ -126,7 +126,7 @@ const PostingAnswerArea = ({ title, content, setContent, setToggleAnswer }: Post
         </div>
       </Default>
       <Mobile>
-        <div className="bg-white w-full h-full min-h-[501px] fixed z-[1000] px-5 py-5 left-0 top-0 ">
+        <div className="bg-white w-full h-full min-h-[501px] fixed z-[1000] px-5 py-5 left-0 top-0 overflow-auto">
           <ConfirmModal
             isOpen={isCancleModalOpen}
             onClose={() => {
