@@ -45,7 +45,16 @@ const PopularArchiveSwiper = () => {
   };
 
   if (isPending) {
-    return <PopularArchiveSwiperSkeleton />;
+    return (
+      <>
+        <Default>
+          <PopularArchiveSwiperSkeleton width={388} height={414} />
+        </Default>
+        <Mobile>
+          <PopularArchiveSwiperSkeleton width={264} height={280} />
+        </Mobile>
+      </>
+    );
   }
   if (error) {
     return <div>Error: {error.message}</div>;

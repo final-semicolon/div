@@ -45,7 +45,16 @@ const ArchivePosts = () => {
   ];
 
   if (isPendingArchive) {
-    return <ArchivePostsSkeleton />;
+    return (
+      <>
+        <Default>
+          <ArchivePostsSkeleton width={388} height={414} />
+        </Default>
+        <Mobile>
+          <ArchivePostsSkeleton width={335} height={234} />
+        </Mobile>
+      </>
+    );
   }
 
   if (isErrorArchive) {
