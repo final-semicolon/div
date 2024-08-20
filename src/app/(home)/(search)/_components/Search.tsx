@@ -9,6 +9,7 @@ import PostCountDisplay from './PostCountDisplay';
 import { SearchData } from '@/types/search/SearchType';
 import SearchBar from '@/components/header/SearchBar';
 import { Mobile, NotDesktop } from '@/hooks/common/useMediaQuery';
+import SearchSkeletonUi from './SearchSkeletonUi';
 
 const Search = () => {
   const [data, setData] = useState<SearchData | null>(null);
@@ -31,7 +32,7 @@ const Search = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      // console.error('Error fetching search data:', error);
+      console.error('Error fetching search data:', error);
       return null;
     }
   }, []);
@@ -111,7 +112,7 @@ const Search = () => {
         </div>
       </NotDesktop>
     );
-  } else if (!data) return <div>Loading...</div>;
+  } else if (!data) return <SearchSkeletonUi />;
 
   return (
     <>
