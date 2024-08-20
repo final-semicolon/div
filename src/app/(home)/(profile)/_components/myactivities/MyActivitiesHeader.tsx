@@ -6,10 +6,10 @@ type MyActivitiesHeaderProps = {
 };
 
 const MyActivitiesHeader = ({ setActiveTab, activeTab }: MyActivitiesHeaderProps) => {
-  const settopButtonTab = useProfiletopTabStore((state) => state.settopButtonTab);
+  const setTopButtonTab = useProfiletopTabStore((state) => state.setTopButtonTab);
 
   const handleTabClick = (tab: 'posts' | 'likes' | 'bookmarks') => {
-    settopButtonTab(tab);
+    setTopButtonTab(tab);
     setActiveTab(tab);
   };
 

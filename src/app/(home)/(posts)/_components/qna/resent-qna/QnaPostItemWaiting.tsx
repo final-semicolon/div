@@ -40,18 +40,18 @@ const QnaPostItemWaiting = ({ post }: { post: Post }) => (
           )}
           <div className="flex justify-between items-center mb-5">
             <div className="flex items-center gap-2">
-              <p className="flex items-center text-body1 font-regular text-neutral-400">
+              <div className="flex items-center text-body1 font-regular text-neutral-400">
                 <div className="flex mr-1">
                   <FilledLike />
                 </div>
                 {post.qna_like[0]?.count || 0}
-              </p>
-              <p className="flex items-center text-body1 font-regular text-neutral-400">
+              </div>
+              <div className="flex items-center text-body1 font-regular text-neutral-400">
                 <div className="flex mr-1">
                   <CommentBubble />
                 </div>
                 {post.qna_reply[0]?.count || 0}
-              </p>
+              </div>
             </div>
 
             <div className="text-body1 font-regular text-neutral-400 ml-4">
@@ -90,18 +90,18 @@ const QnaPostItemWaiting = ({ post }: { post: Post }) => (
           )}
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <p className="flex items-center text-body3 font-regular text-neutral-400">
+              <div className="flex items-center text-body3 font-regular text-neutral-400">
                 <div className="flex mr-[0.5px]">
                   <FilledLike width={20} height={20} />
                 </div>
                 {post.qna_like[0]?.count || 0}
-              </p>
-              <p className="flex items-center text-body3 font-regular text-neutral-400">
+              </div>
+              <div className="flex items-center text-body3 font-regular text-neutral-400">
                 <div className="flex mr-[0.5px]">
                   <CommentBubble width={'20'} height={'20'} />
                 </div>
                 {post.qna_reply[0]?.count || 0}
-              </p>
+              </div>
             </div>
 
             <div className="text-body3 font-regular text-neutral-400 ml-4">

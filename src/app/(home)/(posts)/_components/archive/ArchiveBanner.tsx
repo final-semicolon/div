@@ -2,14 +2,11 @@
 
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from 'swiper';
 import ArchiveBannerOne from '../../../../../../public/images/archive/archive_banner_1.png';
 import ArchiveBannerTwo from '../../../../../../public/images/archive/archive_banner_2.png';
 import MobileArchiveBannerOne from '../../../../../../public/images/archive/LibraryPostbanner1.webp';
 import MobileArchiveBannerTwo from '../../../../../../public/images/archive/LibraryPostbanner2.webp';
-
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
-import { useEffect, useState } from 'react';
 
 const ArchiveBanner = () => {
   return (

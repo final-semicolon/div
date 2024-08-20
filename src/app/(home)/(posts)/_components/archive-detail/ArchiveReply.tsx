@@ -15,6 +15,7 @@ import { archiveReplyType, replyRetouch } from '@/types/posts/archiveDetailTypes
 import ReplyPageButton from './ReplyPageButton';
 import { cutText, filterSlang } from '@/utils/markdownCut';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import ArchiveDetailSkeleton from './skeleton/ArchiveDetailSkeleton';
 
 const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_user_id: string }) => {
   const { me } = useAuth();
@@ -84,7 +85,11 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
     commentDelete.mutate({ id, user_id });
   };
 
-  const { fetchNextPage, data: reply } = useInfiniteQuery({
+  const {
+    fetchNextPage,
+    data: reply,
+    isPending
+  } = useInfiniteQuery({
     queryKey: ['archiveCommentReply', comment_id],
     initialPageParam: 0,
     queryFn: async ({ pageParam = 0 }) => {
@@ -102,6 +107,9 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
       return nextPage * COMMENT_REPLY_PAGE < lastPage.count ? nextPage : undefined;
     }
   });
+  if (isPending) {
+    return <ArchiveDetailSkeleton />;
+  }
 
   const replyCount = reply?.pages[0].count;
   const totalPage = Math.ceil((replyCount as number) / COMMENT_REPLY_PAGE);

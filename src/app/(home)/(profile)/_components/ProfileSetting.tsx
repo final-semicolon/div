@@ -52,7 +52,7 @@ const ProfileSetting = () => {
         toast.error('이미지 업로드에 실패했습니다.');
       }
     } catch (error) {
-      console.error('이미지 업로드 실패:', error);
+      // console.error('이미지 업로드 실패:', error);
     }
   };
 
@@ -86,7 +86,7 @@ const ProfileSetting = () => {
         toast.error('프로필 업데이트에 실패했습니다.');
       }
     } catch (error) {
-      console.error('프로필 업데이트 실패:', (error as Error).message);
+      // console.error('프로필 업데이트 실패:', (error as Error).message);
       toast.error('프로필 업데이트 중 오류가 발생했습니다.');
     }
   };

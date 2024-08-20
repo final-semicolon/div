@@ -80,13 +80,11 @@ const Header = () => {
               </div>
             </Link>
             <div className="flex items-center space-x-4  flex-shrink-0 mr-5">
-              <Link href="/write">
-                <div className="h-6 w-6">
-                  <Link href="/posting">
-                    <MobileWriteButton />
-                  </Link>
-                </div>
-              </Link>
+              <div className="h-6 w-6">
+                <Link href="/posting">
+                  <MobileWriteButton />
+                </Link>
+              </div>
               <Link href="/search">
                 <div className="h-6 w-6">
                   <MobileSearchButton />

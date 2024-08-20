@@ -14,7 +14,7 @@ export const upDateImage = async (file: File, path: string, oldPath: string) => 
   if (oldPath) {
     const { error: removeError } = await supabase.storage.from('profile_images').remove([oldPath]);
     if (removeError) {
-      console.error('이미지 삭제 실패: ' + removeError.message);
+      // console.error('이미지 삭제 실패: ' + removeError.message);
     }
   }
 
