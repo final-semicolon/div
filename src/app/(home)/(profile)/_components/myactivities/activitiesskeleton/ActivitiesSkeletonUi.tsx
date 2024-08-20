@@ -4,9 +4,9 @@ import ActivitiesSkeletonCard from './ActivitiesSkeletonCard';
 const ActivitiesSkeletonUi = () => {
   const skeletonCard = Array.from({ length: 6 }, (_, index) => index);
   return (
-    <div className="">
+    <>
       <Default>
-        <div className="flex mt-6">
+        <div className="flex mt-6 mb-10">
           <p className="mr-3 profile-skeleton w-[126px] h-[40px]" />
           <p className="mr-3 profile-skeleton w-[63px] h-[40px]" />
         </div>
@@ -30,7 +30,7 @@ const ActivitiesSkeletonUi = () => {
       {skeletonCard.map((_, index) => (
         <ActivitiesSkeletonCard key={index} />
       ))}
-    </div>
+    </>
   );
 };
 

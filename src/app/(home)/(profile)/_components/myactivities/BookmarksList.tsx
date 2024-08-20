@@ -83,7 +83,7 @@ const BookmarksList = ({
   const typeFilteredItems =
     contentType === 'all' ? categoryFilteredItems : categoryFilteredItems.filter((item) => item.type === contentType);
 
-  const itemsPerPage = 4;
+  const itemsPerPage = 5;
   const paginatedItems = typeFilteredItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
