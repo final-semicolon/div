@@ -42,7 +42,8 @@ const useReplyForm = ({ commentId, userId, replyType }: useReplyFormProps) => {
   }, []);
 
   const handlePostingReply = useCallback((): void => {
-    if (!userId) return;
+    if (content.length === 0) return;
+    else if (!userId) return;
     postingReply();
     setContent('');
     return;

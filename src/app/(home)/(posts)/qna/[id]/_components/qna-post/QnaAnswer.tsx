@@ -110,7 +110,7 @@ const QnaAnswer = ({
 
   const { mutate: selectMutate } = useMutation({
     mutationFn: selectCommentMutation,
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
       toast.success(SELECT_ANSWER_ALERT_TEXT);
     }

@@ -49,7 +49,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner, title }: QnaAnswersProps) =>
     },
     enabled: !!postId,
     gcTime: 5 * 60 * 1000, // 5분
-    staleTime: 1 * 60 * 1000, // 1분
+    staleTime: 1000, // 캐싱하지 않음
     retry: 1
   });
 
