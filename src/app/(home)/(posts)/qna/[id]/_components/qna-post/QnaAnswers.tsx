@@ -12,9 +12,10 @@ import CommentPageButton from '@/components/common/CommentPageButton';
 type QnaAnswersProps = {
   qnaCommentsCount: number;
   questioner: string;
+  title: string;
 };
 
-const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
+const QnaAnswers = ({ qnaCommentsCount, questioner, title }: QnaAnswersProps) => {
   const { postId, selectedComment, setCommentPage } = useQnaDetailStore();
   const [page, setPage] = useState<number>(1);
   const [sortedByLikes, setSortedByLikes] = useState<boolean>(false);
@@ -72,9 +73,15 @@ const QnaAnswers = ({ qnaCommentsCount, questioner }: QnaAnswersProps) => {
                 questioner={questioner}
                 index={index}
                 qnaCommentsCount={qnaCommentsCount}
+                title={title}
               />
             ) : (
-              <QnaAnswer key={qnaComment.id + 'comment'} qnaComment={qnaComment} questioner={questioner} />
+              <QnaAnswer
+                key={qnaComment.id + 'comment'}
+                qnaComment={qnaComment}
+                questioner={questioner}
+                title={title}
+              />
             );
           })
         : null}
