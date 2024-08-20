@@ -4,11 +4,13 @@ import ConfirmModal from '@/components/modal/ConfirmModal';
 import { POST_DELETE_ALERT_TEXT } from '@/constants/alert';
 import { EDIT_MOVE_CONFIRM_TEXT, POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const QuestionKebobBtn = () => {
+  const queryClient = useQueryClient();
   const { postId } = useQnaDetailStore();
   const router = useRouter();
   const [openKebab, setOpenKebab] = useState<boolean>(false);
@@ -45,6 +47,8 @@ const QuestionKebobBtn = () => {
       toast.error(message);
       return;
     }
+    await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+    await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
     await revalidatePostTag(`qna-detail-${postId}`);
     toast.success(POST_DELETE_ALERT_TEXT);
     router.push(`/qna`);
