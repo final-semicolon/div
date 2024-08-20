@@ -33,13 +33,6 @@ const ForumPostsWithCategoryAndSort = () => {
     { value: 'mostLikes', label: '좋아요순' }
   ];
 
-  // const mobileSortOptions: { value: SortOption; label: string }[] = [
-  //   { value: 'latest', label: '최신순' },
-  //   { value: 'mostComments', label: '댓글순' },
-  //   { value: 'mostLikes', label: '좋아요순' },
-  //   { value: 'bestForum', label: '베짱포럼' }
-  // ];
-
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -91,9 +84,9 @@ const ForumPostsWithCategoryAndSort = () => {
         }
 
         const data = await response.json();
-        console.log(`${action === 'like' ? 'Liked' : 'Unliked'} post with ID: ${postId}`, data);
+        // console.log(`${action === 'like' ? 'Liked' : 'Unliked'} post with ID: ${postId}`, data);
       } catch (error) {
-        console.error(`Error ${action === 'like' ? 'liking' : 'unliking'} post with ID: ${postId}`, error);
+        // console.error(`Error ${action === 'like' ? 'liking' : 'unliking'} post with ID: ${postId}`, error);
       }
     },
     [currentUserId]

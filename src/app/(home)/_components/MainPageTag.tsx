@@ -1,7 +1,7 @@
 'use client';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import { tagList } from './_tag-list/TagList';
+import { tagList } from '../../../constants/TagList';
 import Link from 'next/link';
 import Image from 'next/image';
 import Pc from '@/assets/images/main-page_image/Pc';

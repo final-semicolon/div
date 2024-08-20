@@ -6,7 +6,6 @@ import DefaultThumbnail from '../../../../../../public/images/archive/default_th
 import { useRouter } from 'next/navigation';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import ArchiveBookmarkButton from './ArchiveBookmarkButton';
-import Tag from '@/components/common/Tag';
 import TagBlock from '@/components/common/TagBlock';
 
 const ArchivePostCard = ({ post }: { post: Post }) => {

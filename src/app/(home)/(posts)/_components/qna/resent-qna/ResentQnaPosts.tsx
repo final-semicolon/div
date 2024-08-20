@@ -10,7 +10,6 @@ import StatusTabs from './StatusTabs';
 import QnaPostItemSelected from './QnaPostItemSelected';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import CommentPageButton from '@/components/common/CommentPageButton';
-import { Skeleton } from '@/components/ui/skeleton';
 import QnaPostsSkeleton from '../skeleton/QnaPostsSkeleton';
 
 const ResentQnaPosts = () => {

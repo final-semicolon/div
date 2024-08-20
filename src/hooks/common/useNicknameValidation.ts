@@ -46,10 +46,10 @@ const useNicknameValidation = (nickname: string): UseNicknameValidation => {
           setIsCheckedNickname(true);
           setNicknameValid(true);
         } else if (result.error) {
-          console.error('닉네임 확인 중 오류가 발생했습니다.:', result.error);
+          // console.error('닉네임 확인 중 오류가 발생했습니다.:', result.error);
         }
       } catch (error) {
-        console.error('닉네임 확인 중 오류가 발생했습니다.:', error);
+        // console.error('닉네임 확인 중 오류가 발생했습니다.:', error);
       }
     };
 

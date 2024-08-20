@@ -111,7 +111,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
     return <div>loading...</div>;
   }
 
-  console.log(comments?.count);
+  // console.log(comments?.count);
   const COMMENT_PAGE = 5;
   const commentsCount = comments?.count ?? 0;
 
