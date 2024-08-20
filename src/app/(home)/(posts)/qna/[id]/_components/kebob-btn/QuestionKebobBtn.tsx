@@ -37,7 +37,7 @@ const QuestionKebobBtn = () => {
   };
 
   const deletePost = async (): Promise<void> => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/question/${postId}`, {
+    const response = await fetch(`/api/posts/qna-detail/question/${postId}`, {
       method: 'DELETE'
     });
     const { data, message } = await response.json();
