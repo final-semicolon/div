@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
 type ActiveTabState = {
   activeTab: string;
@@ -7,15 +7,16 @@ type ActiveTabState = {
 };
 
 const useActiveTabStore = create<ActiveTabState>()(
-  persist(
-    (set) => ({
-      activeTab: 'posts',
-      setActiveTab: (tab) => set({ activeTab: tab })
-    }),
-    {
-      name: 'active-tab',
-      getStorage: () => localStorage
-    }
+  devtools(
+    persist(
+      (set) => ({
+        activeTab: 'posts',
+        setActiveTab: (tab) => set({ activeTab: tab })
+      }),
+      {
+        name: 'active-tab'
+      }
+    )
   )
 );
 
