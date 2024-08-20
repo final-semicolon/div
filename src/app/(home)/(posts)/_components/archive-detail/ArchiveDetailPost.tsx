@@ -17,7 +17,6 @@ import { filterSlang } from '@/utils/markdownCut';
 import TagBlock from '@/components/common/TagBlock';
 import { handleLinkCopy } from '@/utils/handleLinkCopy';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
-import BackClick from '@/components/common/BackClick';
 import MobileBackClickBlack from '@/components/common/MobileBackClickBlack';
 import MobileBackClickWhite from '@/components/common/MobileBackClickWhite ';
 import KebabWhite from '@/assets/images/common/KebabWhite';
@@ -72,6 +71,8 @@ const ArchiveDetailPost = () => {
 
   if (!archiveDetail) return <div></div>;
   const thumbnailsArray: string[] = archiveDetail.thumbnail ? archiveDetail.thumbnail.split(',') : [];
+  console.log(archiveDetail.thumbnail);
+
   return (
     <>
       <Default>
@@ -167,10 +168,10 @@ const ArchiveDetailPost = () => {
             <div
               key={index}
               className={`relative flex flex-col justify-between h-[250px] w-full bg-cover p-5 ${
-                thumbnail ? '' : 'bg-sub-200'
+                archiveDetail.thumbnail ? '' : 'bg-sub-200'
               }`}
               style={
-                thumbnail
+                archiveDetail.thumbnail
                   ? {
                       backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0)), url(${thumbnail})`
                     }
