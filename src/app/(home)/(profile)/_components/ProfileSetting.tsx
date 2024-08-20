@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import SettingDefaultFlow from './setting/settingresponsive/SettingDefaultFlow';
 import SettingMobileFlow from './setting/settingresponsive/SettingMobileFlow';
+import SettingSkeletonUi from './setting/settingskeleton/SettingSkeletonUi';
 
 const ProfileSetting = () => {
   const { userData, me, updateUserData } = useAuth();
@@ -91,7 +92,7 @@ const ProfileSetting = () => {
     }
   };
 
-  if (!userData) return <p>Loading...</p>;
+  if (!userData) return <SettingSkeletonUi />;
 
   return (
     <>

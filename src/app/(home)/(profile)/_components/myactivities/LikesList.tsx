@@ -12,6 +12,7 @@ import PrimaryCategories from '@/components/categoryfilter/PrimaryCategories';
 import Reset from '@/assets/images/common/Reset';
 import ContentFilters from '@/components/categoryfilter/ContentFilters';
 import CommentPageButton from '@/components/common/CommentPageButton';
+import ActivitiesSkeletonUi from './activitiesskeleton/ActivitiesSkeletonUi';
 
 type LikesListProps = {
   primaryCategory: 'all' | 'qna' | 'forum' | 'archive';
@@ -48,19 +49,13 @@ const LikesList = ({
     setSelectAll(false);
   }, [currentPage]);
 
-  // 데이터 훅
-  const {
-    data: posts = { archivePosts: [], forumPosts: [], qnaPosts: [] },
-    error: postError,
-    isLoading: postLoading
-  } = useLikesPosts();
+  const { data: posts = { archivePosts: [], forumPosts: [], qnaPosts: [] }, isLoading: postLoading } = useLikesPosts();
   const {
     data: comments = {
       archive: { posts: [], comments: [] },
       forum: { posts: [], comments: [] },
       qna: { posts: [], comments: [] }
     },
-    error: commentError,
     isLoading: commentLoading
   } = useLikesComments();
 
@@ -71,9 +66,6 @@ const LikesList = ({
       setCombinedItems(combined);
     }
   }, [postLoading, commentLoading, posts, comments]);
-
-  if (postLoading || commentLoading) return <div>Loading...</div>;
-  if (postError || commentError) return <div>Error: {postError?.message || commentError?.message}</div>;
 
   const categoryFilteredItems =
     primaryCategory === 'all'
@@ -90,7 +82,6 @@ const LikesList = ({
     contentType === 'all' ? categoryFilteredItems : categoryFilteredItems.filter((item) => item.type === contentType);
 
   const itemsPerPage = 4;
-  const totalPages = Math.ceil(typeFilteredItems.length / itemsPerPage);
   const paginatedItems = typeFilteredItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,10 +143,8 @@ const LikesList = ({
         if (!response.ok) throw new Error('댓글 삭제 요청 실패');
       }
 
-      // 업데이트된 combinedItems 생성
       const updatedCombinedItems = combinedItems.filter((item) => !selectedItems.has(item.id));
 
-      // 상태 업데이트
       setCombinedItems(updatedCombinedItems);
       setSelectedItems(new Map());
 
@@ -171,6 +160,8 @@ const LikesList = ({
     onCategoryChange('all');
     onForumCategoryChange(null);
   };
+
+  if (postLoading || commentLoading) return <ActivitiesSkeletonUi />;
 
   return (
     <div className="relative min-h-screen">
@@ -323,16 +314,14 @@ const LikesList = ({
         )}
       </div>
       {paginatedItems.length > 1 && (
-        <>
+        <div className="py-2">
           <Default>
-            <div className="">
-              <CommentPageButton
-                totalItems={typeFilteredItems.length}
-                itemsPerPage={itemsPerPage}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-              />
-            </div>
+            <CommentPageButton
+              totalItems={typeFilteredItems.length}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
           </Default>
           <Mobile>
             <CommentPageButton
@@ -342,7 +331,7 @@ const LikesList = ({
               onPageChange={setCurrentPage}
             />
           </Mobile>
-        </>
+        </div>
       )}
       <ConfirmModal
         message={'삭제 할까요?'}
