@@ -7,6 +7,7 @@ import { Post } from '@/types/posts/qnaTypes';
 import { memo } from 'react';
 import FilledLike from '@/assets/images/like/FilledLike';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import TagBlock from '@/components/common/TagBlock';
 
 const QnaPostItemWaiting = ({ post }: { post: Post }) => (
   <>
@@ -28,15 +29,13 @@ const QnaPostItemWaiting = ({ post }: { post: Post }) => (
           </div>
           {post.qna_tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-5 max-h-[40px] overflow-hidden">
-              {post.qna_tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className="bg-neutral-50 px-3 py-1 rounded text-subtitle2 font-medium text-neutral-700"
-                  style={{ maxWidth: '100%' }}
-                >
-                  #{tag.tag}
-                </span>
-              ))}
+              {post.qna_tags && post.qna_tags.length > 0 ? (
+                post.qna_tags
+                  .filter((tag) => tag.tag !== null)
+                  .map((tag) => <TagBlock key={tag.id} tag={tag.tag || ''} />)
+              ) : (
+                <span className="h-[40px]"></span>
+              )}
             </div>
           )}
           <div className="flex justify-between items-center mb-5">
@@ -80,15 +79,13 @@ const QnaPostItemWaiting = ({ post }: { post: Post }) => (
           </div>
           {post.qna_tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-3 min-h-[26px]">
-              {post.qna_tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className="bg-neutral-50 px-2 py-1 rounded text-caption font-medium text-neutral-700"
-                  style={{ maxWidth: '100%' }}
-                >
-                  #{tag.tag}
-                </span>
-              ))}
+              {post.qna_tags && post.qna_tags.length > 0 ? (
+                post.qna_tags
+                  .filter((tag) => tag.tag !== null)
+                  .map((tag) => <TagBlock key={tag.id} tag={tag.tag || ''} />)
+              ) : (
+                <span className="h-[26px]"></span>
+              )}
             </div>
           )}
           <div className="flex justify-between items-center">

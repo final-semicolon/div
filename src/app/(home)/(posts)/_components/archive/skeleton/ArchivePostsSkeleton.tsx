@@ -1,7 +1,7 @@
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import ArchivePostCardSkeleton from './ArchivePostCardSkeleton';
 
-const ArchivePostsSkeleton = () => {
+const ArchivePostsSkeleton = ({ width, height }: { width: number; height: number }) => {
   return (
     <>
       <Default>
@@ -18,7 +18,7 @@ const ArchivePostsSkeleton = () => {
           </div>
           <div className="grid grid-cols-3 gap-5">
             {[...Array(6)].map((_, index) => (
-              <ArchivePostCardSkeleton key={index} />
+              <ArchivePostCardSkeleton key={index} width={width} height={height} />
             ))}
           </div>
         </>
@@ -36,8 +36,8 @@ const ArchivePostsSkeleton = () => {
             </div>
           </div>
           <div className="flex flex-col mx-5">
-            {[...Array(6)].map((_, index) => (
-              <ArchivePostCardSkeleton key={index} />
+            {[...Array(5)].map((_, index) => (
+              <ArchivePostCardSkeleton key={index} width={width} height={height} />
             ))}
           </div>
         </>
