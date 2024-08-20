@@ -21,6 +21,7 @@ import { POST_EDIT_ALERT_TEXT } from '@/constants/alert';
 import MobileBackIconBlack from '@/assets/images/upsert_image/MobileBackIconBlack';
 import { useQueryClient } from '@tanstack/react-query';
 import { revalidate } from '@/actions/revalidate';
+import Loading from '@/app/(home)/loading';
 
 type UpsertFormProps = {
   data: TeditForumData | TeditQnaData | TeditArchiveData;
@@ -40,9 +41,11 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
   const [isThumbnailUrlDeleted, setisThumbnailUrlDeleted] = useState<boolean>(false);
   const [thumbnail, setThumbnail] = useState<File>();
   const [FORUM, QNA, ARCHIVE] = BOARD_LIST;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setIsValidTitle, setIsValidContent, clearAllValid } = useUpsertValidationStore();
 
   const handleSubmit = async (): Promise<void> => {
+    setIsLoading(true);
     const category = CATEGORY_LIST_EN[CATEGORY_LIST_KR.indexOf(categoryGroup.category)];
 
     // 폼 유효성 검사 로직
@@ -52,7 +55,7 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
     const invalidSequance = [() => setIsValidTitle(false), () => setIsValidContent(false)];
 
     const invalidCheckArray = validArray.map((valid, index) => {
-      if (valid.length === 0) {
+      if (valid.trim().length === 0) {
         invalidSequance[index]();
         return 'invalid';
       }
@@ -64,6 +67,7 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
     });
 
     if (invalidCheckArray.includes('invalid')) {
+      setIsLoading(false);
       return;
     }
 
@@ -181,6 +185,10 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
       })
     );
   }, [tags]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="max-w-full px-5 md:px-0 md:max-w-[1204px] mx-auto flex flex-col  max-h-screen ">
