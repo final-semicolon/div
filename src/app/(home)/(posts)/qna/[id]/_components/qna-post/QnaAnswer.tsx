@@ -237,7 +237,7 @@ const QnaAnswer = ({
               <span>
                 <Dot />
               </span>
-              <span className="text-body3 md:text-body1 text-neutral-500">
+              <span className="whitespace-nowrap text-body3 md:text-body1 text-neutral-500">
                 {timeForToday(qnaComment.updated_at ?? '')}
               </span>
             </div>

@@ -68,7 +68,7 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
           : null}
       </div>
       <div className="w-full flex flex-col md:flex-row justify-between items-center md:items-start md:my-5 md:gap-5">
-        <div className="min-w-full md:min-w-[96px] md:text-body1 md:my-0 my-5 text-body3 text-neutral-400 ">{`${questionData.updated_at?.slice(0, 10).split('-').join('. ')}`}</div>
+        <div className="whitespace-nowrap  md:text-body1 md:my-0 my-5 text-body3 text-neutral-400 ">{`${questionData.updated_at?.slice(0, 10).split('-').join('. ')}`}</div>
         <div className="w-full flex md:justify-end md:gap-4 gap-2 items-center">
           <div className="flex md:gap-1">
             <LikeButton id={questionData.id} type={'qna'} />
