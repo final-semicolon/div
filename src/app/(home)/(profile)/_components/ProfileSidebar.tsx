@@ -35,19 +35,17 @@ const ProfileSidebar = () => {
         <SidebarDesktop userData={userData} currentPage={currentPage} handleLogout={handleLogout} />
       </Desktop>
       <Tablet>
-        <div className="relative">
+        <div className="relative z-50">
           <button aria-label="HamburgerButton" onClick={toggleSidebar} className="absolute p-4">
             <MobileHamburgerButton />
           </button>
           {isSidebarVisible && (
-            <div className="z-50">
-              <SidebarTablet
-                userData={userData}
-                currentPage={currentPage}
-                handleLogout={handleLogout}
-                handleClose={toggleSidebar}
-              />
-            </div>
+            <SidebarTablet
+              userData={userData}
+              currentPage={currentPage}
+              handleLogout={handleLogout}
+              handleClose={toggleSidebar}
+            />
           )}
         </div>
       </Tablet>

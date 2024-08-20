@@ -100,6 +100,7 @@ const config: Config = {
         subtitle1: ['18px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
         subtitle2: ['16px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
         subtitle3: ['14px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
+        subtitle4: ['10px', { lineHeight: '150%', letterSpacing: '-1%' }],
         body1: ['18px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
         body2: ['16px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
         body3: ['14px', { lineHeight: '21px', letterSpacing: '-1%' }],
