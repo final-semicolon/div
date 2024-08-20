@@ -225,34 +225,20 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                     />
                   </div>
                   <div className="flex justify-end items-end mt-4 gap-6">
+                    <Chip
+                      intent="gray"
+                      size="medium"
+                      label="취소"
+                      onClick={() => toggleEditing(comment.id, comment.user_id)}
+                    />
                     {mdEditorChange === comment.comment ? (
-                      <>
-                        <Chip
-                          intent="gray"
-                          size="medium"
-                          label="취소"
-                          onClick={() => toggleEditing(comment.id, comment.user_id)}
-                        />
-                        <Chip intent="primary_disabled" size="medium" label="수정" />
-                      </>
+                      <Chip intent="primary_disabled" size="medium" label="수정" />
                     ) : (
-                      <>
-                        <Chip intent="gray" size="medium" label="취소" onClick={() => setCancelCommentModal(true)} />
-                        <Chip
-                          intent="primary"
-                          size="medium"
-                          label="수정"
-                          onClick={() => commentRetouchHandle(comment.id, comment.user_id)}
-                        />
-                      </>
-                    )}
-
-                    {cancelCommentModal && (
-                      <ConfirmModal
-                        isOpen={cancelCommentModal}
-                        onClose={() => setCancelCommentModal(false)}
-                        onConfirm={() => toggleEditing(comment.id, comment.user_id)}
-                        message={COMMENT_CANCLE_CONFIRM_TEXT}
+                      <Chip
+                        intent="primary"
+                        size="medium"
+                        label="수정"
+                        onClick={() => commentRetouchHandle(comment.id, comment.user_id)}
                       />
                     )}
                   </div>
