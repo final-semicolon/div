@@ -18,11 +18,13 @@ import { handleLinkCopy } from '@/utils/handleLinkCopy';
 import { POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 import { toast } from 'react-toastify';
 import { POST_DELETE_ALERT_TEXT } from '@/constants/alert';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) => {
   const { me } = useAuth();
   const param = useParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [kebobToggle, setKebobToggle] = useState<boolean>(false);
   const [retouchPostModal, setRetouchPostModal] = useState<boolean>(false);
 
@@ -31,7 +33,8 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
       method: 'DELETE',
       body: JSON.stringify({ id: me?.id })
     });
-    router.push('/');
+    await queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
+    router.push('/forum');
     toast.success(POST_DELETE_ALERT_TEXT);
     return;
   };

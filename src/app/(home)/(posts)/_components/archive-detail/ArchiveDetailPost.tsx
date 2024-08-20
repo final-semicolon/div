@@ -165,7 +165,7 @@ const ArchiveDetailPost = ({ data }: { data: archiveDetailType[] }) => {
             </div>
           </div>
           <ArchiveInputComments setCommentCount={setCommentCount} />
-          <ArchiveComments post_user_id={data[0].user_id} setCommentCount={setCommentCount} />
+          <ArchiveComments post_user_id={data[0].user_id} />
         </>
       </Default>
       <Mobile>
@@ -290,7 +290,7 @@ const ArchiveDetailPost = ({ data }: { data: archiveDetailType[] }) => {
             </div>
           </div>
           <ArchiveInputComments setCommentCount={setCommentCount} />
-          <ArchiveComments post_user_id={data[0].user_id} setCommentCount={setCommentCount} />
+          <ArchiveComments post_user_id={data[0].user_id} />
         </>
       </Mobile>
     </>

@@ -39,6 +39,7 @@ const ArchiveInputComments = ({
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
+      await queryClient.invalidateQueries({ queryKey: ['myArchiveComments'] });
       if (comment) {
         setComment('');
         await revalidate('/', 'layout');

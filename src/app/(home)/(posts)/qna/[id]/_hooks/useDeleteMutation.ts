@@ -45,6 +45,13 @@ const useDeleteMutation = ({ path, queryKey, postId, commentId }: replyMutationP
         );
       }
 
+      if (path.includes('qna-post-reply')) {
+        await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+        await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+      } else if (path.includes('comment')) {
+        await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+        await queryClient.invalidateQueries({ queryKey: ['myComments'] });
+      }
       path.includes('reply') ? toast.success(COMMENT_DELETE_ALRERT_TEXT) : toast.success(QNA_ANSWER_DELETE_ALRERT_TEXT);
       !path.includes('qna-reply') ? await revalidatePostTag(`qna-detail-${postId}`) : '';
     }
