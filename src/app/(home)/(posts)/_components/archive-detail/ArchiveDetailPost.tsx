@@ -36,8 +36,6 @@ const ArchiveDetailPost = () => {
       const response = await fetch(`/api/posts/archive-detail/${param.id}`);
       const data = await response.json();
       setArchiveDetail(data[0]);
-      console.log(data[0]);
-
       setCommentCount(data.commentCount);
     };
 
@@ -69,9 +67,9 @@ const ArchiveDetailPost = () => {
     router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/edit/${param.id}?category=archive`);
   };
 
-  if (!archiveDetail) return <div></div>;
-  const thumbnailsArray: string[] = archiveDetail.thumbnail ? archiveDetail.thumbnail.split(',') : [];
-  console.log(archiveDetail.thumbnail);
+  if (!archiveDetail) return <></>;
+
+  const thumbnailsArray: (string | null)[] = archiveDetail.thumbnail ? archiveDetail.thumbnail.split(',') : [null];
 
   return (
     <>
@@ -168,10 +166,10 @@ const ArchiveDetailPost = () => {
             <div
               key={index}
               className={`relative flex flex-col justify-between h-[250px] w-full bg-cover p-5 ${
-                archiveDetail.thumbnail ? '' : 'bg-sub-200'
+                thumbnail ? '' : 'bg-sub-200'
               }`}
               style={
-                archiveDetail.thumbnail
+                thumbnail
                   ? {
                       backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0)), url(${thumbnail})`
                     }
@@ -249,35 +247,36 @@ const ArchiveDetailPost = () => {
               </div>
             </div>
           ))}
-
-          <div>
-            <MDEditor.Markdown
-              source={filterSlang(archiveDetail.content)}
-              className="body3-regular-14px w-full"
-              style={{ maxWidth: '100%' }}
-            />
-          </div>
-          <div className="flex justify-start items-start gap-2">
-            {archiveDetail.tags?.map((tag) => <div key={tag.id}>{tag && <TagBlock tag={tag.tag} />}</div>)}
-          </div>
-          <div className="flex justify-start items-start gap-2">
-            <p className="body3-regular-14px text-neutral-400">
-              {dayjs(archiveDetail.created_at).format('YYYY.MM.DD')}
-            </p>
-          </div>
-          <div className="w-[375px] mb-4 flex justify-between items-start">
-            <div className="flex items-start gap-2">
-              <LikeButton id={archiveDetail.id} type="archive" />
-              <BookmarkButton id={archiveDetail.id} type="archive" />
-              <button
-                type="button"
-                onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/archive/${archiveDetail.id}`)}
-              >
-                <Share />
-              </button>
+          <div className="w-full px-5">
+            <div className="mb-[20px]">
+              <MDEditor.Markdown
+                source={filterSlang(archiveDetail.content)}
+                className="body3-regular-14px w-full"
+                style={{ maxWidth: '100%' }}
+              />
             </div>
-            <div className="mr-[20px]">
-              <p className="body3-medium-14px text-main-400 mr-6">{commentCount || 0}개의 댓글</p>
+            <div className="flex justify-start items-start gap-2 mb-[20px]">
+              {archiveDetail.tags?.map((tag) => <div key={tag.id}>{tag && <TagBlock tag={tag.tag} />}</div>)}
+            </div>
+            <div className="flex justify-start items-start gap-2 mb-[20px]">
+              <p className="body3-regular-14px text-neutral-400">
+                {dayjs(archiveDetail.created_at).format('YYYY.MM.DD')}
+              </p>
+            </div>
+            <div className="w-[375px] mb-[20px] flex justify-between items-start">
+              <div className="flex items-start gap-2">
+                <LikeButton id={archiveDetail.id} type="archive" />
+                <BookmarkButton id={archiveDetail.id} type="archive" />
+                <button
+                  type="button"
+                  onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/archive/${archiveDetail.id}`)}
+                >
+                  <Share />
+                </button>
+              </div>
+              <div className="mr-[20px]">
+                <p className="body3-medium-14px text-main-400 mr-6">{commentCount || 0}개의 댓글</p>
+              </div>
             </div>
           </div>
         </div>
