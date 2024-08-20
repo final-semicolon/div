@@ -16,9 +16,9 @@ const MobileWriteButton = ({ userData }: MobileWriteButtonProps) => {
           <Image
             src={userData.profile_image}
             alt="User Profile"
-            layout="fill"
-            objectFit="cover"
-            className="rounded-full"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="rounded-full object-cover"
           />
         )}
       </div>

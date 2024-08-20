@@ -1,8 +1,5 @@
 'use client';
 
-// import Info from '@/assets/images/forum/Info';
-// import King from '@/assets/images/forum/King';
-// import Tooltip from '@/assets/images/forum/Tooltip';
 import useFetchTopLikedPosts from '@/hooks/forum/useFetchTopLikedPosts';
 import { Post } from '@/types/posts/forumTypes';
 import { filterSlang } from '@/utils/markdownCut';

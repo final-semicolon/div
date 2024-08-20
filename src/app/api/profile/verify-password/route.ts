@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ valid: true, message: '현재 비밀번호가 확인되었습니다.' });
   } catch (error) {
-    console.error('error:', error);
+    // console.error('error:', error);
     return NextResponse.json({ valid: false, message: '서버 오류가 발생했습니다.' }, { status: 500 });
   }
 }

@@ -2,7 +2,7 @@ import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import { TqnaCommentsWithReplyCount, TqnaReplyWithUser, Treply } from '@/types/posts/qnaDetailTypes';
-import { InvalidateQueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 

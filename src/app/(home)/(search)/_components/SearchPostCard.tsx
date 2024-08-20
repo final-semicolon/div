@@ -58,9 +58,9 @@ const SearchPostCard = ({ post, isLiked: initialIsLiked, currentUserId, primaryC
         }
 
         const data = await response.json();
-        console.log(`${action === 'like' ? 'Liked' : 'Unliked'} post with ID: ${postId}`, data);
+        // console.log(`${action === 'like' ? 'Liked' : 'Unliked'} post with ID: ${postId}`, data);
       } catch (error) {
-        console.error(`Error ${action === 'like' ? 'liking' : 'unliking'} post with ID: ${postId}`, error);
+        // console.error(`Error ${action === 'like' ? 'liking' : 'unliking'} post with ID: ${postId}`, error);
       }
     },
     [currentUserId]

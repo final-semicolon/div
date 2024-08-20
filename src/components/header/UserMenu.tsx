@@ -6,7 +6,6 @@ import { memo } from 'react';
 import SearchButton from '@/assets/images/header/SearchButton';
 
 const UserMenu = ({ isLoggedIn, userData }: UserMenuProps) => (
-  // <div className={`${isLoggedIn ? 'ml-[198px]' : 'ml-[95px]'}`}>
   <>
     {isLoggedIn ? (
       <div className="w-[175px] flex items-center ">

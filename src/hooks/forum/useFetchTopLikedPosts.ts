@@ -13,9 +13,9 @@ const fetchTopLikedPosts = async (): Promise<Post[]> => {
 const useFetchTopLikedPosts = () => {
   return useQuery<Post[], Error>({
     queryKey: ['topForumPosts'],
-    queryFn: fetchTopLikedPosts
-    // staleTime: 1000 * 60 * 5,
-    // gcTime: 1000 * 60 * 10
+    queryFn: fetchTopLikedPosts,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10
   });
 };
 

@@ -93,7 +93,7 @@ export const POST = async (request: Request, { params }: Tparams) => {
     try {
       const result = await Promise.all(promiseArr);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return Response.json(POSTING_ERROR_MASSAGE);
     }
 

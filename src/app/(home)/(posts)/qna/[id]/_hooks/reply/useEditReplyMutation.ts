@@ -1,6 +1,5 @@
-import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
-import { InvalidateQueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 

@@ -12,13 +12,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (updateError) {
-      console.error('비밀번호 변경 실패:', updateError);
+      // console.error('비밀번호 변경 실패:', updateError);
       return NextResponse.json({ error: '비밀번호 변경에 실패했습니다.' }, { status: 500 });
     }
 
     return NextResponse.json({ message: '비밀번호가 성공적으로 변경되었습니다.' });
   } catch (error) {
-    console.error('서버 오류:', error);
+    // console.error('서버 오류:', error);
     return NextResponse.json({ error: '서버 오류가 발생했습니다.' }, { status: 500 });
   }
 }

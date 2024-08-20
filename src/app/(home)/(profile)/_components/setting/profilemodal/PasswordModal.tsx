@@ -22,7 +22,7 @@ const PasswordModal = ({ isOpen, onClose }: PasswordModalProps) => {
   const [validationMessage, setValidationMessage] = useState<string>('');
 
   const handlePassword = async () => {
-    console.log('확인용');
+    // console.log('확인용');
     if (validation) {
       const updateResponse = await fetch('/api/profile/reset-password', {
         method: 'POST',

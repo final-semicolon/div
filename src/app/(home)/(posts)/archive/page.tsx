@@ -1,8 +1,3 @@
-import Image from 'next/image';
-// import ArchivePosts from '../_components/archive/ArchivePosts';
-// import PopularArchiveSwiper from '../_components/archive/PopularArchiveSwiper';
-// import ScrollToTopButton from '../_components/forum/ScrollToTopButton';
-
 import dynamic from 'next/dynamic';
 import ArchiveBanner from '../_components/archive/ArchiveBanner';
 

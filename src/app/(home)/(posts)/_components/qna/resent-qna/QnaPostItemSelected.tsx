@@ -50,9 +50,9 @@ const QnaPostItemSelected = ({ post }: { post: SelectedPost }) => (
                   <Image
                     src={post.selected_comment_data!.user.profile_image}
                     alt={post.user.nickname || 'Unknown User'}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="rounded-full object-cover"
                   />
                 </div>
                 <div className="ml-2 flex items-center">
@@ -130,9 +130,9 @@ const QnaPostItemSelected = ({ post }: { post: SelectedPost }) => (
                   <Image
                     src={post.selected_comment_data!.user.profile_image}
                     alt={post.user.nickname || 'Unknown User'}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="rounded-full object-cover"
                   />
                 </div>
                 <div className="ml-1 flex items-center">

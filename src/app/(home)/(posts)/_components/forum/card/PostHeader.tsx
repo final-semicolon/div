@@ -7,15 +7,15 @@ import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 const PostHeader = ({ post }: PostCardProps) => (
   <>
     <Default>
-      <div className="flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 h-[48px] gap-4 py-1 z-10">
-        <div className="relative w-10 h-10 ">
+      <div className="flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 h-[48px] gap-4 py-1 z-10 mb-5">
+        <div className="relative">
           {post.user.profile_image && (
             <Image
               src={post.user.profile_image}
               alt="User Profile"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-full"
+              width={40}
+              height={40}
+              className="rounded-full object-cover"
             />
           )}
         </div>
@@ -39,14 +39,14 @@ const PostHeader = ({ post }: PostCardProps) => (
     </Default>
     <Mobile>
       <div className="flex justify-start items-start self-stretch flex-grow-0 flex-shrink-0 h-[39px] gap-3 mb-5 z-10">
-        <div className="relative w-9 h-9 ">
+        <div className="relative ">
           {post.user.profile_image && (
             <Image
               src={post.user.profile_image}
               alt="User Profile"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-full"
+              width={36}
+              height={36}
+              className="rounded-full object-cover"
             />
           )}
         </div>
