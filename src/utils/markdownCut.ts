@@ -5,6 +5,7 @@ export const processMarkdown = (markdown: string, limit: number) => {
   processContent = processContent.replace(/```[\s\S]*?```/g, '');
   processContent = processContent.replace(/``[\s\S]*?``/g, '');
   processContent = processContent.replace(/`[\s\S]*?`/g, '');
+  processContent = processContent.replace(/<img[^>]*>/g, '');
   processContent = markdownFilterSlang(processContent);
   processContent = markdownCutText(processContent, limit);
 
