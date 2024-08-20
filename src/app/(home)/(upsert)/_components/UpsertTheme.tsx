@@ -11,25 +11,32 @@ const UpsertTheme = () => {
   const { categoryGroup } = usePostingCategoryStore();
 
   return (
-    <div className="my-5 ">
-      <h2 className="text-neutral-900 flex text-h3 font-bold h-[38px] w-full m-0 mb-2">
+    <div className="">
+      <h2 className="text-neutral-900 flex text-subtitle2 md:text-h3 font-bold md:max-h-[38px] w-full m-0 mb-2">
         {categoryGroup.content === '' ? '코드로 그려가는 이야기' : categoryGroup.content}
-        <span className="content-center ml-2">
+        <div className="content-center ml-2">
           {categoryGroup.category === BOARD_LIST[0].category ? (
             <ForumCategoryIcon />
           ) : categoryGroup.category === BOARD_LIST[1].category ? (
-            <GradCap />
+            <>
+              <div className="md:hidden">
+                <GradCap width={24} height={24} />
+              </div>
+              <div className="hidden md:block">
+                <GradCap width={36} height={36} />
+              </div>
+            </>
           ) : categoryGroup.category === BOARD_LIST[2].category ? (
             <ArchiveCategoryIcon />
           ) : (
             <Twinkle />
           )}
-        </span>
+        </div>
       </h2>
       <h3 className="text-neutral-900 text-body1 h-[27px] ">
         <div className="text-neutral-900 text-subtitle1">
-          <span className="text-subtitle1 font-medium"> {userData?.nickname}</span>
-          <span className="text-body1">
+          <span className="text-body3 md:text-subtitle1 font-medium"> {userData?.nickname}</span>
+          <span className="text-body3 font-regular md:text-body1">
             {categoryGroup.category && userData?.nickname
               ? ' ' + CATEGORY_SUBTITLE[BOARD_LIST.findIndex((BOARD) => BOARD.category === categoryGroup.category)]
               : ' 님, <div>에 오신 것을 환영합니다!'}

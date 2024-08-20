@@ -12,13 +12,13 @@ import { useAuth } from '@/context/auth.context';
 import BackArrowIcon from '@/assets/images/upsert_image/BackArrowIcon';
 import ThumbNailBox from '../ThumbNailBox';
 import { usePostingCategoryStore } from '@/store/postingCategoryStore';
-import PostingCategory from './editform/categorybox/PostingCategory';
+import EditCategoryBox from './editform/categorybox/EditCategoryBox';
 import { TAG_LIST } from '@/constants/tags';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { deleteThumbnail, patchThumbnail, uploadThumbnail } from '../../_utils/thumbnail';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
-import { EDIT_SUCCESS_MASSAGE } from '@/constants/upsert.api';
 import { POST_EDIT_ALERT_TEXT } from '@/constants/alert';
+import MobileBackIconBlack from '@/assets/images/upsert_image/MobileBackIconBlack';
 
 type UpsertFormProps = {
   data: TeditForumData | TeditQnaData | TeditArchiveData;
@@ -167,12 +167,15 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
   }, [tags]);
 
   return (
-    <div className="w-[1204px] mx-auto flex flex-col gap-y-5 max-h-screen">
-      <div className="mb-4" onClick={handleBackClick}>
+    <div className="max-w-full px-5 md:px-0 md:max-w-[1204px] mx-auto flex flex-col  max-h-screen ">
+      <div className="w-6 h-6 mb-6 md:hidden" onClick={handleBackClick}>
+        <MobileBackIconBlack />
+      </div>
+      <div className="w-9 h-9 md:mb-14 hidden md:block" onClick={handleBackClick}>
         <BackArrowIcon />
       </div>
       <form className="flex flex-col gap-y-10 h-full">
-        <PostingCategory />
+        <EditCategoryBox />
         <FormTitleInput title={title} setTitle={setTitle} />
         <FormTagInput tagList={tagList} setTagList={setTagList} />
         <ThumbNailBox

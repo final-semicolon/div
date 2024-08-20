@@ -6,8 +6,8 @@ const MobileBackIconBlack = () => {
           id="Line 51"
           d="M15 6L9.14142 11.8586C9.06332 11.9367 9.06332 12.0633 9.14142 12.1414L15 18"
           stroke="#0F0F0F"
-          stroke-width="1.5"
-          stroke-linecap="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
         />
       </g>
     </svg>

@@ -12,7 +12,9 @@ const FormContentArea = ({ content, setContent }: FormContentAreaProps) => {
 
   return (
     <div>
-      <h5 className={`block my-2 ${isValidContent === false ? 'text-red' : 'text-gray-900'}  text-h5 font-bold `}>
+      <h5
+        className={`block my-2 ${isValidContent === false ? 'text-red' : 'text-gray-900'} text-subtitle3 md:text-h5 font-bold `}
+      >
         본문
       </h5>
       <div
