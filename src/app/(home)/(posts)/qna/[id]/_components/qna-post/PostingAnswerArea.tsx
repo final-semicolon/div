@@ -79,6 +79,8 @@ const PostingAnswerArea = ({ title, content, setContent, setToggleAnswer }: Post
       await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
       setToggleAnswer(false);
       setContent('');
+      await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myComments'] });
       await revalidatePostTag(`qna-detail-${postId}`);
     }
   });

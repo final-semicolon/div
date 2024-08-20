@@ -13,6 +13,7 @@ import { filterSlang } from '@/utils/markdownCut';
 import Replies from '../qna-comments/Replies';
 import Dot from '@/assets/images/common/Dot';
 import CommentBubble from '@/assets/images/common/CommentBubble';
+import { handleLinkCopy } from '@/utils/handleLinkCopy';
 
 type QnaQuestionProps = {
   questionData: TqnaData;
@@ -74,9 +75,12 @@ const QnaQuestion = ({ questionData }: QnaQuestionProps) => {
             <LikeButton id={questionData.id} type={'qna'} />
           </div>
           <div className="flex md:gap-1">
-            <BookmarkButton id={questionData?.id} type={'qnaComment'} />
+            <BookmarkButton id={questionData?.id} type={'qna'} />
           </div>
-          <button>
+          <button
+            type="button"
+            onClick={() => handleLinkCopy(`${process.env.NEXT_PUBLIC_BASE_URL}/qna/${questionData.id}`)}
+          >
             <Share />
           </button>
           <button className="flex gap-1  font-medium text-body3 md:text-subtitle1 ml-auto " onClick={handleReplyClick}>

@@ -56,7 +56,9 @@ const useAddMutation = ({ content, path, queryKey, commentId, userId, postId }: 
           }
         );
       }
-
+      if (path.includes('qna-post-reply')) {
+        await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      }
       toast.success(COMMENT_POST_ALERT_TEXT);
       path.includes('qna-post-reply') ? await revalidatePostTag(`qna-detail-${postId}`) : '';
     }
