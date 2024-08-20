@@ -24,6 +24,7 @@ export type BookmarkContextType = {
       archiveCommentBookmarks: string[];
     }>
   >;
+  removeBookmarks: (id: string, type: BookmarkType) => void;
 };
 
 export type BookmarkProviderProps = {

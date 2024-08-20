@@ -24,6 +24,7 @@ export type LikeContextType = {
       archiveCommentLikes: string[];
     }>
   >;
+  removeLikes: (id: string, type: LikeType) => void;
 };
 
 export type LikeProviderProps = {
