@@ -21,6 +21,7 @@ const FilterControls = ({
   onTypeChange
 }: FilterControlsProps) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [showForumMenu, setShowForumMenu] = useState(false);
 
   const handleResetClick = () => {
     onTypeChange('all');
@@ -38,6 +39,8 @@ const FilterControls = ({
             primaryForumCategory={primaryForumCategory}
             onCategoryChange={onCategoryChange}
             onForumCategoryChange={onForumCategoryChange}
+            showForumMenu={showForumMenu}
+            onShowForumMenu={setShowForumMenu}
           />
         </div>
         <div className="flex items-center order-1 md:order-2 ">

@@ -2,18 +2,19 @@ import useActiveTabStore from '@/store/useActiveTabStore';
 import useProfiletopTabStore from '@/store/useProfiletopTabStore';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 const HaderMobile = () => {
+  const pathname = usePathname();
   const topButtonTab = useProfiletopTabStore((state) => state.topButtonTab);
   const settopButtonTab = useProfiletopTabStore((state) => state.settopButtonTab);
-
   const setActiveTab = useActiveTabStore((state) => state.setActiveTab);
 
   useEffect(() => {
-    if (topButtonTab === '') {
+    if (pathname === '/profile') {
       settopButtonTab('profile');
     }
-  }, [topButtonTab, settopButtonTab]);
+  }, [pathname, topButtonTab, settopButtonTab]);
 
   const handleTabClick = (tab: 'profile' | 'posts' | 'likes' | 'bookmarks') => {
     if (topButtonTab === 'profile') {
