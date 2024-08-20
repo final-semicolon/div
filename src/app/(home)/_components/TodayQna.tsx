@@ -15,6 +15,7 @@ import RightIcon from '@/assets/images/common/RightIcon';
 import LeftIconHover from '@/assets/images/common/LeftIconHover';
 import LeftIcon from '@/assets/images/common/LeftIcon';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import TodayQnaSkeleton from './skeleton/TodayQnaSkeleton';
 
 const TodayQna = () => {
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
@@ -47,7 +48,7 @@ const TodayQna = () => {
     if (swiperInstance) swiperInstance.slideNext();
   };
 
-  const { data: todayQna } = useQuery<Tables<'qna_posts'>[]>({
+  const { data: todayQna, isPending } = useQuery<Tables<'qna_posts'>[]>({
     queryKey: ['todayQna'],
     queryFn: async () => {
       try {
@@ -57,6 +58,9 @@ const TodayQna = () => {
       } catch (error) {}
     }
   });
+  if (isPending) {
+    return <TodayQnaSkeleton />;
+  }
 
   return (
     <div className="flex flex-col md:ml-0 ml-5">

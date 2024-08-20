@@ -13,6 +13,7 @@ import LeftIconHover from '@/assets/images/common/LeftIconHover';
 import RightIconHover from '@/assets/images/common/RightIconHover';
 import RightIcon from '@/assets/images/common/RightIcon';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import TagSkeleton from './skeleton/TagSkeleton';
 
 type TagType = {
   tag: string;
@@ -46,7 +47,7 @@ const MainPageTag = () => {
     }
   }, [swiperInstance]);
 
-  const { data: tagListCount } = useQuery<TagType[]>({
+  const { data: tagListCount, isPending } = useQuery<TagType[]>({
     queryKey: ['tagList'],
     queryFn: async () => {
       try {
@@ -56,6 +57,9 @@ const MainPageTag = () => {
       } catch (error) {}
     }
   });
+  if (isPending) {
+    return <TagSkeleton />;
+  }
 
   const postTagCount = tagListCount?.reduce((allNames: { [key: string]: number }, person: TagType) => {
     const tagName = person.tag;
