@@ -48,8 +48,9 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
         body: JSON.stringify({ id, user_id, mdEditorChange })
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['forumComments'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['forumComments'] });
+      await queryClient.invalidateQueries({ queryKey: ['myComments'] });
       setEditingState({ Boolean: false });
       toast.success(COMMENT_EDIT_ALERT_TEXT);
     }
@@ -68,9 +69,10 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
         body: JSON.stringify({ id, user_id })
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['forumComments'] });
-      revalidatePostTag(`forum-detail-${param.id}`);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['forumComments'] });
+      await queryClient.invalidateQueries({ queryKey: ['myComments'] });
+      await revalidatePostTag(`forum-detail-${param.id}`);
       toast.success(COMMENT_DELETE_ALRERT_TEXT);
     }
   });
