@@ -280,8 +280,8 @@ const ArchiveComments = ({
                     {comment.created_at.slice(0, 10).replace(/-/g, '.')}
                   </p>
                   <div className=" flex gap-4">
-                    <LikeButton id={comment.id} type="forumComment" />
-                    <BookmarkButton id={comment.id} type="forumComment" />
+                    <LikeButton id={comment.id} type="archiveComment" />
+                    <BookmarkButton id={comment.id} type="archiveComment" />
                     {replyToggle[comment.id] ? (
                       <div className="flex gap-5">
                         <button
@@ -463,8 +463,8 @@ const ArchiveComments = ({
               </div>
               <div className=" flex justify-between">
                 <div className=" flex justify-between gap-[12px]">
-                  <LikeButton id={comment.id} type="forumComment" />
-                  <BookmarkButton id={comment.id} type="forumComment" />
+                  <LikeButton id={comment.id} type="archiveComment" />
+                  <BookmarkButton id={comment.id} type="archiveComment" />
                 </div>
                 {replyToggle[comment.id] ? (
                   <div className="w-[252px] h-[21px] flex justify-end gap-[12px] ">
