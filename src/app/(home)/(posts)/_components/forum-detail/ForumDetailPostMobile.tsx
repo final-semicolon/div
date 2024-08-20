@@ -78,7 +78,7 @@ const ForumDetailPostMobile = ({ forumDetail }: { forumDetail: forumDetailType[]
                 {scroll ? <MobileBackClickBlack /> : <MobileBackClickWhite />}
                 {post.user_id === me?.id && (
                   <div className="relative">
-                    <div className="p-4" onClick={() => setKebobToggle(!kebobToggle)}>
+                    <div className="p-2 md:p-4" onClick={() => setKebobToggle(!kebobToggle)}>
                       {scroll ? <KebabButton /> : <KebabWhite />}
                     </div>
                     {kebobToggle ? (
