@@ -57,6 +57,7 @@ const ContentFilters = ({ contentType, onTypeChange, showMenu, onShowMenu }: Con
       {showMenu && (
         <div
           ref={menuButtonRef}
+          onClick={() => onShowMenu(false)}
           className="absolute z-10 md:top-[24px] w-[87px] md:w-[127px] border overflow-hidden border-neutral-100 rounded-lg bg-white hover:border hover:border-main-400 "
         >
           <li
