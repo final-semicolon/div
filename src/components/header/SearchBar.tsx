@@ -109,9 +109,9 @@ const SearchBar = ({ Searching }: SearchBarProps) => {
   };
 
   return (
-    <div ref={searchBarRef} className=" relative flex flex-col text-neutral-400">
+    <div ref={searchBarRef} className=" relative flex flex-col text-neutral-400 ">
       <div
-        className={`flex items-center justify-between px-5 border border-neutral-200 rounded-md h-[48px] md:h-[56px] md:ml-10 ${Searching === 'ture' ? 'w-full' : 'w-[287px] md:w-[318px]'}`}
+        className={`flex items-center justify-between px-5 border bg-white border-neutral-200 rounded-md h-[48px] md:h-[56px] md:ml-10 ${Searching === 'ture' ? 'w-full' : 'w-[287px] md:w-[318px]'}`}
       >
         <div className="flex items-center">
           <SearchButton stroke="#8F8F8F" />

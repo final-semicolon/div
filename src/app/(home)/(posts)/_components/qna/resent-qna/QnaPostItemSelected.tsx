@@ -22,7 +22,10 @@ const QnaPostItemSelected = ({ post }: { post: SelectedPost }) => (
             </div>
             <div className="flex placeholder:mt-2 text-neutral-700 mb-5" data-color-mode="light">
               <div className="flex-grow">
-                <MDEditor.Markdown source={processMarkdown(post.content, 160)} />
+                <MDEditor.Markdown
+                  source={processMarkdown(post.content, 160)}
+                  className="max-w-[1083px] overflow-hidden"
+                />
               </div>
               <div className="flex flex-col items-center justify-center ml-4 p-2 border rounded-md text-center min-w-[65px] h-[54px]">
                 <p className="text-h5 font-bold text-neutral-900">{post.qna_comment[0]?.count || 0}</p>
