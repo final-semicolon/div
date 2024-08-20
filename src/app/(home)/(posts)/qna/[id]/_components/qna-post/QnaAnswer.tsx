@@ -98,12 +98,9 @@ const QnaAnswer = ({
   };
 
   const selectCommentMutation = async () => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/question/${postId}?comment_id=${qnaComment.id}`,
-      {
-        method: 'PATCH'
-      }
-    );
+    const response = await fetch(`/api/posts/qna-detail/question/${postId}?comment_id=${qnaComment.id}`, {
+      method: 'PATCH'
+    });
     const { data, message } = await response.json();
     if (message) {
       toast.error(message);
@@ -130,9 +127,6 @@ const QnaAnswer = ({
       tags: tagList.filter((tag) => tag.selected),
       user_id: me?.id ?? ''
     });
-    toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
-    setIsEdit(false);
-    await revalidatePostTag(`qna-detail-${postId}`);
   };
 
   const editCommentMutation = async ({
@@ -146,7 +140,7 @@ const QnaAnswer = ({
     tags: Ttag[];
     user_id: string;
   }) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${commentId}`, {
+    const response = await fetch(`/api/posts/qna-detail/comment/${commentId}`, {
       method: 'PATCH',
       body: JSON.stringify({ comment, tags, user_id })
     });
@@ -159,14 +153,16 @@ const QnaAnswer = ({
 
   const { mutate: editMutate } = useMutation({
     mutationFn: editCommentMutation,
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+      toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
+      setIsEdit(false);
+      await revalidatePostTag(`qna-detail-${postId}`);
     }
   });
 
   useEffect(() => {
     const commentTagList = qnaComment.qna_comment_tag.map((tag) => tag.tag);
-
     setTagList(
       TAG_LIST.map((TAG) => {
         return commentTagList.includes(TAG.name) ? { ...TAG, selected: !TAG.selected } : TAG;
@@ -175,7 +171,7 @@ const QnaAnswer = ({
   }, [qnaComment.qna_comment_tag]);
   return (
     <div
-      className={`bg-white md:max-w-[1204px] md:py-12 py-5 md:mb-8 mb-4 px-5 md:px-6 md:border md:${selectedComment === qnaComment.id ? 'border-main-400' : ''} md:rounded-2xl overflow-auto`}
+      className={`bg-white md:max-w-[1204px] md:py-12 py-5 md:mb-8 mb-4 px-5 md:px-6 md:border ${selectedComment === qnaComment.id ? 'md:border-main-400' : ''} md:rounded-2xl overflow-auto`}
     >
       <div className="mb-6">
         {index === 0 ? (
@@ -237,7 +233,7 @@ const QnaAnswer = ({
               <span>
                 <Dot />
               </span>
-              <span className="text-body3 md:text-body1 text-neutral-500">
+              <span className="whitespace-nowrap text-body3 md:text-body1 text-neutral-500">
                 {timeForToday(qnaComment.updated_at ?? '')}
               </span>
             </div>
@@ -367,7 +363,7 @@ const QnaAnswer = ({
       </div>
       <div className="flex justify-between  h-[59px] items-center">
         <div className={`w-full flex flex-col md:flex-row gap-6 md:items-center `}>
-          <span className="text-body3 md:text-body1 text-neutral-400 md:min-w-24">
+          <span className="whitespace-nowrap text-body3 md:text-body1 text-neutral-400 md:min-w-24">
             {qnaComment.created_at?.slice(0, 10).split('-').join('. ')}
           </span>
           <div className={`w-full flex gap-2 md:gap-4 h-10 md:h-12 items-center`}>

@@ -16,6 +16,7 @@ import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants
 import Chip from '@/components/common/Chip';
 import { COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 import ReplyPageBtn from '@/components/common/ReplyPageBtn';
+import ForumDetailSkeleton from './skeleton/ForumDetailSkeleton';
 
 const ForumReply = ({
   comment_id,
@@ -100,7 +101,7 @@ const ForumReply = ({
   });
 
   if (isPending) {
-    return <div>loading...</div>;
+    return <ForumDetailSkeleton />;
   }
   //reply 페이지 수
   const COMMENT_REPLY_PAGE = 5;
