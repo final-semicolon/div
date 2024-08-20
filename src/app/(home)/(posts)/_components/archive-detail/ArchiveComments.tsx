@@ -20,14 +20,9 @@ import { useLoginAlertStore } from '@/store/loginAlertModal';
 import LoginAlertModal from '@/components/modal/LoginAlertModal';
 import CommentPageButton from '@/components/common/CommentPageButton';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants/alert';
 
-const ArchiveComments = ({
-  post_user_id,
-  setCommentCount
-}: {
-  post_user_id: string;
-  setCommentCount: React.Dispatch<React.SetStateAction<number>>;
-}) => {
+const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
   const param = useParams<{ id: string }>();
   const queryClient = useQueryClient();
@@ -44,48 +39,40 @@ const ArchiveComments = ({
 
   const commentRetouch = useMutation({
     mutationFn: async ({ id, user_id, mdEditorChange }: commentRetouch) => {
-      const response = await fetch(`/api/posts/forum-detail/archive-comments/${param.id}`, {
+      await fetch(`/api/posts/archive-detail/archive-comments/${param.id}`, {
         method: 'PATCH',
-        body: JSON.stringify({ id, user_id, mdEditorChange }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        body: JSON.stringify({ id, user_id, mdEditorChange })
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
+      await queryClient.invalidateQueries({ queryKey: ['myArchiveComments'] });
+      revalidate('/', 'layout');
+      setEditingState({ Boolean: false });
+      toast.success(COMMENT_EDIT_ALERT_TEXT);
     }
   });
 
   const commentRetouchHandle = async (id: string, user_id: string) => {
     commentRetouch.mutate({ id, user_id, mdEditorChange });
-    setEditingState({ Boolean: false });
-    toast.success('댓글이 수정되었어요', { autoClose: 1500 });
   };
 
   const commentDelete = useMutation({
     mutationFn: async ({ id, user_id }: { id: string; user_id: string }) => {
       const response = await fetch(`/api/posts/archive-detail/archive-comments/${param.id}`, {
         method: 'DELETE',
-        body: JSON.stringify({ id, user_id }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        body: JSON.stringify({ id, user_id })
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete comment');
-      }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
+      await queryClient.invalidateQueries({ queryKey: ['myArchiveComments'] });
       revalidate('/', 'page');
-      setCommentCount((prev) => prev - 1);
+      toast.success(COMMENT_DELETE_ALRERT_TEXT);
     }
   });
 
   const handleDelete = async (id: string, user_id: string) => {
-    toast.success('댓글이 삭제되었어요', { autoClose: 1500 });
     commentDelete.mutate({ id, user_id });
   };
 
