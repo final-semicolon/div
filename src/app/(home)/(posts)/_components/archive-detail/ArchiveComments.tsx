@@ -21,7 +21,13 @@ import LoginAlertModal from '@/components/modal/LoginAlertModal';
 import CommentPageButton from '@/components/common/CommentPageButton';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
-const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
+const ArchiveComments = ({
+  post_user_id,
+  setCommentCount
+}: {
+  post_user_id: string;
+  setCommentCount: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const { me } = useAuth();
   const param = useParams<{ id: string }>();
   const queryClient = useQueryClient();
@@ -74,6 +80,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
       revalidate('/', 'page');
+      setCommentCount((prev) => prev - 1);
     }
   });
 
