@@ -28,7 +28,7 @@ const Replies = ({ commentId, replyCount }: AnswerCommentsProps) => {
   } = useQuery({
     queryKey: ['qnaReply', commentId ?? postId, page],
     queryFn: async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/${path}`);
+      const response = await fetch(`/api/posts/qna-detail/${path}`);
       const { data } = await response.json();
       return data;
     },

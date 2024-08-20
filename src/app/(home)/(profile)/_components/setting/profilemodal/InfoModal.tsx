@@ -8,6 +8,9 @@ import Check from '@/assets/images/common/Check';
 import Chip from '@/components/common/Chip';
 import { INFO, MODAL_MESSAGES } from '@/constants/auth';
 import { getStyles } from '@/utils/profileStyles';
+import InfoModalFlow from '../settingresponsive/InfoModalFlow';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import MobileModal from '@/components/modal/MobileModal';
 
 type InfoModalProps = {
   isOpen: boolean;
@@ -20,7 +23,6 @@ const InfoModal = ({ isOpen, onClose, currentInfo, onInfoUpdate }: InfoModalProp
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [validationMessage, setValidationMessage] = useState<string>('');
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   useEffect(() => {
     if (newInfo === currentInfo) {
@@ -78,54 +80,47 @@ const InfoModal = ({ isOpen, onClose, currentInfo, onInfoUpdate }: InfoModalProp
   // 확인 모달에서 취소를 클릭했을 때 호출되는 함수
   const handleCancelClose = () => setIsConfirmModalOpen(false);
 
-  const { titleTextColor, conditionTextColor, stroke, borderColor } = getStyles({
-    isConditionsNotMetOnBlur: !isFocused && newInfo.length > INFO.MAX_LENGTH,
-    isConditionsMetOnBlur:
-      currentInfo === newInfo || (!isFocused && newInfo.length <= INFO.MAX_LENGTH && newInfo.length > 1),
-    isConditionsNotMetOnFocus: newInfo.length > INFO.MAX_LENGTH,
-    isConditionsMetOnFocus: newInfo.length > 0
-  });
-
   return (
     <>
-      <Modal isOpen={isOpen} onClose={handleClose} type="myPage">
-        <div className="w-[581px] h-[477px] p-[40px_80px]">
-          <div className="flex flex-row justify-between mb-10">
-            <h2 className="text-h4 font-bold  text-neutral-900">자기소개</h2>
-            <div onClick={handleClose} className=" cursor-pointer">
-              <X width={20} height={20} />
+      <Mobile>
+        <MobileModal isOpen={isOpen} onClose={handleClose}>
+          <div className="w-screen h-screen p-5">
+            <div className="flex justify-between">
+              <div onClick={handleClose} className="mt-[5px] cursor-pointer">
+                <X width={14} height={14} />
+              </div>
+              <h2 className="mb-10 text-subtitle2 font-bold text-center text-neutral-900">자기소개</h2>
+              <div className="w-5 h-5"></div>
             </div>
-          </div>
-          <h2 className={`text-subtitle2 font-bold ${titleTextColor}`}>자기소개</h2>
-          <textarea
-            value={newInfo}
-            onChange={onInputHandler}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            placeholder={INFO.INFO_EDIT_PLACEHOLDER}
-            maxLength={INFO.MAX_LENGTH}
-            className={`border text-body1 font-regular rounded-lg p-4 w-full h-[167px] my-2 resize-none ${borderColor}`}
-          />
-          <div className={`flex items-center mb-10 ${conditionTextColor}`}>
-            <Check stroke={stroke} />
-            <span className="ml-1">
-              {validationMessage}
-              {newInfo.length > 0 && newInfo.length <= INFO.MAX_LENGTH && (
-                <span className="text-neutral-900"> / 150</span>
-              )}
-            </span>
-          </div>
-          <div className="flex justify-end ">
-            <Chip
-              type="button"
-              intent={newInfo.length > 0 && newInfo.length <= INFO.MAX_LENGTH ? 'primary' : 'primary_disabled'}
-              size={'large'}
-              label="변경하기"
-              onClick={handleSave}
+            <InfoModalFlow
+              newInfo={newInfo}
+              currentInfo={currentInfo}
+              onInputHandler={onInputHandler}
+              validationMessage={validationMessage}
+              handleSave={handleSave}
             />
           </div>
-        </div>
-      </Modal>
+        </MobileModal>
+      </Mobile>
+      <Default>
+        <Modal isOpen={isOpen} onClose={handleClose} type="myPage">
+          <div className="w-[581px] h-[477px] p-[40px_80px]">
+            <div className="flex flex-row justify-between mb-10">
+              <h2 className="text-h4 font-bold  text-neutral-900">자기소개</h2>
+              <div onClick={handleClose} className=" cursor-pointer">
+                <X width={20} height={20} />
+              </div>
+            </div>
+            <InfoModalFlow
+              newInfo={newInfo}
+              currentInfo={currentInfo}
+              onInputHandler={onInputHandler}
+              validationMessage={validationMessage}
+              handleSave={handleSave}
+            />
+          </div>
+        </Modal>
+      </Default>
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         onClose={handleCancelClose}

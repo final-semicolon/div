@@ -8,9 +8,7 @@ export const GET = async () => {
   const { data: qnaTag } = await supabase.from('qna_tags').select(`tag`);
   const { data: archiveTag } = await supabase.from('archive_tags').select(`tag`);
 
-  const tagList = { ...forumTag, ...qnaTag, ...archiveTag };
-
-  console.log(tagList);
+  const tagList = [...(forumTag || []), ...(qnaTag || []), ...(archiveTag || [])];
 
   return NextResponse.json(tagList);
 };

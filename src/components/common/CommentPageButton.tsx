@@ -49,7 +49,7 @@ const CommentPageButton = ({ totalItems, itemsPerPage, currentPage, onPageChange
   };
 
   return (
-    <div className="flex justify-center items-center mt-4 space-x-2 gap-4">
+    <div className="flex justify-center items-center mt-4 mx-3 md:gap-4 gap-3">
       <button
         onClick={handleFirstPage}
         disabled={currentPage === 1}

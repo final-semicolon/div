@@ -6,12 +6,12 @@ type ResponsiveProps = {
 };
 
 export const Desktop = ({ children }: ResponsiveProps) => {
-  const isDesktop = useMediaQuery({ minWidth: 992 });
+  const isDesktop = useMediaQuery({ minWidth: 1152 });
   return isDesktop ? children : null;
 };
 
 export const Tablet = ({ children }: ResponsiveProps) => {
-  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1151 });
   return isTablet ? children : null;
 };
 
