@@ -16,6 +16,8 @@ import { filterSlang } from '@/utils/markdownCut';
 import TagBlock from '@/components/common/TagBlock';
 import { handleLinkCopy } from '@/utils/handleLinkCopy';
 import { POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
+import { toast } from 'react-toastify';
+import { POST_DELETE_ALERT_TEXT } from '@/constants/alert';
 
 const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) => {
   const { me } = useAuth();
@@ -30,6 +32,7 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
       body: JSON.stringify({ id: me?.id })
     });
     router.push('/');
+    toast.success(POST_DELETE_ALERT_TEXT);
     return;
   };
 
