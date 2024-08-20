@@ -14,6 +14,8 @@ import ConfirmModal from '@/components/modal/ConfirmModal';
 import { archiveReplyType, replyRetouch } from '@/types/posts/archiveDetailTypes';
 import ReplyPageButton from './ReplyPageButton';
 import { cutText, filterSlang } from '@/utils/markdownCut';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import ArchiveDetailSkeleton from './skeleton/ArchiveDetailSkeleton';
 
 const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_user_id: string }) => {
   const { me } = useAuth();
@@ -51,7 +53,7 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
 
   const replyRetouchHandle = async (id: string, user_id: string) => {
     if (!replyRetouch) {
-      toast.error('댓글을 입력해주세요!', {
+      toast.error('댓글을 입력해주세요', {
         autoClose: 2000
       });
       return;
@@ -71,10 +73,6 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
         }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to delete reply');
-      }
-
       return response.json();
     },
     onSuccess: () => {
@@ -87,13 +85,10 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
     commentDelete.mutate({ id, user_id });
   };
 
-  // 대댓글 가져오기
   const {
     fetchNextPage,
     data: reply,
-    isLoading,
-    hasNextPage,
-    error
+    isPending
   } = useInfiniteQuery({
     queryKey: ['archiveCommentReply', comment_id],
     initialPageParam: 0,
@@ -112,31 +107,23 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
       return nextPage * COMMENT_REPLY_PAGE < lastPage.count ? nextPage : undefined;
     }
   });
+  if (isPending) {
+    return <ArchiveDetailSkeleton />;
+  }
 
   const replyCount = reply?.pages[0].count;
   const totalPage = Math.ceil((replyCount as number) / COMMENT_REPLY_PAGE);
 
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
-
-  if (error) {
-    return <div>오류가 발생했습니다. 다시 시도해 주세요.</div>;
-  }
-
-  // MDeditor
   const changeReplyRetouch = (value?: string) => {
     setReplyRetouch(value!);
   };
 
-  // 댓글 수정 버튼
   const toggleReplyEditing = (id: string, reply: string) => {
     setReplyEditor({ [id]: true });
     setReplyEditorToggle({ [id]: !replyEditorToggle[id] });
     setReplyRetouch(reply);
   };
 
-  // 댓글 수정&삭제 케밥
   const toggleEditingOptions = (id: string) => {
     setReplyEditorToggle({ [id]: !replyEditorToggle[id] });
   };
@@ -156,141 +143,290 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
 
   return (
     <div>
-      {reply?.pages[page]?.reply.map((reply) => (
-        <div key={reply.id} className="w-full">
-          {reply.comment_id === comment_id && (
-            <div
-              key={reply.id}
-              className={`flex flex-col justify-between border-l-4 border-[#C7DCF5] border-b-[1px] gap-4 p-6 ${
-                reply.user_id === me?.id ? 'bg-[#F2F7FD]' : 'bg-white'
-              }`}
-            >
-              <div className="flex justify-between ">
-                <div className="flex justify-start items-center gap-4">
-                  <Image
-                    src={reply.user.profile_image}
-                    alt="replyUserImage"
-                    width={48}
-                    height={48}
-                    className="rounded-full "
-                  />
-                  <div className="flex flex-col">
-                    {post_user_id === reply.user_id && (
-                      <p className="text-subtitle2 font-medium px-[12px] py-[4px] text-white bg-main-500 text-center rounded-[4px]">
-                        글쓴이
-                      </p>
-                    )}
-                    <p className="text-subtitle1 font-medium">{reply.user.nickname}</p>
-                    <p className="text-body2 font-regular">{timeForToday(reply.updated_at)}</p>
-                  </div>
-                </div>
-                <div className="relative">
-                  {me?.id === reply.user_id && (
-                    <>
-                      {!replyEditor[reply.id] && (
-                        <div onClick={() => toggleEditingOptions(reply.id)} className="p-4">
-                          <KebabButton />
-                        </div>
-                      )}
-                      {replyEditorToggle[reply.id] && (
-                        <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center border-main-400 bg-white shadow-lg border rounded-lg">
-                          <button
-                            className="h-[44px] w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
-                            onClick={() => toggleReplyEditing(reply.id, reply.reply)}
-                          >
-                            댓글 수정
-                          </button>
-                          <button
-                            className="h-[44px] w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
-                            onClick={() => setConfirmModal((prev) => ({ ...prev, [reply.id]: true }))}
-                          >
-                            댓글 삭제
-                          </button>
-                          {confirmModal[reply.id] && (
-                            <ConfirmModal
-                              isOpen={confirmModal[reply.id]}
-                              onClose={() => setConfirmModal((prev) => ({ ...prev, [reply.id]: false }))}
-                              onConfirm={() => handleReplyDelete(reply.id, reply.user_id)}
-                              message={'댓글을 삭제 하겠습니까?'}
-                            />
-                          )}
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-              {replyEditor[reply.id] ? (
-                <div>
-                  <MDEditor
-                    value={replyRetouch}
-                    onChange={changeReplyRetouch}
-                    preview="edit"
-                    extraCommands={commands.getCommands().filter(() => false)}
-                    commands={commands.getCommands().filter((command) => {
-                      return command.name !== 'image';
-                    })}
-                    textareaProps={{ maxLength: 1000 }}
-                    height={'auto'}
-                  />
-                  <div className="flex justify-end items-end mt-4 gap-6">
-                    <button
-                      onClick={() => handleCancelEdit(reply.id)}
-                      className="bg-neutral-50 text-neutral-100 px-5 py-3 rounded-lg"
-                    >
-                      취소
-                    </button>
-                    <button
-                      onClick={() => replyRetouchHandle(reply.id, reply.user_id)}
-                      className="bg-main-100 text-main-50 px-5 py-3 rounded-lg"
-                    >
-                      수정
-                    </button>
-                  </div>
-                  {confirmModal[reply.id] && (
-                    <ConfirmModal
-                      isOpen={confirmModal[reply.id]}
-                      onClose={() => handleCloseModal(reply.id)}
-                      onConfirm={() => handleConfirmCancelEdit(reply.id)}
-                      message={'댓글 작성을 취소 하시겠습니까?'}
+      <Default>
+        {reply?.pages[page]?.reply.map((reply) => (
+          <div key={reply.id} className="w-full">
+            {reply.comment_id === comment_id && (
+              <div
+                key={reply.id}
+                className={`flex flex-col justify-between border-l-4 border-[#C7DCF5] border-b-[1px] gap-4 p-6 ${
+                  reply.user_id === me?.id ? 'bg-[#F2F7FD]' : 'bg-white'
+                }`}
+              >
+                <div className="flex justify-between ">
+                  <div className="flex justify-start items-center gap-4">
+                    <Image
+                      src={reply.user.profile_image}
+                      alt="replyUserImage"
+                      width={48}
+                      height={48}
+                      className="rounded-full "
                     />
-                  )}
+                    <div className="flex flex-col gap-1">
+                      {post_user_id === reply.user_id && (
+                        <p className="w-[66px] h-[30px] text-subtitle2 font-medium px-[12px] py-[4px] text-white bg-main-500 text-center rounded-[4px]">
+                          글쓴이
+                        </p>
+                      )}
+                      <p className="text-subtitle1 font-medium">{reply.user.nickname}</p>
+                      <p className="text-body2 font-regular text-neutral-400">{timeForToday(reply.updated_at)}</p>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    {me?.id === reply.user_id && (
+                      <>
+                        {!replyEditor[reply.id] && (
+                          <div onClick={() => toggleEditingOptions(reply.id)} className="p-4">
+                            <KebabButton />
+                          </div>
+                        )}
+                        {replyEditorToggle[reply.id] && (
+                          <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center border-main-400 bg-white shadow-lg border rounded-lg">
+                            <button
+                              className="h-[44px] w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
+                              onClick={() => toggleReplyEditing(reply.id, reply.reply)}
+                            >
+                              댓글 수정
+                            </button>
+                            <button
+                              className="h-[44px] w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
+                              onClick={() => setConfirmModal((prev) => ({ ...prev, [reply.id]: true }))}
+                            >
+                              댓글 삭제
+                            </button>
+                            {confirmModal[reply.id] && (
+                              <ConfirmModal
+                                isOpen={confirmModal[reply.id]}
+                                onClose={() => setConfirmModal((prev) => ({ ...prev, [reply.id]: false }))}
+                                onConfirm={() => handleReplyDelete(reply.id, reply.user_id)}
+                                message={'댓글을 삭제 할까요?'}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
-              ) : (
-                <div className="flex flex-col  gap-4">
-                  {replyLength ? (
-                    <p className="text-body1 font-regular text-wrap break-all  ">{filterSlang(reply.reply)}</p>
-                  ) : (
-                    <div className="flex flex-col justify-start items-start">
-                      <p className="text-body1 font-regular text-wrap break-all  ">
-                        {cutText(filterSlang(reply.reply), 140)}
-                      </p>
-                      {reply.reply.length > 145 ? (
+                {replyEditor[reply.id] ? (
+                  <div className="flex flex-col min-h-[200px] mb-6 mx-5 mt-4 gap-4">
+                    <div className="border border-neutral-100 bg-white rounded-xl focus-within:border-main-400">
+                      <MDEditor
+                        value={replyRetouch}
+                        onChange={changeReplyRetouch}
+                        preview="edit"
+                        extraCommands={commands.getCommands().filter(() => false)}
+                        commands={commands.getCommands().filter((command) => {
+                          return command.name !== 'image';
+                        })}
+                        textareaProps={{ maxLength: 1000 }}
+                        height={'auto'}
+                      />
+                    </div>
+                    <div className="flex justify-end items-end mt-4 gap-6">
+                      <button
+                        onClick={() => handleCancelEdit(reply.id)}
+                        className="bg-neutral-50 text-neutral-100 px-5 py-3 rounded-lg"
+                      >
+                        취소
+                      </button>
+                      <button
+                        onClick={() => replyRetouchHandle(reply.id, reply.user_id)}
+                        className="bg-main-100 text-main-50 px-5 py-3 rounded-lg"
+                      >
+                        수정
+                      </button>
+                    </div>
+                    {confirmModal[reply.id] && (
+                      <ConfirmModal
+                        isOpen={confirmModal[reply.id]}
+                        onClose={() => handleCloseModal(reply.id)}
+                        onConfirm={() => handleConfirmCancelEdit(reply.id)}
+                        message={'댓글 작성을 중단 할까요?'}
+                      />
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col  gap-4">
+                    {replyLength ? (
+                      <p className="text-body1 font-regular text-wrap break-all  ">{filterSlang(reply.reply)}</p>
+                    ) : (
+                      <div className="flex flex-col justify-start items-start">
+                        <p className="text-body1 font-regular text-wrap break-all  ">
+                          {cutText(filterSlang(reply.reply), 140)}
+                        </p>
+                        {reply.reply.length > 145 ? (
+                          <button
+                            className="text-subtitle2 font-bold text-neutral-700"
+                            onClick={() => setReplyLength(true)}
+                          >
+                            ...더보기
+                          </button>
+                        ) : null}
+                      </div>
+                    )}
+                    <p className="text-body1 font-regular text-neutral-400">
+                      {reply.created_at.slice(0, 10).replace(/-/g, '.')}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+        <div className=" flex pt-6 gap-4 w-full mt-6 justify-end">
+          <ReplyPageButton
+            page={page}
+            setPage={setPage}
+            totalPage={totalPage}
+            fetchNextPage={fetchNextPage}
+            reply={reply}
+          />
+        </div>
+      </Default>
+      <Mobile>
+        <div className="flex flex-col justify-end items-end mx-5">
+          {reply?.pages[page]?.reply.map((reply) => (
+            <div key={reply.id} className="w-full">
+              {reply.comment_id === comment_id && (
+                <div
+                  key={reply.id}
+                  className={`flex flex-col justify-between border-l-4 border-[#C7DCF5] border-b-[1px] gap-4 p-6 ${
+                    reply.user_id === me?.id ? 'bg-[#F2F7FD]' : 'bg-white'
+                  }`}
+                >
+                  <div className="flex justify-between ">
+                    <div className="flex justify-start items-center gap-4">
+                      <Image
+                        src={reply.user.profile_image}
+                        alt="replyUserImage"
+                        width={36}
+                        height={36}
+                        className="rounded-full "
+                      />
+                      <div className="flex flex-col gap-1">
+                        {post_user_id === reply.user_id && (
+                          <p className="w-[34px] h-[19px] text-white text-subtitle4 font-semibold  bg-main-400 text-center rounded-[4px]">
+                            글쓴이
+                          </p>
+                        )}
+                        <p className="body4-medium-13px text-neutral-900">{reply.user.nickname}</p>
+                        <p className="body4-regular-13px text-neutral-300">{timeForToday(reply.updated_at)}</p>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      {me?.id === reply.user_id && (
+                        <>
+                          {!replyEditor[reply.id] && (
+                            <div onClick={() => toggleEditingOptions(reply.id)} className="p-2">
+                              <KebabButton />
+                            </div>
+                          )}
+                          {replyEditorToggle[reply.id] && (
+                            <div className="w-[82px] right-0 absolute flex flex-col justify-center items-center border-main-400 bg-white shadow-lg border rounded-lg">
+                              <button
+                                className="h-9 w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
+                                onClick={() => toggleReplyEditing(reply.id, reply.reply)}
+                              >
+                                댓글 수정
+                              </button>
+                              <button
+                                className="h-9 w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
+                                onClick={() => setConfirmModal((prev) => ({ ...prev, [reply.id]: true }))}
+                              >
+                                댓글 삭제
+                              </button>
+                              {confirmModal[reply.id] && (
+                                <ConfirmModal
+                                  isOpen={confirmModal[reply.id]}
+                                  onClose={() => setConfirmModal((prev) => ({ ...prev, [reply.id]: false }))}
+                                  onConfirm={() => handleReplyDelete(reply.id, reply.user_id)}
+                                  message={'댓글을 삭제 할까요?'}
+                                />
+                              )}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  {replyEditor[reply.id] ? (
+                    <div className="flex flex-col w-full min-h-[200px] mt-4 gap-4">
+                      <div className="border border-neutral-100 bg-white rounded-xl focus-within:border-main-400">
+                        <MDEditor
+                          value={replyRetouch}
+                          onChange={changeReplyRetouch}
+                          preview="edit"
+                          extraCommands={commands.getCommands().filter(() => false)}
+                          commands={commands.getCommands().filter((command) => {
+                            return command.name !== 'image';
+                          })}
+                          textareaProps={{ maxLength: 1000 }}
+                          height={'auto'}
+                        />
+                      </div>
+                      <div className="flex justify-end items-end mt-4 gap-4">
                         <button
-                          className="text-subtitle2 font-bold text-neutral-700"
-                          onClick={() => setReplyLength(true)}
+                          onClick={() => handleCancelEdit(reply.id)}
+                          className="bg-neutral-50 text-neutral-100  py-2 px-4 rounded-lg"
                         >
-                          ...더보기
+                          취소
                         </button>
-                      ) : null}
+                        <button
+                          onClick={() => replyRetouchHandle(reply.id, reply.user_id)}
+                          className="bg-main-100 text-main-50  py-2 px-4 rounded-lg"
+                        >
+                          수정
+                        </button>
+                      </div>
+                      {confirmModal[reply.id] && (
+                        <ConfirmModal
+                          isOpen={confirmModal[reply.id]}
+                          onClose={() => handleCloseModal(reply.id)}
+                          onConfirm={() => handleConfirmCancelEdit(reply.id)}
+                          message={'댓글 작성을 중단 할까요?'}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-2 w-full text-body3 font-regular whitespace-pre-wrap break-words text-neutral-900">
+                      {replyLength ? (
+                        <p className="text-body1 font-regular text-wrap break-all  ">{filterSlang(reply.reply)}</p>
+                      ) : (
+                        <div className="flex flex-col justify-start items-start">
+                          <p className="text-body1 font-regular text-wrap break-all  ">
+                            {cutText(filterSlang(reply.reply), 140)}
+                          </p>
+                          {reply.reply.length > 145 ? (
+                            <button
+                              className="text-subtitle3 font-bold mt-2 text-neutral-700"
+                              onClick={() => setReplyLength(true)}
+                            >
+                              ...더보기
+                            </button>
+                          ) : null}
+                        </div>
+                      )}
+                      <p className="text-body3 md:text-body1 font-regular text-neutral-400">
+                        {reply.created_at.slice(0, 10).replace(/-/g, '.')}
+                      </p>
                     </div>
                   )}
-                  <p className="text-body1 font-regular text-neutral-400">
-                    {reply.created_at.slice(0, 10).replace(/-/g, '.')}
-                  </p>
                 </div>
               )}
             </div>
-          )}
+          ))}
+          <div className=" flex pt-6 gap-4 w-full mt-6 justify-end">
+            <ReplyPageButton
+              page={page}
+              setPage={setPage}
+              totalPage={totalPage}
+              fetchNextPage={fetchNextPage}
+              reply={reply}
+            />
+          </div>
         </div>
-      ))}
-      <ReplyPageButton
-        page={page}
-        setPage={setPage}
-        totalPage={totalPage}
-        fetchNextPage={fetchNextPage}
-        reply={reply}
-      />
+      </Mobile>
     </div>
   );
 };

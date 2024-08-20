@@ -11,11 +11,18 @@ export async function GET(request: NextRequest) {
   const searchPosts = [];
   if (searchType === 'title') {
     searchPosts.push(
-      supabase.from('archive_posts').select(`*, tag:archive_tags(tag), user:users(*)`).ilike('title', `%${keyword}%`),
-
-      supabase.from('forum_posts').select(`*, tag:forum_tags(tag), user:users(*)`).ilike('title', `%${keyword}%`),
-
-      supabase.from('qna_posts').select(`*, tag:qna_tags(tag), user:users(*)`).ilike('title', `%${keyword}%`)
+      supabase
+        .from('archive_posts')
+        .select(`*, tag:archive_tags(tag), isLiked: archive_likes(user_id), user:users(*)`)
+        .ilike('title', `%${keyword}%`),
+      supabase
+        .from('forum_posts')
+        .select(`*, tag:forum_tags(tag), isLiked: forum_likes(user_id) , user:users(*)`)
+        .ilike('title', `%${keyword}%`),
+      supabase
+        .from('qna_posts')
+        .select(`*, tag:qna_tags(tag), isLiked: qna_likes(user_id) , user:users(*)`)
+        .ilike('title', `%${keyword}%`)
     );
   } else if (searchType === 'tag') {
     const tagFetches = [
@@ -37,11 +44,18 @@ export async function GET(request: NextRequest) {
     ];
 
     searchPosts.push(
-      supabase.from('archive_posts').select(`*, tag:archive_tags(tag), user:users(*)`).in('id', PostIds),
-
-      supabase.from('forum_posts').select(`*, tag:forum_tags(tag), user:users(*)`).in('id', PostIds),
-
-      supabase.from('qna_posts').select(`*, tag:qna_tags(tag), user:users(*)`).in('id', PostIds)
+      supabase
+        .from('archive_posts')
+        .select(`*, tag:archive_tags(tag), isLiked: archive_likes(user_id) , user:users(*)`)
+        .in('id', PostIds),
+      supabase
+        .from('forum_posts')
+        .select(`*, tag:forum_tags(tag), isLiked: forum_likes(user_id) , user:users(*)`)
+        .in('id', PostIds),
+      supabase
+        .from('qna_posts')
+        .select(`*, tag:qna_tags(tag), isLiked: qna_likes(user_id) , user:users(*)`)
+        .in('id', PostIds)
     );
   }
 
@@ -54,9 +68,9 @@ export async function GET(request: NextRequest) {
   const PostIds = [...archivePosts.map((b) => b.id), ...forumPosts.map((b) => b.id), ...qnaPosts.map((b) => b.id)];
 
   const commentLikesCounts = [
-    supabase.from('archive_likes').select('post_id', { count: 'exact' }).in('post_id', PostIds),
-    supabase.from('forum_likes').select('post_id', { count: 'exact' }).in('post_id', PostIds),
-    supabase.from('qna_likes').select('post_id', { count: 'exact' }).in('post_id', PostIds),
+    supabase.from('archive_likes').select('post_id ', { count: 'exact' }).in('post_id', PostIds),
+    supabase.from('forum_likes').select('post_id ', { count: 'exact' }).in('post_id', PostIds),
+    supabase.from('qna_likes').select('post_id ', { count: 'exact' }).in('post_id', PostIds),
     supabase.from('archive_comments').select('post_id', { count: 'exact' }).in('post_id', PostIds),
     supabase.from('forum_comments').select('post_id', { count: 'exact' }).in('post_id', PostIds),
     supabase.from('qna_comments').select('post_id', { count: 'exact' }).in('post_id', PostIds)
@@ -71,7 +85,6 @@ export async function GET(request: NextRequest) {
     qnaCommentCounts
   ] = await Promise.all(commentLikesCounts);
 
-  // 댓글 수 데이터 정리
   const createCommentMap = (Counts: { post_id: string }[]) =>
     Counts.reduce<Record<string, number>>((acc, { post_id }) => ((acc[post_id] = (acc[post_id] || 0) + 1), acc), {});
 
@@ -79,23 +92,25 @@ export async function GET(request: NextRequest) {
     archivePosts: archivePosts.map((post) => ({
       ...post,
       commentsCount: createCommentMap(archiveCommentCounts.data!)[post.id] || 0,
-      likescount: createCommentMap(archiveLikesCounts.data!)[post.id] || 0
+      likesCount: createCommentMap(archiveLikesCounts.data!)[post.id] || 0
     })),
     forumPosts: forumPosts.map((post) => ({
       ...post,
       commentsCount: createCommentMap(forumCommentCounts.data!)[post.id] || 0,
-      likescount: createCommentMap(forumLikesCounts.data!)[post.id] || 0
+      likesCount: createCommentMap(forumLikesCounts.data!)[post.id] || 0
     })),
     qnaPosts: qnaPosts.map((post) => ({
       ...post,
       commentsCount: createCommentMap(qnaCommentCounts.data!)[post.id] || 0,
-      likescount: createCommentMap(qnaLikesCounts.data!)[post.id] || 0
+      likesCount: createCommentMap(qnaLikesCounts.data!)[post.id] || 0
     }))
   };
+
   const searchCombinedData = {
     archive: postData.archivePosts,
     forum: postData.forumPosts,
     qna: postData.qnaPosts
   };
+
   return NextResponse.json(searchCombinedData, { status: 200 });
 }

@@ -2,11 +2,8 @@ import MDEditor from '@uiw/react-md-editor';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TqnaCommentsWithReplyCount } from '@/types/posts/qnaDetailTypes';
-import Share from '@/assets/images/common/Share';
-import AnswerReplies from '../qna-comments/AnswerReplies';
 import LikeButton from '@/components/common/LikeButton';
 import { useAuth } from '@/context/auth.context';
-import AnswerKebobBtn from '../kebob-btn/AnswerKebobBtn';
 import { timeForToday } from '@/utils/timeForToday';
 import BookmarkButton from '@/components/common/BookmarkButton';
 import CustomMDEditor from '@/components/common/CustomMDEditor';
@@ -33,34 +30,56 @@ import {
   POST_EDIT_CANCLE_CONFIRM_TEXT,
   SELECT_ANSWER_CONFIRM_TEXT
 } from '@/constants/confirmModal';
+import KebobBtn from '../kebob-btn/KebobBtn';
+import Replies from '../qna-comments/Replies';
+import Dot from '@/assets/images/common/Dot';
+import CommentBubble from '@/assets/images/common/CommentBubble';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import X from '@/assets/images/common/X';
 
 type QnaAnswerProps = {
+  sortedByLikes?: boolean;
+  setSortedByLikes?: Dispatch<SetStateAction<boolean>>;
   qnaComment: TqnaCommentsWithReplyCount;
   questioner: string;
   index?: number;
   qnaCommentsCount?: number;
-  setQnaCommentsCount: Dispatch<SetStateAction<number>>;
+  title: string;
 };
 
-const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaCommentsCount }: QnaAnswerProps) => {
+const QnaAnswer = ({
+  sortedByLikes,
+  setSortedByLikes,
+  qnaComment,
+  questioner,
+  index,
+  qnaCommentsCount,
+  title
+}: QnaAnswerProps) => {
   const { me } = useAuth();
-  const { postId, seletedComment, setSeletedComment } = useQnaDetailStore();
+  const { postId, selectedComment, setSelectedComment } = useQnaDetailStore();
   const [openAnswerReply, setOpenAnswerReply] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [content, setContent] = useState(qnaComment.comment);
-  const [replyCount, setReplyCount] = useState<number>(qnaComment?.qna_reply[0].count);
   const [tagList, setTagList] = useState<Array<Ttag>>(TAG_LIST);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isCancleModalOpen, setIsCancleModalOpen] = useState<boolean>(false);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
+  const handelLikeSortTrue = () => {
+    index === 0 && setSortedByLikes ? setSortedByLikes(true) : null;
+  };
+  const handelLikeSortFalse = () => {
+    index === 0 && setSortedByLikes ? setSortedByLikes(false) : null;
+  };
+
   const handleReplyClick = () => {
     setOpenAnswerReply((prev) => !prev);
   };
 
   const handleEditClick = () => {
-    if (content.length === 0) return;
+    if (content.trim().length === 0) return;
     setIsEditModalOpen(true);
   };
 
@@ -73,46 +92,42 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
   };
 
   const selectComment = async (): Promise<void> => {
-    const data = await selectMutate();
-    toast.success(SELECT_ANSWER_ALERT_TEXT);
+    setSelectedComment(qnaComment.id);
+    selectMutate();
     await revalidatePostTag(`qna-detail-${postId}`);
-    setSeletedComment(qnaComment.id);
   };
 
   const selectCommentMutation = async () => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/${postId}?comment_id=${qnaComment.id}`,
-      {
-        method: 'PATCH'
-      }
-    );
+    const response = await fetch(`/api/posts/qna-detail/question/${postId}?comment_id=${qnaComment.id}`, {
+      method: 'PATCH'
+    });
     const { data, message } = await response.json();
     if (message) {
       toast.error(message);
     }
     return data;
   };
+
   const { mutate: selectMutate } = useMutation({
     mutationFn: selectCommentMutation,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+      await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      toast.success(SELECT_ANSWER_ALERT_TEXT);
     }
   });
 
   const editComment = async (): Promise<void> => {
-    if (content.length === 0) {
+    if (content.trim().length === 0) {
       toast.error('내용을 입력해주세요!');
       return;
     }
-    const data = await editMutate({
+    editMutate({
       commentId: qnaComment.id,
       comment: content,
       tags: tagList.filter((tag) => tag.selected),
       user_id: me?.id ?? ''
     });
-    toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
-    setIsEdit(false);
-    await revalidatePostTag(`qna-detail-${postId}`);
   };
 
   const editCommentMutation = async ({
@@ -126,7 +141,7 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
     tags: Ttag[];
     user_id: string;
   }) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${commentId}`, {
+    const response = await fetch(`/api/posts/qna-detail/comment/${commentId}`, {
       method: 'PATCH',
       body: JSON.stringify({ comment, tags, user_id })
     });
@@ -134,53 +149,76 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
     if (message) {
       return toast.error(message);
     }
-
     return data;
   };
 
   const { mutate: editMutate } = useMutation({
     mutationFn: editCommentMutation,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+      await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myComments'] });
+      toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
+      setIsEdit(false);
     }
   });
 
   useEffect(() => {
     const commentTagList = qnaComment.qna_comment_tag.map((tag) => tag.tag);
-
     setTagList(
       TAG_LIST.map((TAG) => {
         return commentTagList.includes(TAG.name) ? { ...TAG, selected: !TAG.selected } : TAG;
       })
     );
   }, [qnaComment.qna_comment_tag]);
-
   return (
     <div
-      className={`w-[1204px]  mb-6 px-6 py-12 border ${seletedComment === qnaComment.id ? 'border-main-400' : ''} rounded-2xl overflow-auto`}
+      className={`bg-white md:max-w-[1204px] md:py-12 py-5 md:mb-8 mb-4 px-5 md:px-6 md:border ${selectedComment === qnaComment.id ? 'md:border-main-400' : ''} md:rounded-2xl overflow-auto`}
     >
       <div className="mb-6">
-        {index === 0 ? <div className="w-[1156px] pb-12 text-h4 font-bold">총 {qnaCommentsCount}개의 답변</div> : null}
+        {index === 0 ? (
+          <div className="flex mb-5 md:mb-6 border-b border-neutral-100 pb-5 md:pb-12 md:max-w-[1156px]">
+            <div className=" text-subtitle3 md:text-h4 font-bold ">{qnaCommentsCount}개의 답변</div>
+            <div className="flex gap-3 body-4 text-body4 md:text-subtitle2 font-medium ml-auto">
+              <button
+                className={`underline hover:font-bold ${sortedByLikes ? '' : 'font-bold'}`}
+                onClick={handelLikeSortFalse}
+              >
+                {selectedComment ? '채택순' : '답변순'}
+              </button>
+              <div className="flex items-center">
+                <Dot />
+              </div>
+              <button
+                className={`underline hover:font-bold ${sortedByLikes ? 'font-bold' : ''}`}
+                onClick={handelLikeSortTrue}
+              >
+                좋아요순
+              </button>
+            </div>
+          </div>
+        ) : null}
         <div
-          className={`flex gap-4 items-center ${seletedComment === qnaComment.id ? 'bg-main-50 ' : 'bg-neutral-50 '} py-6 px-5 rounded-2xl`}
+          className={`flex gap-4 items-center ${selectedComment === qnaComment.id ? 'bg-main-50 border border-main-400 md:border-none' : 'bg-neutral-50'}  px-3 py-4 md:py-6 md:px-5 rounded-xl md:rounded-2xl`}
         >
           <div>
             {qnaComment.users.profile_image ? (
-              <div className="relative w-12 h-12">
+              <div className="relative md:w-12 md:h-12 w-9 h-9">
                 <Image
                   src={qnaComment.users?.profile_image ?? ''}
                   alt="Profile"
-                  layout="fill"
-                  objectFit="cover"
+                  fill
                   className="rounded-full"
+                  sizes="48px,48px"
+                  loading="lazy"
                 />
               </div>
             ) : null}
           </div>
 
-          <div className="flex flex-col">
+          <div className={`flex flex-col `}>
             <div className="flex">
-              {seletedComment === qnaComment.id ? (
+              {selectedComment === qnaComment.id ? (
                 <div className="flex gap-2 items-center">
                   <BlueCheck />
                   <Tag intent="primary" label="채택된 답변" />
@@ -192,19 +230,19 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
                 </div>
               )}
             </div>
-            <div className="flex gap-5 h-[42px] items-center">
-              <span className="text-subtitle1 text-neutral-900">{qnaComment.users.nickname}</span>
-              <span className="text-body1 text-neutral-500">{timeForToday(qnaComment.updated_at ?? '')}</span>
+            <div className="flex gap-1 md:gap-2 md:py-2 items-center">
+              <span className="text-body3 md:text-subtitle1 text-neutral-900">{qnaComment.users.nickname}</span>
+              <span>
+                <Dot />
+              </span>
+              <span className="whitespace-nowrap text-body3 md:text-body1 text-neutral-500">
+                {timeForToday(qnaComment.updated_at ?? '')}
+              </span>
             </div>
           </div>
           <div className="ml-auto">
             {me?.id === qnaComment.user_id ? (
-              <AnswerKebobBtn
-                commentId={qnaComment.id}
-                isEdit={isEdit}
-                setIsEdit={setIsEdit}
-                setQnaCommentsCount={setQnaCommentsCount}
-              />
+              <KebobBtn commentId={qnaComment.id} setIsEdit={setIsEdit} category="answer" />
             ) : (
               ''
             )}
@@ -213,45 +251,99 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
       </div>
       <div className=" max-w-[1204px]">
         {isEdit ? (
-          <div className="flex flex-col">
-            <ConfirmModal
-              isOpen={isEditModalOpen}
-              onClose={() => {
-                setIsEditModalOpen(false);
-              }}
-              onConfirm={editComment}
-              message={POST_APPROVE_CONFIRM_TEXT}
-            />
+          <>
+            <Default>
+              <div className="flex flex-col">
+                <ConfirmModal
+                  isOpen={isEditModalOpen}
+                  onClose={() => {
+                    setIsEditModalOpen(false);
+                  }}
+                  onConfirm={editComment}
+                  message={POST_APPROVE_CONFIRM_TEXT}
+                />
 
-            <ConfirmModal
-              isOpen={isCancleModalOpen}
-              onClose={() => {
-                setIsCancleModalOpen(false);
-              }}
-              onConfirm={() => {
-                toast.success(QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT);
-                setIsEdit(false);
-                setContent(qnaComment.comment);
-              }}
-              message={POST_EDIT_CANCLE_CONFIRM_TEXT}
-            />
-            <div className="border border-neutral-100 bg-white rounded-xl">
-              <CustomMDEditor content={content} setContent={setContent} />
-            </div>
-            <div className="h-[182px] mt-12 flex flex-col gap-4">
-              <h5 className="text-h5 font-bold text-neutral-900">태그</h5>
-              <SelectTagInput tagList={tagList} setTagList={setTagList} />
-            </div>
-            <div className="flex gap-4 ml-auto">
-              <Chip intent={'gray'} size={'medium'} label="취소하기" onClick={handleCancleClick} />
-              <Chip
-                intent={`${content.length === 0 ? 'secondary_disabled' : 'secondary'}`}
-                size={'medium'}
-                label="수정하기"
-                onClick={handleEditClick}
-              />
-            </div>
-          </div>
+                <ConfirmModal
+                  isOpen={isCancleModalOpen}
+                  onClose={() => {
+                    setIsCancleModalOpen(false);
+                  }}
+                  onConfirm={() => {
+                    toast.success(QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT);
+                    setIsEdit(false);
+                    setContent(qnaComment.comment);
+                  }}
+                  message={POST_EDIT_CANCLE_CONFIRM_TEXT}
+                />
+                <div className="border border-neutral-100 bg-white rounded-xl">
+                  <CustomMDEditor content={content} setContent={setContent} />
+                </div>
+                <div className="h-[182px] mt-12 flex flex-col gap-2 md:gap-4">
+                  <h5 className="text-subtitle3 md:text-h5 font-bold text-neutral-900">태그</h5>
+                  <SelectTagInput tagList={tagList} setTagList={setTagList} />
+                </div>
+                <div className="flex gap-4 ml-auto">
+                  <Chip intent={'gray'} size={'medium'} label="취소하기" onClick={handleCancleClick} />
+                  <Chip
+                    intent={`${content.trim().length === 0 ? 'secondary_disabled' : 'secondary'}`}
+                    size={'medium'}
+                    label="수정하기"
+                    onClick={handleEditClick}
+                  />
+                </div>
+              </div>
+            </Default>
+            <Mobile>
+              <div className="bg-white w-full h-full fixed z-[1000] px-5 py-5 left-0 top-0 overflow-auto">
+                <ConfirmModal
+                  isOpen={isEditModalOpen}
+                  onClose={() => {
+                    setIsEditModalOpen(false);
+                  }}
+                  onConfirm={editComment}
+                  message={POST_APPROVE_CONFIRM_TEXT}
+                />
+
+                <ConfirmModal
+                  isOpen={isCancleModalOpen}
+                  onClose={() => {
+                    setIsCancleModalOpen(false);
+                  }}
+                  onConfirm={() => {
+                    toast.success(QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT);
+                    setIsEdit(false);
+                    setContent(qnaComment.comment);
+                  }}
+                  message={POST_EDIT_CANCLE_CONFIRM_TEXT}
+                />
+                <div className="flex h-[51px] justify-between items-center ">
+                  <button onClick={handleCancleClick}>
+                    <X stroke="#757575" />
+                  </button>
+                  <div className="max-h-[35px] ">
+                    {content.trim().length === 0 ? (
+                      <Chip intent={'primary_disabled'} size="medium" label="수정하기" />
+                    ) : (
+                      <Chip intent={'primary'} size="medium" label="수정하기" onClick={handleEditClick} />
+                    )}
+                  </div>
+                </div>
+                <div className="text-subtitle2 flex gap-2 max-h-[60px] mb-5 py-2 border-y">
+                  <span className=" text-main-400 font-regular ">Q.</span>
+                  <h2 className=" text-neutral-900 font-medium inline max-h-[44px] overflow-hidden">
+                    {filterSlang(title ?? '')}
+                  </h2>
+                </div>
+                <div className="border rounded-2xl border-neutral-100">
+                  <CustomMDEditor content={content} setContent={setContent} />
+                </div>
+                <div className="min-w-full whitespace-nowrap h-[182px] mt-12 flex flex-col gap-2">
+                  <h5 className="text-subtitle3 font-bold text-neutral-900">태그</h5>
+                  <SelectTagInput tagList={tagList} setTagList={setTagList} />
+                </div>
+              </div>
+            </Mobile>
+          </>
         ) : (
           <MDEditor.Markdown
             style={{
@@ -265,35 +357,46 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
             source={filterSlang(qnaComment.comment)}
           />
         )}
-        <div className={`flex gap-[6px] my-6 ${isEdit ? 'hidden' : ''}`}>
+        <div className={`flex flex-wrap gap-[6px] my-6 ${isEdit ? 'hidden' : ''}`}>
           {qnaComment.qna_comment_tag.map((tag) => (
-            <TagBlock key={'answer' + tag} tag={tag.tag} />
+            <TagBlock key={'answer' + tag.tag} tag={tag.tag} />
           ))}
         </div>
       </div>
       <div className="flex justify-between  h-[59px] items-center">
-        <div className="flex gap-6 items-center ">
-          <span className="text-body1 text-neutral-400">{qnaComment.created_at?.slice(0, 10)}</span>
-          <button className="flex gap-1 ">
-            <LikeButton id={qnaComment.id} type={'qnaComment'} />
-          </button>
-          <button className="flex gap-1 ">
-            <BookmarkButton id={qnaComment.id} type={'qnaComment'} />
-          </button>
-          <button className="flex gap-1 ">
-            <Share />
-          </button>
-          <button className="flex gap-1" onClick={handleReplyClick}>
-            {replyCount !== 0 && openAnswerReply ? (
-              <div className="text-main-400 text-subtitle1 font-medium">댓글 모두 숨기기</div>
-            ) : replyCount !== 0 ? (
-              <div className="text-main-400 text-subtitle1 font-medium">{replyCount}개의 댓글</div>
-            ) : openAnswerReply ? (
-              <div className="text-main-400 text-subtitle1 font-medium">댓글 쓰기</div>
-            ) : (
-              <div className="text-neutral-400 text-subtitle1 font-medium">댓글 쓰기</div>
-            )}
-          </button>
+        <div className={`w-full flex flex-col md:flex-row gap-6 md:items-center `}>
+          <span className="whitespace-nowrap text-body3 md:text-body1 text-neutral-400 md:min-w-24">
+            {qnaComment.created_at?.slice(0, 10).split('-').join('. ')}
+          </span>
+          <div className={`w-full flex gap-2 md:gap-4 h-10 md:h-12 items-center`}>
+            <div className="flex gap-1 ">
+              <LikeButton id={qnaComment.id} type={'qnaComment'} />
+            </div>
+            <div className="flex gap-1 ">
+              <BookmarkButton id={qnaComment.id} type={'qnaComment'} />
+            </div>
+            <button
+              className={`flex gap-1 md:text-subtitle1 font-medium text-body3 ${me?.id === questioner && !selectedComment ? 'mr-auto ml-0' : 'ml-auto'}`}
+              onClick={handleReplyClick}
+            >
+              {qnaComment?.qna_reply[0].count !== 0 && openAnswerReply ? (
+                <div className="text-main-400">댓글 모두 숨기기</div>
+              ) : qnaComment?.qna_reply[0].count !== 0 ? (
+                <div className="flex gap-[2px] md:gap-1 text-neutral-400">
+                  <CommentBubble /> {qnaComment?.qna_reply[0].count}
+                </div>
+              ) : openAnswerReply ? (
+                <div className="text-main-400">댓글 쓰기</div>
+              ) : (
+                <div className="text-neutral-400 ">댓글 쓰기</div>
+              )}
+            </button>
+            {me?.id === questioner && !selectedComment ? (
+              <button onClick={handelSelectClick}>
+                <SelectAnswer />
+              </button>
+            ) : null}
+          </div>
         </div>
         <ConfirmModal
           isOpen={isSelectModalOpen}
@@ -303,18 +406,8 @@ const QnaAnswer = ({ qnaComment, questioner, index, qnaCommentsCount, setQnaComm
           onConfirm={selectComment}
           message={SELECT_ANSWER_CONFIRM_TEXT}
         />
-        {me?.id === questioner && seletedComment !== qnaComment.id ? (
-          <button
-            className="w-[134px] h-[48px] bg-main-50 rounded-md text-main-400 text-subtitle1 font-bold"
-            onClick={handelSelectClick}
-          >
-            <SelectAnswer />
-          </button>
-        ) : null}
       </div>
-      {openAnswerReply ? (
-        <AnswerReplies commentId={qnaComment.id} replyCount={replyCount} setReplyCount={setReplyCount} />
-      ) : null}
+      {openAnswerReply ? <Replies commentId={qnaComment.id} replyCount={qnaComment?.qna_reply[0].count} /> : null}
     </div>
   );
 };

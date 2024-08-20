@@ -18,9 +18,12 @@ import { TAG_LIST } from '@/constants/tags';
 import { uploadThumbnail } from '../../_utils/thumbnail';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
 import { POST_ALERT_TEXT } from '@/constants/alert';
+import MobileBackIconBlack from '@/assets/images/upsert_image/MobileBackIconBlack';
+import { useQueryClient } from '@tanstack/react-query';
 
 const PostingForm = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { categoryGroup, subCategory, clearCategory } = usePostingCategoryStore();
   const { me: user } = useAuth();
   const [title, setTitle] = useState<string>('');
@@ -84,7 +87,6 @@ const PostingForm = () => {
       body: JSON.stringify({ ...postData, thumbnailUrl })
     });
     const { data, message } = await response.json();
-
     const tagsArray = tagList.filter((tag) => tag.selected === true);
     if (tagsArray.length > 0 && !!data[0].id) {
       const response = await fetch(`/api/upsert/tags/${data[0].id}`, {
@@ -92,6 +94,18 @@ const PostingForm = () => {
         body: JSON.stringify({ user_id: user.id, tags: tagsArray, category: data[0].category })
       });
     }
+
+    if (category === 'forum') {
+      await queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+    } else if (category === 'qna') {
+      await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+    } else if (category === 'archive') {
+      await queryClient.invalidateQueries({ queryKey: ['archivePosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+    }
+
     router.push(`/${category}/${data[0].id}`);
     toast.success(POST_ALERT_TEXT);
     clearCategory();
@@ -103,20 +117,16 @@ const PostingForm = () => {
     router.back();
   };
 
-  // const [isValidCategory, setIsValidCategory] = useState<boolean>(false);
-  // const [isValidContent, setIsValidContent] = useState<boolean>(false);
-  // const [isValidTitle, setIsValidTitle] = useState<boolean>(false);
-  // useEffect(() => {
-  //   return () => clearCategory();
-  // }, []);
-
   return (
-    <div className="w-[1204px] mx-auto flex flex-col gap-y-5 max-h-screen">
-      <div className="mb-4" onClick={handleBackClick}>
+    <div className="max-w-full px-5 md:px-0 md:max-w-[1204px] mx-auto flex flex-col  max-h-screen ">
+      <div className="w-6 h-6 mb-6 md:hidden" onClick={handleBackClick}>
+        <MobileBackIconBlack />
+      </div>
+      <div className="w-9 h-9 md:mb-14 hidden md:block" onClick={handleBackClick}>
         <BackArrowIcon />
       </div>
       <UpsertTheme />
-      <form className="flex flex-col gap-y-10 h-full">
+      <form className="w-full md:max-w-full flex flex-col gap-y-10 h-full ">
         <PostingCategoryBox />
         <FormTitleInput title={title} setTitle={setTitle} />
         <FormTagInput tagList={tagList} setTagList={setTagList} />

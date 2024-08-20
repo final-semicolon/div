@@ -9,7 +9,7 @@ type FormTagInputProps = {
 const FormTagInput = ({ tagList, setTagList }: FormTagInputProps) => {
   return (
     <div>
-      <label className="block mb-2 text-gray-900 text-h5 font-bold" htmlFor="tag">
+      <label className="block mb-2 text-gray-900 text-subtitle3 md:text-h5 font-bold" htmlFor="tag">
         태그
       </label>
       <SelectTagInput tagList={tagList} setTagList={setTagList} />

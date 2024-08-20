@@ -5,12 +5,14 @@ import UnfilledLike from '@/assets/images/like/UnfilledLike';
 import { useAuth } from '@/context/auth.context';
 import { useLike } from '@/hooks/like/useLike';
 import { LikeButtonProps, LikeType } from '@/types/buttons/like';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const LikeButton = ({ id, type }: LikeButtonProps) => {
   const { me } = useAuth();
   const { likes, setLikes } = useLike();
+  const queryClient = useQueryClient();
 
   const likeMap: { [key in LikeType]: string[] } = {
     forum: likes.forumLikes,
@@ -67,6 +69,9 @@ const LikeButton = ({ id, type }: LikeButtonProps) => {
         // console.error('likebutton', errorResult);
         throw new Error('Failed to update like');
       }
+
+      queryClient.invalidateQueries({ queryKey: ['likesComments'] });
+      queryClient.invalidateQueries({ queryKey: ['likesPosts'] });
     } catch (error) {
       // console.error('like 2', error);
       setLikes(previousLikes);
@@ -75,8 +80,8 @@ const LikeButton = ({ id, type }: LikeButtonProps) => {
   };
   return (
     <button onClick={handleLike} className="flex items-center">
-      {isLiked ? <FilledLike /> : <UnfilledLike />}{' '}
-      <span className="ml-1 text-subtitle1 font-medium text-neutral-400">{likeCount}</span>
+      {isLiked ? <FilledLike /> : <UnfilledLike />}
+      <span className="ml-1 text-body3 md:text-subtitle1 font-medium text-neutral-400">{likeCount}</span>
     </button>
   );
 };

@@ -5,12 +5,13 @@ import UnfilledBookmark from '@/assets/images/bookmark/UnfilledBookmark';
 import { useAuth } from '@/context/auth.context';
 import { useBookmark } from '@/hooks/bookmark/useBookmark';
 import { BookmarkButtonProps, BookmarkType } from '@/types/buttons/bookmark';
-import React, { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 const BookmarkButton = ({ id, type }: BookmarkButtonProps) => {
   const { me } = useAuth();
   const { bookmarks, setBookmarks } = useBookmark();
+  const queryClient = useQueryClient();
 
   const bookmarksMap: { [key in BookmarkType]: string[] } = {
     forum: bookmarks.forumBookmarks,
@@ -41,12 +42,6 @@ const BookmarkButton = ({ id, type }: BookmarkButtonProps) => {
     }));
 
     try {
-      // console.log('Sending request:', {
-      //   user_id: me.id,
-      //   post_id: type.includes('Comment') ? undefined : id,
-      //   comment_id: type.includes('Comment') ? id : undefined,
-      //   type
-      // });
       const response = await fetch('/api/common/bookmark', {
         method: isBookmarked ? 'DELETE' : 'POST',
         headers: {
@@ -65,16 +60,14 @@ const BookmarkButton = ({ id, type }: BookmarkButtonProps) => {
         // console.error('Server response error:', errorResult);
         throw new Error('Failed to update bookmark');
       }
+      queryClient.invalidateQueries({ queryKey: ['bookmarksComments'] });
+      queryClient.invalidateQueries({ queryKey: ['bookmarksPosts'] });
     } catch (error) {
       // console.error('bookmark 2', error);
       setBookmarks(previousBookmarks);
     }
   };
-  return (
-    <button onClick={handleBookmark}>
-      {isBookmarked ? <FilledBookmark /> : <UnfilledBookmark width={24} height={24} />}
-    </button>
-  );
+  return <button onClick={handleBookmark}>{isBookmarked ? <FilledBookmark /> : <UnfilledBookmark />}</button>;
 };
 
 export default BookmarkButton;

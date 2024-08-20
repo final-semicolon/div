@@ -5,8 +5,8 @@ const Tooltip = () => {
         <path
           d="M158.188 16.5026L142.951 7.81954C139.882 6.07057 136.118 6.07057 133.049 7.81954L117.812 16.5026H32.4C17.8197 16.5026 6 23.9947 6 33.2366V102.264C6 111.506 17.8197 118.998 32.4 118.998H243.6C258.18 118.998 270 111.506 270 102.264V33.2366C270 23.9947 258.18 16.5026 243.6 16.5026H158.188Z"
           fill="#EEEDFC"
-          fill-opacity="0.95"
-          shape-rendering="crispEdges"
+          fillOpacity="0.95"
+          shapeRendering="crispEdges"
         />
       </g>
       <path
@@ -21,9 +21,9 @@ const Tooltip = () => {
           width="280"
           height="128.492"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"

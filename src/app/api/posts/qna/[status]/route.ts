@@ -2,15 +2,15 @@ import { createClient } from '@/supabase/server';
 import dayjs from 'dayjs';
 import { NextRequest, NextResponse } from 'next/server';
 
-const POSTS_PER_PAGE = 6;
-
-const getSelectedQnaPosts = async (page: number, limit: number) => {
+const getSelectedQnaPosts = async (page: number) => {
   const supabase = createClient();
+  const limit = 5;
 
   const { data: posts, error } = await supabase
     .from('qna_posts')
     .select(
-      `*, qna_like: qna_likes(count), qna_comment:qna_comments!qna_comments_post_id_fkey(count), qna_reply:qna_post_reply(count),qna_tags(*), user:users(*)`
+      `*, qna_like: qna_likes(count), qna_comment:qna_comments!qna_comments_post_id_fkey(count), qna_reply:qna_post_reply(count),qna_tags(*), user:users(*), selected_comment_data: selected_comment(*, qna_comment_likes(count),
+        qna_reply(count),user: users(*))`
     )
     .not('selected_comment', 'is', null)
     .order('updated_at', { ascending: false })
@@ -36,8 +36,9 @@ const getSelectedQnaPosts = async (page: number, limit: number) => {
   return NextResponse.json({ data: posts, count, nextPage: posts.length === limit ? page + 1 : null });
 };
 
-const getWaitingQnaPosts = async (page: number, limit: number) => {
+const getWaitingQnaPosts = async (page: number) => {
   const supabase = createClient();
+  const limit = 5;
 
   const { data: posts, error } = await supabase
     .from('qna_posts')
@@ -91,7 +92,7 @@ const getPopularQnaPost = async (page: number, limit: number) => {
 
   return NextResponse.json({
     data: paginatedPosts,
-    count: 18,
+    count: 30,
     nextPage: paginatedPosts.length === limit ? page + 1 : null
   });
 };
@@ -99,13 +100,13 @@ const getPopularQnaPost = async (page: number, limit: number) => {
 export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get('page') || '0');
-  const limit = parseInt(searchParams.get('limit') || String(POSTS_PER_PAGE));
+  const limit = parseInt(searchParams.get('limit') || '6');
   const status = req.nextUrl.pathname.split('/').pop();
 
   if (status === 'selected') {
-    return await getSelectedQnaPosts(page, limit);
+    return await getSelectedQnaPosts(page);
   } else if (status === 'waiting') {
-    return await getWaitingQnaPosts(page, limit);
+    return await getWaitingQnaPosts(page);
   } else if (status === 'popular') {
     return await getPopularQnaPost(page, limit);
   } else {

@@ -22,7 +22,7 @@ const SettingsList = ({ nickname, email, info, onNicknameUpdate, onInfoUpdate }:
   const [isInfoModalOpen, setInfoModalOpen] = useState<boolean>(false);
 
   return (
-    <div className="w-[588px]">
+    <div className="md:max-w-[588px] md:min-w-[500px] min-w-[335px] ">
       <SettingItem label="이메일" value={email} />
       <OAuthLoginStatus />
       <p className="border-b border-neutral-50 " />
@@ -33,7 +33,6 @@ const SettingsList = ({ nickname, email, info, onNicknameUpdate, onInfoUpdate }:
       <NicknameModal
         isOpen={isNicknameModalOpen}
         onClose={() => setNicknameModalOpen(false)}
-        currentNickname={nickname}
         onNicknameUpdate={onNicknameUpdate}
       />
       <InfoModal

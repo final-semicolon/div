@@ -36,7 +36,7 @@ const CheckCurrentPassword = ({ onValidationChange }: CheckCurrentPasswordProps)
         setValidationMessage(PASSWORD.MISMATCH);
       }
     } catch (error) {
-      console.error('서버 오류:', error);
+      // console.error('서버 오류:', error);
     }
   };
 

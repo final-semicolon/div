@@ -1,5 +1,7 @@
 'use client';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
+import Chip from '@/components/common/Chip';
+import { COMMENT_POST_ALERT_TEXT } from '@/constants/alert';
 import { useAuth } from '@/context/auth.context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import MDEditor, { commands } from '@uiw/react-md-editor';
@@ -26,9 +28,11 @@ const InputComments = () => {
         body: JSON.stringify({ userComment })
       });
       const result = await response.json();
+      return result;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['forumComments'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['forumComments', params.id] });
+      await queryClient.invalidateQueries({ queryKey: ['myComments'] });
       if (comment) {
         setComment('');
         revalidatePostTag(`forum-detail-${params.id}`);
@@ -36,8 +40,9 @@ const InputComments = () => {
     }
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  //댓글 등록 onClick 함수
+  const handleCommentClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e?.preventDefault();
 
     const forumComment = { user_id: me?.id, post_id: params.id, comment };
 
@@ -47,28 +52,22 @@ const InputComments = () => {
       });
       return;
     }
-    if (comment === '') {
-      toast.error('댓글을 입력해주세요!', {
-        autoClose: 2000
-      });
-      return;
-    }
 
-    toast.success('댓글이 입력되었습니다.', { autoClose: 1500 });
+    toast.success(COMMENT_POST_ALERT_TEXT);
     handleComment.mutate(forumComment);
   };
 
   return (
-    <div className={`flex ${me ? 'justify-start' : 'justify-center'} items-center  py-6`}>
-      <form className=" w-full" onSubmit={handleSubmit}>
-        <div className=" flex justify-center items-center gap-6" data-color-mode="light">
+    <div className={`flex ${me ? 'justify-start' : 'justify-center'} items-center px-5 pb-5 md:pb-0 md:px-0  md:py-6`}>
+      <div className=" w-full">
+        <div className=" flex justify-center items-center gap-6">
           {me && (
             <Image
               src={userData?.profile_image ?? ''}
               alt="user profile image"
               width={48}
               height={48}
-              className=" rounded-full"
+              className=" rounded-full hidden md:block md:w-12 md:h-12 "
             />
           )}
           <MDEditor
@@ -83,30 +82,32 @@ const InputComments = () => {
               placeholder: `${me ? '자유롭게 소통해 보세요!' : '로그인 후 자유롭게 소통해 보세요!'}`,
               maxLength: 1000
             }}
-            className="w-full border border-neutral-100  first-of-type:rounded-xl focus-within:border-main-400"
+            className="w-full border  border-neutral-100  first-of-type:rounded-xl focus-within:border-main-400"
           />
         </div>
         {me && (
           <div className=" flex justify-end items-end gap-6 mt-6">
-            <button
-              type="button"
-              disabled={!comment}
-              className={`${comment ? 'bg-neutral-50 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-500' : 'bg-neutral-50 text-neutral-100'}   px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-              onClick={() => {
-                setComment('');
-              }}
-            >
-              취소
-            </button>
-            <button
-              className={`${comment ? 'bg-main-400 text-white hover:bg-main-500 hover:text-white' : 'bg-main-100 text-main-50'}  px-5 py-3 rounded-lg text-subtitle1 font-bold`}
-              disabled={!comment}
-            >
-              등록
-            </button>
+            {comment === '' ? (
+              <>
+                <Chip intent="gray_disabled" size="medium" label="취소" />
+                <Chip intent="primary_disabled" size="medium" label="등록" />
+              </>
+            ) : (
+              <>
+                <Chip
+                  intent="gray"
+                  size="medium"
+                  label="취소"
+                  onClick={() => {
+                    setComment('');
+                  }}
+                />
+                <Chip intent="primary" size="medium" label="등록" onClick={handleCommentClick} />
+              </>
+            )}
           </div>
         )}
-      </form>
+      </div>
     </div>
   );
 };

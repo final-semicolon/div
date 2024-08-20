@@ -12,13 +12,15 @@ import { useAuth } from '@/context/auth.context';
 import BackArrowIcon from '@/assets/images/upsert_image/BackArrowIcon';
 import ThumbNailBox from '../ThumbNailBox';
 import { usePostingCategoryStore } from '@/store/postingCategoryStore';
-import PostingCategory from './editform/categorybox/PostingCategory';
+import EditCategoryBox from './editform/categorybox/EditCategoryBox';
 import { TAG_LIST } from '@/constants/tags';
 import { revalidatePostTag } from '@/actions/revalidatePostTag';
 import { deleteThumbnail, patchThumbnail, uploadThumbnail } from '../../_utils/thumbnail';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
-import { EDIT_SUCCESS_MASSAGE } from '@/constants/upsert.api';
 import { POST_EDIT_ALERT_TEXT } from '@/constants/alert';
+import MobileBackIconBlack from '@/assets/images/upsert_image/MobileBackIconBlack';
+import { useQueryClient } from '@tanstack/react-query';
+import { revalidate } from '@/actions/revalidate';
 
 type UpsertFormProps = {
   data: TeditForumData | TeditQnaData | TeditArchiveData;
@@ -27,6 +29,7 @@ type UpsertFormProps = {
 
 const EditForm = ({ data, path }: UpsertFormProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { me: user } = useAuth();
   const { categoryGroup, subCategory, setCategoryGroup, setSubCategory, clearCategory } = usePostingCategoryStore();
   const [title, setTitle] = useState<string>('');
@@ -100,8 +103,21 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
       return;
     }
 
+    if (category === 'forum') {
+      await queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+      await revalidatePostTag(`forum-detail-${data[0].id}`);
+    } else if (category === 'qna') {
+      await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+      await revalidatePostTag(`qna-detail-${data[0].id}`);
+    } else if (category === 'archive') {
+      await queryClient.invalidateQueries({ queryKey: ['archivePosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+      await revalidate('/', 'layout');
+    }
     await revalidatePostTag(`${path}`);
-    router.push(`/${category}`);
+    router.push(`/${category}/${data[0].id}`);
     toast.success(POST_EDIT_ALERT_TEXT);
     clearAllValid();
     return;
@@ -167,12 +183,15 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
   }, [tags]);
 
   return (
-    <div className="w-[1204px] mx-auto flex flex-col gap-y-5 max-h-screen">
-      <div className="mb-4" onClick={handleBackClick}>
+    <div className="max-w-full px-5 md:px-0 md:max-w-[1204px] mx-auto flex flex-col  max-h-screen ">
+      <div className="w-6 h-6 mb-6 md:hidden" onClick={handleBackClick}>
+        <MobileBackIconBlack />
+      </div>
+      <div className="w-9 h-9 md:mb-14 hidden md:block" onClick={handleBackClick}>
         <BackArrowIcon />
       </div>
       <form className="flex flex-col gap-y-10 h-full">
-        <PostingCategory />
+        <EditCategoryBox />
         <FormTitleInput title={title} setTitle={setTitle} />
         <FormTagInput tagList={tagList} setTagList={setTagList} />
         <ThumbNailBox

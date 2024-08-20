@@ -15,6 +15,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { includes } from 'lodash';
 
 type ThumbNailBoxProps = {
   prevUrl?: string | null;
@@ -35,14 +36,14 @@ const ThumbNailBox = ({ prevUrl, setisThumbnailUrlDeleted, setThumbnail }: Thumb
     else if (!event.target.files) return;
     else if (event.target.files[0].name === '') return;
     setIsLoading(true);
-    if (event.target.files[0].size > MAX_SIZE) {
+    if (!event.target.files[0].type.includes('image')) {
+      setIsValidSize(false);
+      setIsLoading(false);
+      return;
+    } else if (event.target.files[0].size > MAX_SIZE) {
       setIsValidSize(false);
       setIsLoading(false);
       setThumbnail(undefined);
-      return;
-    } else if (!event.target.files[0].type.includes('image')) {
-      setIsValidSize(false);
-      setIsLoading(false);
       return;
     }
     setIsValidSize(true);
@@ -73,6 +74,12 @@ const ThumbNailBox = ({ prevUrl, setisThumbnailUrlDeleted, setThumbnail }: Thumb
     event.preventDefault();
     if (!event.dataTransfer) {
       return;
+    }
+    setIsLoading(true);
+    if (!event.dataTransfer.files[0].type.includes('image')) {
+      setIsValidSize(false);
+      setIsLoading(false);
+      return;
     } else if (event.dataTransfer.files[0].size > MAX_SIZE) {
       setIsValidSize(false);
       setIsLoading(false);
@@ -82,7 +89,6 @@ const ThumbNailBox = ({ prevUrl, setisThumbnailUrlDeleted, setThumbnail }: Thumb
       setIsLoading(false);
       return;
     }
-    setIsLoading(true);
     setIsValidSize(true);
 
     if (event.dataTransfer.files.length > 0) {
@@ -121,17 +127,22 @@ const ThumbNailBox = ({ prevUrl, setisThumbnailUrlDeleted, setThumbnail }: Thumb
   return (
     <div className="flex flex-col">
       <input className="hidden" type="file" name="thumbnail" ref={thumbnailInput} onChange={handleThumbnailChange} />
-      <h5 className={`block mb-2 ${isValidSize ? 'text-gray-900' : 'text-red'}  text-h5 font-bold `}>썸네일</h5>
+      <h5 className={`block mb-2 ${isValidSize ? 'text-gray-900' : 'text-red'} text-subtitle3 md:text-h5 font-bold `}>
+        썸네일
+      </h5>
       <div
-        className={`w-[748px] h-[550px] ${isValidSize ? 'custom-dashed-border' : 'custom-dashed-border-invalid'} shadow-xl flex flex-col items-center justify-center text-neutral-400 rounded-lg ]`}
+        className={`p-5 md:p-6 h-[304px] md:max-w-[748px] md:h-[550px] ${isValidSize ? 'custom-dashed-border' : 'custom-dashed-border-invalid'} shadow-xl flex flex-col gap-4 md:gap-10 items-center justify-center text-neutral-400 rounded-lg ]`}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        {isLoading ? <div className="w-[748px] h-[550px] bg-white opacity-50 absolute z-10"></div> : null}
+        {isLoading ? (
+          <div className="h-[304px] md:max-w-[748px] md:h-[550px] bg-white opacity-50 absolute z-40"></div>
+        ) : null}
         {thumbnailPreview && isValidSize ? (
           <>
+            <div className="hidden w-full md:text-h5 font-bold text-left text-neutral-900 md:block">미리보기</div>
             <Image
-              className="w-[700px] h-[332px] object-cover rounded-lg mb-10"
+              className=" w-full h-[180px]  md:h-[332px] object-cover rounded-lg "
               src={thumbnailPreview}
               alt="썸네일 미리보기"
               width={700}
@@ -141,9 +152,11 @@ const ThumbNailBox = ({ prevUrl, setisThumbnailUrlDeleted, setThumbnail }: Thumb
                 setIsLoading(false);
               }}
             />
-            <div className={`w-[700px] h-[56px]  border flex justify-between items-center px-5 py-2 rounded `}>
+            <div
+              className={`max-h-[52px] w-full md:max-h-[56px] mt-4 border flex justify-between items-center px-5 py-5 md:py-2 rounded `}
+            >
               <div className="h-[38px] flex items-center gap-[6px] rounded-lg  text-center content-center bg-neutral-50 px-2 py-1 z-20 ">
-                <span className="text-neutral-700 text-subtitle2 font-medium"> {thumbnailName}</span>
+                <span className="text-neutral-700 text-subtitle3 md:text-subtitle2 font-medium"> {thumbnailName}</span>
                 {isLoading ? (
                   <ClipLoader size={20} cssOverride={{ borderWidth: '3px' }} color="#423EDF" speedMultiplier={0.85} />
                 ) : (
@@ -166,11 +179,11 @@ const ThumbNailBox = ({ prevUrl, setisThumbnailUrlDeleted, setThumbnail }: Thumb
             <div className=" flex justify-center text-center">
               <SadIcon />
             </div>
-            <div className="text-center my-10 text-body1 text-neutral-900 font-regular">
+            <div className="text-center md:my-10 text-body3 md:text-body1 text-neutral-900 font-regular">
               <p>이 파일을 가져올 수 없어요.</p>
               <p>{`(50MB 이하의 이미지 파일만 가능해요)`}</p>
             </div>
-            <div className="flex gap-10">
+            <div className="flex gap-6 md:gap-10">
               <Chip type="button" intent={'gray'} size={'large'} label="취소" onClick={handleButtonClick} />
               <Chip type="button" intent={'primary'} size={'large'} label="재업로드" onClick={handleInputClick} />
             </div>
@@ -180,7 +193,7 @@ const ThumbNailBox = ({ prevUrl, setisThumbnailUrlDeleted, setThumbnail }: Thumb
             <div className={`flex justify-center text-center`}>
               <ImageIcon />
             </div>
-            <div className="text-center my-10">
+            <div className="text-center text-body3 md:text-body1 my-4 md:my-10">
               <p>썸네일로 설정할 이미지를 불러오세요.</p>
               <p>{`(50MB 이하의 이미지 파일)`}</p>
             </div>

@@ -15,20 +15,27 @@ import ConfirmModal from '@/components/modal/ConfirmModal';
 import { filterSlang } from '@/utils/markdownCut';
 import TagBlock from '@/components/common/TagBlock';
 import { handleLinkCopy } from '@/utils/handleLinkCopy';
+import { POST_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
+import { toast } from 'react-toastify';
+import { POST_DELETE_ALERT_TEXT } from '@/constants/alert';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) => {
   const { me } = useAuth();
   const param = useParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [kebobToggle, setKebobToggle] = useState<boolean>(false);
   const [retouchPostModal, setRetouchPostModal] = useState<boolean>(false);
 
   const handlePostDelete = async () => {
-    const response = await fetch(`/api/posts/forum-detail/${param.id}`, {
+    await fetch(`/api/posts/forum-detail/${param.id}`, {
       method: 'DELETE',
       body: JSON.stringify({ id: me?.id })
     });
-    router.push('/');
+    await queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
+    router.push('/forum');
+    toast.success(POST_DELETE_ALERT_TEXT);
     return;
   };
 
@@ -37,7 +44,7 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5 md:gap-6">
       {forumDetail?.map((post) => (
         <div key={post.id} className="w-full flex flex-col gap-6 border-b-[1px] ">
           <div className="flex  justify-between items-center   ">
@@ -67,7 +74,7 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
                   <KebabButton />
                 </div>
                 {kebobToggle ? (
-                  <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center shadow-lg border rounded-lg ">
+                  <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center bg-white z-50 shadow-lg border rounded-lg ">
                     <button
                       className="h-[44px] w-full rounded-t-lg hover:bg-main-50 hover:text-main-400 "
                       onClick={handlePostRetouch}
@@ -85,7 +92,7 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
                         isOpen={retouchPostModal}
                         onClose={() => setRetouchPostModal(false)}
                         onConfirm={handlePostDelete}
-                        message={'게시글을 삭제 하겠습니까?'}
+                        message={POST_DELETE_CONFIRM_TEXT}
                       />
                     )}
                   </div>

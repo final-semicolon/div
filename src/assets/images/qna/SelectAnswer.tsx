@@ -1,6 +1,11 @@
 const SelectAnswer = () => {
   return (
-    <svg width="134" height="48" viewBox="0 0 134 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      className="w-[108px] max-h-10 md:w-[134px] md:max-h-[48px] rounded-full "
+      viewBox="0 0 134 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <rect width="134" height="48" rx="6" fill="#EEEDFC" />
       <path
         d="M26 25.2L30.2374 29.8395C30.2464 29.8493 30.2563 29.8584 30.2674 29.8659C30.5981 30.092 31.138 30.0236 31.3426 29.7251L38 18"

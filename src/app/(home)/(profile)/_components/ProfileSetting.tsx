@@ -5,8 +5,10 @@ import { useAuth } from '@/context/auth.context';
 import { uploadImage, upDateImage } from '@/utils/imageUpload';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ProfileImage from './setting/ProfileImage';
-import ProfileDetails from './setting/SettingsList';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import SettingDefaultFlow from './setting/settingresponsive/SettingDefaultFlow';
+import SettingMobileFlow from './setting/settingresponsive/SettingMobileFlow';
+import SettingSkeletonUi from './setting/settingskeleton/SettingSkeletonUi';
 
 const ProfileSetting = () => {
   const { userData, me, updateUserData } = useAuth();
@@ -51,7 +53,7 @@ const ProfileSetting = () => {
         toast.error('이미지 업로드에 실패했습니다.');
       }
     } catch (error) {
-      console.error('이미지 업로드 실패:', error);
+      // console.error('이미지 업로드 실패:', error);
     }
   };
 
@@ -85,42 +87,42 @@ const ProfileSetting = () => {
         toast.error('프로필 업데이트에 실패했습니다.');
       }
     } catch (error) {
-      console.error('프로필 업데이트 실패:', (error as Error).message);
+      // console.error('프로필 업데이트 실패:', (error as Error).message);
       toast.error('프로필 업데이트 중 오류가 발생했습니다.');
     }
   };
 
-  if (!userData) return <p>Loading...</p>;
+  if (!userData) return <SettingSkeletonUi />;
 
   return (
-    <div>
-      <p className="text-h5 font-bold text-neutral-900 mb-2">프로필 관리</p>
-      <p className="text-body1 font-regular text-neutral-600 mb-9">
-        서비스에서 사용하는 내 계정 정보를 관리할 수 있습니다.
-      </p>
-      <div className="center-alignment p-[20px_80px] border border-neutral-50 rounded-3xl shadow-custom-light">
-        <ProfileImage
+    <>
+      <Default>
+        <SettingDefaultFlow
           profileImage={profileImage}
-          onImageClick={handleImageClick}
-          onImageUpload={handleImageUpload}
+          handleImageClick={handleImageClick}
+          handleImageUpload={handleImageUpload}
           inputRef={inputRef}
-        />
-        <p className="text-neutral-900 text-h4 font-bold p-[24px_0_24px_0]">{nickname}님, 좋은 하루 보내세요!</p>
-        <ProfileDetails
           nickname={nickname}
-          email={me?.email}
+          me={me}
           info={info}
-          onNicknameUpdate={(newNickname) => {
-            updateProfile({ nickname: newNickname });
-            updateUserData({ nickname: newNickname });
-          }}
-          onInfoUpdate={(newInfo) => {
-            updateProfile({ info: newInfo });
-            updateUserData({ info: newInfo });
-          }}
+          updateProfile={updateProfile}
+          updateUserData={updateUserData}
         />
-      </div>
-    </div>
+      </Default>
+      <Mobile>
+        <SettingMobileFlow
+          profileImage={profileImage}
+          handleImageClick={handleImageClick}
+          handleImageUpload={handleImageUpload}
+          inputRef={inputRef}
+          nickname={nickname}
+          me={me}
+          info={info}
+          updateProfile={updateProfile}
+          updateUserData={updateUserData}
+        />
+      </Mobile>
+    </>
   );
 };
 

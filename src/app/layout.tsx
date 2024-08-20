@@ -10,9 +10,8 @@ export const metadata: Metadata = {
 };
 
 const pretendard = localFont({
-  src: '../assets/fonts/PretendardVariable.woff2',
+  src: [{ path: '../assets/fonts/subset-PretendardVariable-Regular.woff2', weight: '400 500 700' }],
   display: 'swap',
-  weight: '400 500 700',
   variable: '--font-pretendard'
 });
 
@@ -22,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="kr">
-      <body className={pretendard.className}>
+    <html lang="ko">
+      <body className={`${pretendard.variable}`}>
         <Providers>{children}</Providers>
       </body>
     </html>
