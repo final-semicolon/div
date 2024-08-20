@@ -15,7 +15,7 @@ const PostHeader = ({ post }: PostCardProps) => (
               alt="User Profile"
               width={40}
               height={40}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover h-10 w-10"
             />
           )}
         </div>
@@ -46,7 +46,7 @@ const PostHeader = ({ post }: PostCardProps) => (
               alt="User Profile"
               width={36}
               height={36}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover h-9 w-9"
             />
           )}
         </div>

@@ -14,10 +14,9 @@ const ArchiveDetailPage = async ({ params }: { params: { id: string } }) => {
         <BackClick />
       </div>
       <div className="md:border md:rounded-xl md:p-6">
-        <ArchiveDetailPost />
-        <ArchiveInputComments />
+        <ArchiveDetailPost data={data} />
       </div>
-      <ArchiveComments post_user_id={data[0].user_id} />
+
       <TopButton />
     </div>
   );

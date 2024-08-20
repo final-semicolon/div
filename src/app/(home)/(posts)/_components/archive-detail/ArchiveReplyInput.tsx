@@ -30,9 +30,23 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
       const data = await response.json();
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['commentReply', comment_id] });
-      queryClient.invalidateQueries({ queryKey: ['archiveComment'] });
+    onSuccess: (newReply) => {
+      queryClient.setQueryData(['archiveCommentReply', comment_id], (oldData: any) => {
+        if (!oldData) {
+          return { count: 1, reply: [newReply] };
+        }
+
+        return {
+          ...oldData,
+          count: oldData.count + 1,
+          reply: [...(oldData.reply || []), newReply]
+        };
+      });
+      queryClient.invalidateQueries({ queryKey: ['archiveCommentReply', comment_id] });
+      queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
+
+      setReply('');
+      toggle(comment_id, count + 1);
     }
   });
 

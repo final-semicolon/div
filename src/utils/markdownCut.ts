@@ -5,6 +5,7 @@ export const processMarkdown = (markdown: string, limit: number) => {
   processContent = processContent.replace(/```[\s\S]*?```/g, '');
   processContent = processContent.replace(/``[\s\S]*?``/g, '');
   processContent = processContent.replace(/`[\s\S]*?`/g, '');
+  processContent = processContent.replace(/<img[^>]*>/g, '');
   processContent = markdownFilterSlang(processContent);
   processContent = markdownCutText(processContent, limit);
 
@@ -41,7 +42,11 @@ export const cutText = (text: string, limit: number): string => {
   return cutText;
 };
 
-export const removeImageLinks = (markdown: string) => markdown.replace(/!\[.*?\]\(.*?\)/g, '');
+export const removeImageLinks = (markdown: string) => {
+  let processContent = markdown.replace(/!\[.*?\]\(.*?\)/g, '');
+  processContent = processContent.replace(/<img[^>]*>/g, '');
+  return processContent;
+};
 
 export const cutTitle = (text: string, limit: number): string => {
   const trimmedText = text.length > limit ? text.slice(0, limit) + '...' : text;

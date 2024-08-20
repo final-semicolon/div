@@ -10,6 +10,7 @@ import ArchivePostCard from './ArchivePostCard';
 import ArchivePostsSkeleton from './skeleton/ArchivePostsSkeleton';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import ArchivePostCardMobile from './ArchivePostCardMobile';
+import CommentPageButton from '@/components/common/CommentPageButton';
 
 const ArchivePosts = () => {
   const [page, setPage] = useState(0);
@@ -100,7 +101,12 @@ const ArchivePosts = () => {
           ) : (
             <div>게시글이 없습니다.</div>
           )}
-          <Pagination totalPages={totalPages} currentPage={page} onPageChange={handlePageChange} />
+          <CommentPageButton
+            totalItems={archiveResult?.count || 0}
+            itemsPerPage={POSTS_PER_PAGE}
+            currentPage={page + 1}
+            onPageChange={(newPage) => handlePageChange(newPage - 1)}
+          />
         </>
       </Default>
       <Mobile>
@@ -129,7 +135,12 @@ const ArchivePosts = () => {
           ) : (
             <div>게시글이 없습니다.</div>
           )}
-          <Pagination totalPages={totalPages} currentPage={page} onPageChange={handlePageChange} />
+          <CommentPageButton
+            totalItems={archiveResult?.count || 0}
+            itemsPerPage={POSTS_PER_PAGE}
+            currentPage={page + 1}
+            onPageChange={(newPage) => handlePageChange(newPage - 1)}
+          />
         </>
       </Mobile>
     </>

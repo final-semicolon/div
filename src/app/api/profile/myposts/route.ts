@@ -92,21 +92,21 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const supabase = createClient();
-  const { commentsToDelete } = await req.json();
+  const { postsToDelete } = await req.json();
 
-  for (const comment of commentsToDelete) {
-    const { category, id } = comment;
+  for (const post of postsToDelete) {
+    const { category, id } = post;
 
     // 댓글 삭제
     if (category === 'archive') {
       const { error } = await supabase.from('archive_posts').delete().eq('id', id);
-      if (error) throw new Error(`댓글 삭제 실패 (archive): ${error.message}`);
+      if (error) throw new Error(`포스트 삭제 실패 (archive): ${error.message}`);
     } else if (category === 'forum') {
       const { error } = await supabase.from('forum_posts').delete().eq('id', id);
-      if (error) throw new Error(`댓글 삭제 실패 (forum): ${error.message}`);
+      if (error) throw new Error(`포스트 삭제 실패 (archive): ${error.message}`);
     } else if (category === 'qna') {
       const { error } = await supabase.from('qna_posts').delete().eq('id', id);
-      if (error) throw new Error(`댓글 삭제 실패 (qna): ${error.message}`);
+      if (error) throw new Error(`포스트 삭제 실패 (archive): ${error.message}`);
     } else {
       throw new Error('유효하지 않은 카테고리');
     }
