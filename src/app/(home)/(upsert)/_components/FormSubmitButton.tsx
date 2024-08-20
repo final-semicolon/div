@@ -66,7 +66,13 @@ const FormSubmitButton = ({ handleSubmit, isEdit }: FormSubmitButtonProps) => {
         onConfirm={approvePostConfirm}
         onClose={closePostConfirmClose}
       />
-      <Chip type="button" intent={'primary'} size="large" label="등록" onClick={handlePostConfirmClick} />
+      <Chip
+        type="button"
+        intent={'primary'}
+        size="large"
+        label={isEdit ? '수정 완료' : '등록'}
+        onClick={handlePostConfirmClick}
+      />
     </div>
   );
 };
