@@ -19,6 +19,7 @@ import { isNicknameValid } from '@/utils/validateBannedWords';
 import debounce from 'lodash/debounce';
 import RedI from '@/assets/images/auth/RedI';
 import ReverseExclamation from '@/assets/images/common/ReverseExclamation';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
 type SignupFormInputs = {
   email: string;
@@ -190,159 +191,160 @@ const SignupForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex items-center justify-center min-h-full">
-        <div className="bg-white w-full max-w-[420px]">
-          <div className="flex items-center justify-center mb-[120px]">
-            <Link href="/">
-              <Logo />
-            </Link>
-          </div>
-          <div className="text-center border-b-2 mb-16">
-            <OAuthButtons title="SNS 계정으로 회원가입" handleLogin={handleOAuthLogin} />
-          </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-4 relative">
-              <label
-                className={`block subtitle2-bold-16px ${
-                  errors.email ? 'text-red' : focusedField === 'email' ? 'text-main-400' : 'text-gray-900'
-                }`}
-              >
-                이메일
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  placeholder="이메일을 입력해 주세요"
-                  {...methods.register('email', {
-                    required: '필수 입력 항목이에요',
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: '유효한 이메일 주소를 입력해주세요.'
-                    }
-                  })}
-                  className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
+      <Default>
+        <div className="flex items-center justify-center min-h-full">
+          <div className="bg-white w-full max-w-[420px]">
+            <div className="flex items-center justify-center mb-[120px]">
+              <Link href="/">
+                <Logo />
+              </Link>
+            </div>
+            <div className="text-center border-b-2 mb-16">
+              <OAuthButtons title="SNS 계정으로 회원가입" handleLogin={handleOAuthLogin} />
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="mb-4 relative">
+                <label
+                  className={`block subtitle2-bold-16px ${
+                    errors.email ? 'text-red' : focusedField === 'email' ? 'text-main-400' : 'text-gray-900'
+                  }`}
+                >
+                  이메일
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    placeholder="이메일을 입력해 주세요"
+                    {...methods.register('email', {
+                      required: '필수 입력 항목이에요',
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: '유효한 이메일 주소를 입력해주세요.'
+                      }
+                    })}
+                    className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
                   body2-regular-16px ${
                     errors.email ? 'border-red' : focusedField === 'email' ? 'border-main-400' : 'border-gray-900'
                   }`}
-                  onFocus={() => setFocusedField('email')}
-                  onBlur={() => setFocusedField(null)}
-                  onKeyDown={preventSpaceInput}
-                />
-                {email && focusedField === 'email' && (
-                  <button
-                    type="button"
-                    onMouseDown={() => methods.setValue('email', '')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                  >
-                    <X />
-                  </button>
+                    onFocus={() => setFocusedField('email')}
+                    onBlur={() => setFocusedField(null)}
+                    onKeyDown={preventSpaceInput}
+                  />
+                  {email && focusedField === 'email' && (
+                    <button
+                      type="button"
+                      onMouseDown={() => methods.setValue('email', '')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    >
+                      <X />
+                    </button>
+                  )}
+                </div>
+                {errors.email && (
+                  <p className="mt-1 body2-regular-16px text-red flex items-center">
+                    <RedX />
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
-              {errors.email && (
-                <p className="mt-1 body2-regular-16px text-red flex items-center">
-                  <RedX />
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
 
-            <div className="mb-4 relative">
-              <label
-                className={`block subtitle2-bold-16px ${
-                  errors.password ? 'text-red' : focusedField === 'password' ? 'text-main-400' : 'text-gray-900'
-                }`}
-              >
-                비밀번호
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  placeholder="비밀번호를 입력해 주세요"
-                  {...methods.register('password', {
-                    required: '필수 입력 항목이에요',
-                    validate: (value) => {
-                      const pattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{10,}$/;
-                      if (!value) {
-                        return '필수 입력 항목이에요';
-                      } else if (!pattern.test(value)) {
-                        return '영문/숫자/특수문자 혼합 (10자 이상)';
+              <div className="mb-4 relative">
+                <label
+                  className={`block subtitle2-bold-16px ${
+                    errors.password ? 'text-red' : focusedField === 'password' ? 'text-main-400' : 'text-gray-900'
+                  }`}
+                >
+                  비밀번호
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    placeholder="비밀번호를 입력해 주세요"
+                    {...methods.register('password', {
+                      required: '필수 입력 항목이에요',
+                      validate: (value) => {
+                        const pattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{10,}$/;
+                        if (!value) {
+                          return '필수 입력 항목이에요';
+                        } else if (!pattern.test(value)) {
+                          return '영문/숫자/특수문자 혼합 (10자 이상)';
+                        }
+                        return true;
                       }
-                      return true;
-                    }
-                  })}
-                  className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
+                    })}
+                    className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
                   body2-regular-16px ${
                     errors.password ? 'border-red' : focusedField === 'password' ? 'border-main-400' : 'border-gray-900'
                   }`}
-                  onFocus={() => setFocusedField('password')}
-                  onBlur={() => setFocusedField(null)}
-                  onKeyDown={(e) => handleCapsLock(e)}
-                  onKeyUp={(e) => handleCapsLock(e)}
-                />
-                {password && focusedField === 'password' && (
-                  <button
-                    type="button"
-                    onMouseDown={() => methods.setValue('password', '')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    onFocus={() => setFocusedField('password')}
+                    onBlur={() => setFocusedField(null)}
+                    onKeyDown={(e) => handleCapsLock(e)}
+                    onKeyUp={(e) => handleCapsLock(e)}
+                  />
+                  {password && focusedField === 'password' && (
+                    <button
+                      type="button"
+                      onMouseDown={() => methods.setValue('password', '')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    >
+                      <X />
+                    </button>
+                  )}
+                </div>
+                {isCapsLockOn && (
+                  <div className="ml-1 my-2 flex items-center">
+                    <ReverseExclamation stroke="#423EDF" />
+                    <span
+                      className="ml-1 
+body2-regular-16px text-main-400"
+                    >
+                      Caps Lock on
+                    </span>
+                  </div>
+                )}
+                {!errors.password && (
+                  <p
+                    className={`mt-1 body2-regular-16px flex items-center ${isPasswordValid ? 'text-main-400' : 'text-gray-600'}`}
                   >
-                    <X />
-                  </button>
+                    {isPasswordValid ? <CheckVector /> : <I />}
+                    {isPasswordValid ? '영문/숫자/특수문자 혼합 (10자 이상)' : '영문/숫자/특수문자 혼합 (10자 이상)'}
+                  </p>
+                )}
+                {errors.password && (
+                  <>
+                    <p className="mt-1 body2-regular-16px text-red flex items-center">
+                      <RedX />
+                      필수 입력 항목이에요
+                    </p>
+                    <p className="mt-1 body2-regular-16px text-red flex items:center">
+                      <RedX />
+                      영문/숫자/특수문자 혼합 (10자 이상)
+                    </p>
+                  </>
                 )}
               </div>
-              {isCapsLockOn && (
-                <div className="ml-1 my-2 flex items-center">
-                  <ReverseExclamation stroke="#423EDF" />
-                  <span
-                    className="ml-1 
-body2-regular-16px text-main-400"
-                  >
-                    Caps Lock on
-                  </span>
-                </div>
-              )}
-              {!errors.password && (
-                <p
-                  className={`mt-1 body2-regular-16px flex items-center ${isPasswordValid ? 'text-main-400' : 'text-gray-600'}`}
-                >
-                  {isPasswordValid ? <CheckVector /> : <I />}
-                  {isPasswordValid ? '영문/숫자/특수문자 혼합 (10자 이상)' : '영문/숫자/특수문자 혼합 (10자 이상)'}
-                </p>
-              )}
-              {errors.password && (
-                <>
-                  <p className="mt-1 body2-regular-16px text-red flex items-center">
-                    <RedX />
-                    필수 입력 항목이에요
-                  </p>
-                  <p className="mt-1 body2-regular-16px text-red flex items:center">
-                    <RedX />
-                    영문/숫자/특수문자 혼합 (10자 이상)
-                  </p>
-                </>
-              )}
-            </div>
 
-            <div className="mb-4 relative">
-              <label
-                className={`block subtitle2-bold-16px ${
-                  errors.confirmPassword
-                    ? 'text-red'
-                    : focusedField === 'confirmPassword'
-                      ? 'text-main-400'
-                      : 'text-gray-900'
-                }`}
-              >
-                비밀번호 확인
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  placeholder="비밀번호를 한번 더 입력해 주세요"
-                  {...methods.register('confirmPassword', {
-                    required: '확인을 위해 비밀번호를 한 번 더 입력해 주세요',
-                    validate: (value) => value === watch('password') || '비밀번호가 일치하지 않습니다.'
-                  })}
-                  className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
+              <div className="mb-4 relative">
+                <label
+                  className={`block subtitle2-bold-16px ${
+                    errors.confirmPassword
+                      ? 'text-red'
+                      : focusedField === 'confirmPassword'
+                        ? 'text-main-400'
+                        : 'text-gray-900'
+                  }`}
+                >
+                  비밀번호 확인
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    placeholder="비밀번호를 한번 더 입력해 주세요"
+                    {...methods.register('confirmPassword', {
+                      required: '확인을 위해 비밀번호를 한 번 더 입력해 주세요',
+                      validate: (value) => value === watch('password') || '비밀번호가 일치하지 않습니다.'
+                    })}
+                    className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
                   body2-regular-16px ${
                     errors.confirmPassword
                       ? 'border-red'
@@ -350,132 +352,397 @@ body2-regular-16px text-main-400"
                         ? 'border-main-400'
                         : 'border-gray-900'
                   }`}
-                  onFocus={() => setFocusedField('confirmPassword')}
-                  onBlur={() => setFocusedField(null)}
-                  onKeyDown={preventSpaceInput}
-                />
-                {confirmPassword && focusedField === 'confirmPassword' && (
-                  <button
-                    type="button"
-                    onMouseDown={() => methods.setValue('confirmPassword', '')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                  >
-                    <X />
-                  </button>
+                    onFocus={() => setFocusedField('confirmPassword')}
+                    onBlur={() => setFocusedField(null)}
+                    onKeyDown={preventSpaceInput}
+                  />
+                  {confirmPassword && focusedField === 'confirmPassword' && (
+                    <button
+                      type="button"
+                      onMouseDown={() => methods.setValue('confirmPassword', '')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    >
+                      <X />
+                    </button>
+                  )}
+                </div>
+                {!errors.confirmPassword && isConfirmPasswordValid && (
+                  <p className="mt-1 body2-regular-16px text-main-400 flex items-center">
+                    <CheckVector />
+                    비밀번호가 일치해요
+                  </p>
+                )}
+                {errors.confirmPassword && (
+                  <p className="mt-1 body2-regular-16px text-red flex items:center">
+                    <RedX />
+                    {errors.confirmPassword.message}
+                  </p>
                 )}
               </div>
-              {!errors.confirmPassword && isConfirmPasswordValid && (
-                <p className="mt-1 body2-regular-16px text-main-400 flex items-center">
-                  <CheckVector />
-                  비밀번호가 일치해요
-                </p>
-              )}
-              {errors.confirmPassword && (
-                <p className="mt-1 body2-regular-16px text-red flex items:center">
-                  <RedX />
-                  {errors.confirmPassword.message}
-                </p>
-              )}
-            </div>
 
-            <div className="mb-4 relative">
-              <label
-                className={`block 
+              <div className="mb-4 relative">
+                <label
+                  className={`block 
                 subtitle2-bold-16px ${
                   errors.nickname ? 'text-red' : focusedField === 'nickname' ? 'text-main-400' : 'text-gray-900'
                 }`}
-              >
-                닉네임
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="닉네임을 입력해 주세요"
-                  {...methods.register('nickname', {
-                    required: '2~12자 이하만 가능해요',
-                    minLength: {
-                      value: 2,
-                      message: '닉네임은 2자 이상이어야 합니다.'
-                    },
-                    maxLength: {
-                      value: 12,
-                      message: '닉네임은 12자 이하이어야 합니다.'
-                    }
-                  })}
-                  className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
+                >
+                  닉네임
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="닉네임을 입력해 주세요"
+                    {...methods.register('nickname', {
+                      required: '2~12자 이하만 가능해요',
+                      minLength: {
+                        value: 2,
+                        message: '닉네임은 2자 이상이어야 합니다.'
+                      },
+                      maxLength: {
+                        value: 12,
+                        message: '닉네임은 12자 이하이어야 합니다.'
+                      }
+                    })}
+                    className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:
                   body2-regular-16px ${
                     errors.nickname ? 'border-red' : focusedField === 'nickname' ? 'border-main-400' : 'border-gray-900'
                   }`}
-                  onFocus={() => setFocusedField('nickname')}
-                  onBlur={() => setFocusedField(null)}
-                  onKeyDown={preventSpaceInput}
-                />
-                {nickname && focusedField === 'nickname' && (
-                  <button
-                    type="button"
-                    onMouseDown={() => methods.setValue('nickname', '')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    onFocus={() => setFocusedField('nickname')}
+                    onBlur={() => setFocusedField(null)}
+                    onKeyDown={preventSpaceInput}
+                  />
+                  {nickname && focusedField === 'nickname' && (
+                    <button
+                      type="button"
+                      onMouseDown={() => methods.setValue('nickname', '')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    >
+                      <X />
+                    </button>
+                  )}
+                </div>
+                {!errors.nickname && (
+                  <p
+                    className={`mt-1 body2-regular-16px flex items:center ${
+                      isNicknameValidLocal ? 'text-main-400' : 'text-gray-900'
+                    }`}
                   >
-                    <X />
-                  </button>
+                    {isNicknameValidLocal ? <CheckVector /> : <I />}
+                    {isNicknameValidLocal ? '사용 가능한 닉네임이에요' : '2~12자 이하만 가능해요'}
+                  </p>
+                )}
+                {errors.nickname && (
+                  <p className="mt-1 body2-regular-16px text-red flex items:center">
+                    <RedX />
+                    {errors.nickname.message}
+                  </p>
                 )}
               </div>
-              {!errors.nickname && (
-                <p
-                  className={`mt-1 body2-regular-16px flex items:center ${
-                    isNicknameValidLocal ? 'text-main-400' : 'text-gray-900'
-                  }`}
-                >
-                  {isNicknameValidLocal ? <CheckVector /> : <I />}
-                  {isNicknameValidLocal ? '사용 가능한 닉네임이에요' : '2~12자 이하만 가능해요'}
-                </p>
-              )}
-              {errors.nickname && (
-                <p className="mt-1 body2-regular-16px text-red flex items:center">
-                  <RedX />
-                  {errors.nickname.message}
-                </p>
-              )}
-            </div>
 
-            <CheckboxGroup showError={!!(errors.terms || errors.privacy)} />
+              <CheckboxGroup showError={!!(errors.terms || errors.privacy)} />
 
-            <div className="mt-6 mb-10 p-2 rounded flex items-center justify-center w-full">
-              <div className="w-full flex justify-center">
-                <div className=" ml-4">
-                  <ReCAPTCHA
-                    sitekey={RECAPTCHA_SITE_KEY}
-                    onChange={(token) => {
-                      setRecaptchaToken(token);
-                      clearErrors('recaptcha');
-                    }}
-                    className="w-full"
-                  />
+              <div className="mt-6 mb-10 p-2 rounded flex items-center justify-center w-full">
+                <div className="w-full flex justify-center">
+                  <div className=" ml-4">
+                    <ReCAPTCHA
+                      sitekey={RECAPTCHA_SITE_KEY}
+                      onChange={(token) => {
+                        setRecaptchaToken(token);
+                        clearErrors('recaptcha');
+                      }}
+                      className="w-full"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            {errors.recaptcha && (
-              <p className="mt-1 body2-regular-16px text-red flex items:center">
-                <RedI />
-                {errors.recaptcha?.message}
-              </p>
-            )}
+              {errors.recaptcha && (
+                <p className="mt-1 body2-regular-16px text-red flex items:center">
+                  <RedI />
+                  {errors.recaptcha?.message}
+                </p>
+              )}
 
-            <button
-              type="submit"
-              className="w-full p-3 rounded-md subtitle1-bold-18px bg-main-400 text-white hover:bg-main-500"
-            >
-              가입하기
-            </button>
-          </form>
-          <p className="mt-4 mb-64 text-center body2-regular-16px gap-12">
-            이미 아이디가 있으신가요?
-            <Link href="/login" className="body2-medium-16px underline">
-              로그인
-            </Link>
-          </p>
+              <button
+                type="submit"
+                className="w-full p-3 rounded-md subtitle1-bold-18px bg-main-400 text-white hover:bg-main-500"
+              >
+                가입하기
+              </button>
+            </form>
+            <p className="mt-4 mb-64 text-center body2-regular-16px gap-12">
+              이미 아이디가 있으신가요?
+              <Link href="/login" className="body2-medium-16px underline">
+                로그인
+              </Link>
+            </p>
+          </div>
         </div>
-      </div>
+      </Default>
+      <Mobile>
+        <div className="flex items-center justify-center min-h-full">
+          <div className="bg-white w-full max-w-[420px]">
+            <div className="flex items-center justify-center mb-10">
+              <Link href="/">
+                <Logo width={68} height={48} />
+              </Link>
+            </div>
+            <div className="text-center border-b-2 mb-10">
+              <OAuthButtons title="SNS 계정으로 회원가입" handleLogin={handleOAuthLogin} />
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="mb-8 relative w-[335px] min-h-[71px] mx-auto">
+                <label
+                  className={`block subtitle2-bold-16px ${
+                    errors.email ? 'text-red' : focusedField === 'email' ? 'text-main-400' : 'text-gray-900'
+                  }`}
+                >
+                  이메일
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    placeholder="이메일을 입력해 주세요"
+                    {...methods.register('email', {
+                      required: '필수 입력 항목이에요',
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: '유효한 이메일 주소를 입력해주세요.'
+                      }
+                    })}
+                    className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
+                      errors.email ? 'border-red' : focusedField === 'email' ? 'border-main-400' : 'border-gray-900'
+                    }`}
+                    onFocus={() => setFocusedField('email')}
+                    onBlur={() => setFocusedField(null)}
+                    onKeyDown={preventSpaceInput}
+                  />
+                  {email && focusedField === 'email' && (
+                    <button
+                      type="button"
+                      onMouseDown={() => methods.setValue('email', '')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    >
+                      <X />
+                    </button>
+                  )}
+                </div>
+                {errors.email && (
+                  <p className="mt-1 body2-regular-16px text-red flex items-center">
+                    <RedX />
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="mb-8 relative w-[335px] min-h-[71px] mx-auto">
+                <label
+                  className={`block subtitle2-bold-16px ${
+                    errors.password ? 'text-red' : focusedField === 'password' ? 'text-main-400' : 'text-gray-900'
+                  }`}
+                >
+                  비밀번호
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    placeholder="비밀번호를 입력해 주세요"
+                    {...methods.register('password', {
+                      required: '필수 입력 항목이에요',
+                      validate: (value) => {
+                        const pattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{10,}$/;
+                        if (!value) {
+                          return '필수 입력 항목이에요';
+                        } else if (!pattern.test(value)) {
+                          return '영문/숫자/특수문자 혼합 (10자 이상)';
+                        }
+                        return true;
+                      }
+                    })}
+                    className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
+                      errors.password
+                        ? 'border-red'
+                        : focusedField === 'password'
+                          ? 'border-main-400'
+                          : 'border-gray-900'
+                    }`}
+                    onFocus={() => setFocusedField('password')}
+                    onBlur={() => setFocusedField(null)}
+                    onKeyDown={(e) => handleCapsLock(e)}
+                    onKeyUp={(e) => handleCapsLock(e)}
+                  />
+                  {password && focusedField === 'password' && (
+                    <button
+                      type="button"
+                      onMouseDown={() => methods.setValue('password', '')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    >
+                      <X />
+                    </button>
+                  )}
+                </div>
+                {isCapsLockOn && (
+                  <div className="ml-1 my-2 flex items-center">
+                    <ReverseExclamation stroke="#423EDF" />
+                    <span className="ml-1 body2-regular-16px text-main-400">Caps Lock on</span>
+                  </div>
+                )}
+                {!errors.password && (
+                  <p
+                    className={`mt-1 body2-regular-16px flex items-center ${isPasswordValid ? 'text-main-400' : 'text-gray-600'}`}
+                  >
+                    {isPasswordValid ? <CheckVector /> : <I />}
+                    {isPasswordValid ? '영문/숫자/특수문자 혼합 (10자 이상)' : '영문/숫자/특수문자 혼합 (10자 이상)'}
+                  </p>
+                )}
+                {errors.password && (
+                  <>
+                    <p className="mt-1 body2-regular-16px text-red flex items-center">
+                      <RedX />
+                      필수 입력 항목이에요
+                    </p>
+                    <p className="mt-1 body2-regular-16px text-red flex items:center">
+                      <RedX />
+                      영문/숫자/특수문자 혼합 (10자 이상)
+                    </p>
+                  </>
+                )}
+              </div>
+
+              <div className="mb-8 relative w-[335px] min-h-[71px] mx-auto">
+                <label
+                  className={`block subtitle2-bold-16px ${
+                    errors.confirmPassword
+                      ? 'text-red'
+                      : focusedField === 'confirmPassword'
+                        ? 'text-main-400'
+                        : 'text-gray-900'
+                  }`}
+                >
+                  비밀번호 확인
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    placeholder="비밀번호를 한번 더 입력해 주세요"
+                    {...methods.register('confirmPassword', {
+                      required: '확인을 위해 비밀번호를 한 번 더 입력해 주세요',
+                      validate: (value) => value === watch('password') || '비밀번호가 일치하지 않습니다.'
+                    })}
+                    className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
+                      errors.confirmPassword
+                        ? 'border-red'
+                        : focusedField === 'confirmPassword'
+                          ? 'border-main-400'
+                          : 'border-gray-900'
+                    }`}
+                    onFocus={() => setFocusedField('confirmPassword')}
+                    onBlur={() => setFocusedField(null)}
+                    onKeyDown={preventSpaceInput}
+                  />
+                  {confirmPassword && focusedField === 'confirmPassword' && (
+                    <button
+                      type="button"
+                      onMouseDown={() => methods.setValue('confirmPassword', '')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    >
+                      <X />
+                    </button>
+                  )}
+                </div>
+                {!errors.confirmPassword && isConfirmPasswordValid && (
+                  <p className="mt-1 body2-regular-16px text-main-400 flex items-center">
+                    <CheckVector />
+                    비밀번호가 일치해요
+                  </p>
+                )}
+                {errors.confirmPassword && (
+                  <p className="mt-1 body2-regular-16px text-red flex items:center">
+                    <RedX />
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="mb-8 relative w-[335px] min-h-[71px] mx-auto">
+                <label
+                  className={`block subtitle2-bold-16px ${
+                    errors.nickname ? 'text-red' : focusedField === 'nickname' ? 'text-main-400' : 'text-gray-900'
+                  }`}
+                >
+                  닉네임
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="닉네임을 입력해 주세요"
+                    {...methods.register('nickname', {
+                      required: '2~12자 이하만 가능해요',
+                      minLength: {
+                        value: 2,
+                        message: '닉네임은 2자 이상이어야 합니다.'
+                      },
+                      maxLength: {
+                        value: 12,
+                        message: '닉네임은 12자 이하이어야 합니다.'
+                      }
+                    })}
+                    className={`mt-2 block w-full p-4 border rounded-lg focus:outline-none placeholder:body2-regular-16px ${
+                      errors.nickname
+                        ? 'border-red'
+                        : focusedField === 'nickname'
+                          ? 'border-main-400'
+                          : 'border-gray-900'
+                    }`}
+                    onFocus={() => setFocusedField('nickname')}
+                    onBlur={() => setFocusedField(null)}
+                    onKeyDown={preventSpaceInput}
+                  />
+                  {nickname && focusedField === 'nickname' && (
+                    <button
+                      type="button"
+                      onMouseDown={() => methods.setValue('nickname', '')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    >
+                      <X />
+                    </button>
+                  )}
+                </div>
+                {!errors.nickname && (
+                  <p
+                    className={`mt-1 body2-regular-16px flex items:center ${isNicknameValidLocal ? 'text-main-400' : 'text-gray-900'}`}
+                  >
+                    {isNicknameValidLocal ? <CheckVector /> : <I />}
+                    {isNicknameValidLocal ? '사용 가능한 닉네임이에요' : '2~12자 이하만 가능해요'}
+                  </p>
+                )}
+                {errors.nickname && (
+                  <p className="mt-1 body2-regular-16px text-red flex items:center">
+                    <RedX />
+                    {errors.nickname.message}
+                  </p>
+                )}
+              </div>
+              <div className="mb-36 relative w-[335px] h-[71px] mx-auto">
+                <CheckboxGroup showError={!!(errors.terms || errors.privacy)} />
+              </div>
+              <button
+                type="submit"
+                className="w-[335px] h-[46px] ml-8 p-3 rounded-lg subtitle1-bold-18px bg-main-400 text-white hover:bg-main-500"
+              >
+                가입하기
+              </button>
+            </form>
+            <p className="mt-10 mb-[84px] text-center text-neutral-900 body3-regular-14px">
+              이미 아이디가 있으신가요?
+              <span className="inline-block w-[12px]"></span>
+              <Link href="/login" className="body3-medium-14px text-neutral-900 underline">
+                로그인
+              </Link>
+            </p>
+          </div>
+        </div>
+      </Mobile>
     </FormProvider>
   );
 };
