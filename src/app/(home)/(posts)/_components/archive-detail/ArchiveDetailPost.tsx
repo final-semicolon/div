@@ -55,7 +55,7 @@ const ArchiveDetailPost = () => {
     };
   }, []);
   const handlePostDelete = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/archive-detail/${param.id}`, {
+    const response = await fetch(`/api/posts/archive-detail/${param.id}`, {
       method: 'DELETE',
       body: JSON.stringify({ id: me?.id })
     });
