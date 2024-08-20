@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/auth.context';
 import { toast } from 'react-toastify';
 import { usePathname, useRouter } from 'next/navigation';
+import useProfiletopTabStore from '@/store/useProfiletopTabStore';
 
 type ModalProps = {
   isOpen: boolean;
@@ -16,6 +17,7 @@ const HeaderModal = ({ isOpen, onClose }: ModalProps) => {
   const { isLoggedIn, logOut } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
+  const setTopButtonTab = useProfiletopTabStore((state) => state.setTopButtonTab);
 
   useEffect(() => {
     if (isOpen) {
@@ -123,6 +125,7 @@ const HeaderModal = ({ isOpen, onClose }: ModalProps) => {
               <div
                 className="ml-5 mt-5 border-0 text-subtitle2 font-medium text-neutral-900 w-full"
                 onClick={() => {
+                  setTopButtonTab('profile');
                   router.push('/profile');
                   onClose();
                 }}
