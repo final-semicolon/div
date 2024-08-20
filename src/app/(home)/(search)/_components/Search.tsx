@@ -8,7 +8,7 @@ import { useAuth } from '@/context/auth.context';
 import PostCountDisplay from './PostCountDisplay';
 import { SearchData } from '@/types/search/SearchType';
 import SearchBar from '@/components/header/SearchBar';
-import { Mobile } from '@/hooks/common/useMediaQuery';
+import { Mobile, NotDesktop } from '@/hooks/common/useMediaQuery';
 
 const Search = () => {
   const [data, setData] = useState<SearchData | null>(null);
@@ -102,14 +102,14 @@ const Search = () => {
 
   if (!searchType) {
     return (
-      <Mobile>
-        <div className="flex justify-center">
+      <NotDesktop>
+        <div className="flex justify-center p-10">
           <SearchBar />
           <button className=" ml-5" onClick={handleBack}>
             취소
           </button>
         </div>
-      </Mobile>
+      </NotDesktop>
     );
   } else if (!data) return <div>Loading...</div>;
 
@@ -118,7 +118,7 @@ const Search = () => {
       <div className="p-5">
         <Mobile>
           <div className="mb-10 ">
-            <SearchBar />
+            <SearchBar Searching="ture" />
           </div>
         </Mobile>
         <div className="flex flex-col">

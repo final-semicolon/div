@@ -1,7 +1,7 @@
 import Reset from '@/assets/images/common/Reset';
 import PrimaryCategories from '@/components/categoryfilter/PrimaryCategories';
 import SortingFilters from '@/components/categoryfilter/SortingFilters';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type SearchFilterProps = {
   primaryCategory: 'all' | 'qna' | 'forum' | 'archive';
@@ -21,10 +21,23 @@ const SearchFilter = ({
   onTypeChange
 }: SearchFilterProps) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [showForumMenu, setShowForumMenu] = useState(false);
+
+  const handleScroll = () => {
+    setShowMenu(false);
+    setShowForumMenu(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleResetClick = () => {
     onTypeChange('all');
-    setShowMenu(false);
     onCategoryChange('all');
     onForumCategoryChange(null);
   };
@@ -37,6 +50,8 @@ const SearchFilter = ({
           primaryForumCategory={primaryForumCategory}
           onCategoryChange={onCategoryChange}
           onForumCategoryChange={onForumCategoryChange}
+          showForumMenu={showForumMenu}
+          onShowForumMenu={setShowForumMenu}
         />
       </div>
       <div className="flex items-center order-1 md:order-2 ">
