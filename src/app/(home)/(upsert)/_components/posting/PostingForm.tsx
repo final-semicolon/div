@@ -18,6 +18,7 @@ import { TAG_LIST } from '@/constants/tags';
 import { uploadThumbnail } from '../../_utils/thumbnail';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
 import { POST_ALERT_TEXT } from '@/constants/alert';
+import MobileBackIconBlack from '@/assets/images/upsert_image/MobileBackIconBlack';
 
 const PostingForm = () => {
   const router = useRouter();
@@ -103,20 +104,16 @@ const PostingForm = () => {
     router.back();
   };
 
-  // const [isValidCategory, setIsValidCategory] = useState<boolean>(false);
-  // const [isValidContent, setIsValidContent] = useState<boolean>(false);
-  // const [isValidTitle, setIsValidTitle] = useState<boolean>(false);
-  // useEffect(() => {
-  //   return () => clearCategory();
-  // }, []);
-
   return (
-    <div className="w-[1204px] mx-auto flex flex-col gap-y-5 max-h-screen">
-      <div className="mb-4" onClick={handleBackClick}>
+    <div className="max-w-full px-5 md:px-0 md:max-w-[1204px] mx-auto flex flex-col  max-h-screen ">
+      <div className="w-6 h-6 mb-6 md:hidden" onClick={handleBackClick}>
+        <MobileBackIconBlack />
+      </div>
+      <div className="w-9 h-9 md:mb-14 hidden md:block" onClick={handleBackClick}>
         <BackArrowIcon />
       </div>
       <UpsertTheme />
-      <form className="flex flex-col gap-y-10 h-full">
+      <form className="w-full md:max-w-full flex flex-col gap-y-10 h-full ">
         <PostingCategoryBox />
         <FormTitleInput title={title} setTitle={setTitle} />
         <FormTagInput tagList={tagList} setTagList={setTagList} />

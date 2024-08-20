@@ -25,10 +25,10 @@ const PostTags = ({ tags }: PostTagsProps) => (
         {tags.map((tag) => (
           <div
             key={tag.id}
-            className="inline-block border bg-neutral-50 border-neutral-50 mr-[6px] flex-wrap rounded max-h-[26px] overflow-hidden"
+            className="inline-block border bg-neutral-50 border-neutral-50 mr-[6px] flex-wrap rounded min-h-[26px] overflow-hidden"
           >
             <span
-              className="inline-block text-caption font-regular text-neutral-700 px-1 whitespace-nowrap"
+              className="inline-block text-caption2 font-regular text-neutral-700 px-1 whitespace-nowrap"
               style={{ maxWidth: '100%' }}
             >
               #{tag.tag}

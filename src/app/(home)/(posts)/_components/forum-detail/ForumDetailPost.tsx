@@ -38,7 +38,7 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5 md:gap-6">
       {forumDetail?.map((post) => (
         <div key={post.id} className="w-full flex flex-col gap-6 border-b-[1px] ">
           <div className="flex  justify-between items-center   ">
@@ -68,7 +68,7 @@ const ForumDetailPost = ({ forumDetail }: { forumDetail: forumDetailType[] }) =>
                   <KebabButton />
                 </div>
                 {kebobToggle ? (
-                  <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center shadow-lg border rounded-lg ">
+                  <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center bg-white z-50 shadow-lg border rounded-lg ">
                     <button
                       className="h-[44px] w-full rounded-t-lg hover:bg-main-50 hover:text-main-400 "
                       onClick={handlePostRetouch}

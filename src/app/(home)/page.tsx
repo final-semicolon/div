@@ -14,7 +14,9 @@ const HomePage = async () => {
         <TodayQna />
         <LandingPage />
         <MainPageTag />
-        <TopButton />
+        <div className=" hidden md:block">
+          <TopButton />
+        </div>
       </div>
     </div>
   );

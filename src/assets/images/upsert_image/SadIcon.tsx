@@ -1,6 +1,11 @@
 const SadIcon = () => {
   return (
-    <svg width="80" height="81" viewBox="0 0 80 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      className="w-[35px] h-[35px] md:w-20 md:h-20"
+      viewBox="0 0 80 81"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <g id="icon/sad" clipPath="url(#clip0_4341_45255)">
         <g id="Group">
           <path

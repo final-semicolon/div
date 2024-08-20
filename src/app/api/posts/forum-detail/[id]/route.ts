@@ -5,7 +5,7 @@ export const GET = async (request: Request, { params }: { params: { id: string }
   const supabase = createClient();
   const { data } = await supabase
     .from('forum_posts')
-    .select('*, user: users(*), comment:forum_comments(count), tags:forum_tags(*) ')
+    .select('*, user: users(*), comment:forum_comments(count), tags:forum_tags(*)  ')
     .eq('id', params.id);
 
   return NextResponse.json(data);

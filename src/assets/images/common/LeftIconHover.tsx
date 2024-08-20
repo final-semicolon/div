@@ -4,8 +4,8 @@ const LeftIconHover = () => {
       <path
         d="M12 2L2.1223 12.8655C2.05295 12.9417 2.05296 13.0583 2.1223 13.1345L12 24"
         stroke="#8F8F8F"
-        stroke-width="4"
-        stroke-linecap="round"
+        strokeWidth="4"
+        strokeLinecap="round"
       />
     </svg>
   );
