@@ -122,7 +122,7 @@ const SearchBar = ({ Searching }: SearchBarProps) => {
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={handleSearch}
             onFocus={() => setIsFocused(true)}
-            className={`mx-2 pr-4 text-body2 font-regular focus:outline-none ${Searching === 'ture' ? ' w-full' : 'w-[191px] md:w-[222px]'}`}
+            className={`mx-2 pr-4 text-body2 font-regular bg-transparent focus:outline-none ${Searching === 'ture' ? ' w-full' : 'w-[191px] md:w-[222px]'}`}
           />
         </div>
         <div>
