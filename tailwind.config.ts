@@ -102,7 +102,7 @@ const config: Config = {
         subtitle3: ['14px', { lineHeight: '135%', letterSpacing: '-0.5px' }],
         body1: ['18px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
         body2: ['16px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
-        body3: ['14px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
+        body3: ['14px', { lineHeight: '21px', letterSpacing: '-1%' }],
         body4: ['13px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
         overline1: ['14px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
         overline2: ['12px', { lineHeight: '150%', letterSpacing: '-0.5px' }],
