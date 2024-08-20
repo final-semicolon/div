@@ -22,6 +22,7 @@ import LeftIcon from '@/assets/images/common/LeftIcon';
 import RightIconHover from '@/assets/images/common/RightIconHover';
 import RightIcon from '@/assets/images/common/RightIcon';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import MainForumSkeleton from './skeleton/MainForumSkeleton';
 
 const BestForum = () => {
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
@@ -54,7 +55,7 @@ const BestForum = () => {
     if (swiperInstance) swiperInstance.slideNext();
   };
 
-  const { data: forumList } = useQuery<BestForumType[]>({
+  const { data: forumList, isPending } = useQuery<BestForumType[]>({
     queryKey: ['bestForum'],
     queryFn: async () => {
       try {
@@ -64,6 +65,10 @@ const BestForum = () => {
       } catch (error) {}
     }
   });
+
+  if (isPending) {
+    return <MainForumSkeleton />;
+  }
 
   return (
     <div className="flex flex-col ml-5 md:ml-0 my-16 md:my-0">

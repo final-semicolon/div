@@ -23,6 +23,7 @@ import { COMMENT_DELETE_ALRERT_TEXT, COMMENT_EDIT_ALERT_TEXT } from '@/constants
 import Chip from '@/components/common/Chip';
 import { COMMENT_CANCLE_CONFIRM_TEXT, COMMENT_DELETE_CONFIRM_TEXT } from '@/constants/confirmModal';
 import CommentPageButton from '@/components/common/CommentPageButton';
+import ForumDetailSkeleton from './skeleton/ForumDetailSkeleton';
 
 const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   const { me } = useAuth();
@@ -108,7 +109,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   });
 
   if (isPending) {
-    return <div>loading...</div>;
+    return <ForumDetailSkeleton />;
   }
 
   // console.log(comments?.count);
