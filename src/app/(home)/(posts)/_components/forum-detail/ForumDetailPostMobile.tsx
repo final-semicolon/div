@@ -22,11 +22,13 @@ import MobileBackClickBlack from '@/components/common/MobileBackClickBlack';
 import KebabButton from '@/assets/images/common/KebabButton';
 import { toast } from 'react-toastify';
 import { POST_DELETE_ALERT_TEXT } from '@/constants/alert';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ForumDetailPostMobile = ({ forumDetail }: { forumDetail: forumDetailType[] }) => {
   const { me } = useAuth();
   const param = useParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [kebobToggle, setKebobToggle] = useState<boolean>(false);
   const [retouchPostModal, setRetouchPostModal] = useState<boolean>(false);
   const [scroll, setScroll] = useState<boolean>(false);
@@ -36,7 +38,9 @@ const ForumDetailPostMobile = ({ forumDetail }: { forumDetail: forumDetailType[]
       method: 'DELETE',
       body: JSON.stringify({ id: me?.id })
     });
-    router.push('/');
+    await queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
+    router.push('/forum');
+
     toast.success(POST_DELETE_ALERT_TEXT);
     return;
   };
