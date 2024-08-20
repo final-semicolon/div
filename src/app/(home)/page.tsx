@@ -3,18 +3,20 @@ import LandingPage from './_components/LandingPage';
 import MainPageTag from './_components/MainPageTag';
 import PostsLink from './_components/PostsLink';
 import TodayQna from './_components/TodayQna';
-import TopButton from '../../components/TopButton';
+import TopButton from '@/components/common/TopButton';
 
-const HomePage = () => {
+const HomePage = async () => {
   return (
-    <div className="flex flex-col justify-center items-center relative">
-      <div className="xl:w-[1200px] md:w-[800px] sm:w-96 flex flex-col gap-20">
+    <div className={`flex flex-col justify-center items-center relative`}>
+      <div className="w-full flex flex-col md:gap-20">
         <PostsLink />
         <BestForum />
         <TodayQna />
         <LandingPage />
         <MainPageTag />
-        <TopButton />
+        <div className=" hidden md:block">
+          <TopButton />
+        </div>
       </div>
     </div>
   );

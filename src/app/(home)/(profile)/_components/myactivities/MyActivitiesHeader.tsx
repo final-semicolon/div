@@ -1,28 +1,37 @@
+import useProfiletopTabStore from '@/store/useProfiletopTabStore';
+
 type MyActivitiesHeaderProps = {
   setActiveTab: (tab: string) => void;
   activeTab: string;
 };
 
 const MyActivitiesHeader = ({ setActiveTab, activeTab }: MyActivitiesHeaderProps) => {
+  const setTopButtonTab = useProfiletopTabStore((state) => state.setTopButtonTab);
+
+  const handleTabClick = (tab: 'posts' | 'likes' | 'bookmarks') => {
+    setTopButtonTab(tab);
+    setActiveTab(tab);
+  };
+
   return (
     <header>
-      <nav className=" w-full bg-[#E3E3E3] p-5 overflow-y-hidden">
-        <ul className="flex justify-between mx-[50px]">
+      <nav>
+        <ul className=" h-[50px] flex justify-between items-center text-center ">
           <li
-            className={`${activeTab === 'posts' ? 'text-black  ' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('posts')}
+            className={`h-[50px] w-[283px] center-alignment ${activeTab === 'posts' ? 'text-main-400 border border-sub-50 bg-sub-50 rounded-t-2xl' : 'text-neutral-300'}`}
+            onClick={() => handleTabClick('posts')}
           >
             내가 쓴 글
           </li>
           <li
-            className={`${activeTab === 'likes' ? 'text-black ' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('likes')}
+            className={` h-[50px] w-[283px] center-alignment ${activeTab === 'likes' ? 'text-main-400 border border-sub-50 bg-sub-50 rounded-t-2xl' : 'text-neutral-300'}`}
+            onClick={() => handleTabClick('likes')}
           >
             좋아요 한 글
           </li>
           <li
-            className={`${activeTab === 'bookmarks' ? 'text-black ' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('bookmarks')}
+            className={` h-[50px] w-[283px] center-alignment ${activeTab === 'bookmarks' ? 'text-main-400 border border-sub-50 bg-sub-50 rounded-t-2xl' : 'text-neutral-300'}`}
+            onClick={() => handleTabClick('bookmarks')}
           >
             북마크
           </li>

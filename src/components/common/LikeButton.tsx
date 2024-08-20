@@ -64,18 +64,19 @@ const LikeButton = ({ id, type }: LikeButtonProps) => {
       });
       if (!response.ok) {
         const errorResult = await response.json();
-        console.error('likebutton', errorResult);
+        // console.error('likebutton', errorResult);
         throw new Error('Failed to update like');
       }
     } catch (error) {
-      console.error('like 2', error);
+      // console.error('like 2', error);
       setLikes(previousLikes);
       setLikeCount((prev) => (isLiked ? prev + 1 : prev - 1));
     }
   };
   return (
     <button onClick={handleLike} className="flex items-center">
-      {isLiked ? <FilledLike /> : <UnfilledLike />} <span className="ml-1">{likeCount}</span>
+      {isLiked ? <FilledLike /> : <UnfilledLike />}
+      <span className="ml-1 text-body3 md:text-subtitle1 font-medium text-neutral-400">{likeCount}</span>
     </button>
   );
 };

@@ -7,5 +7,10 @@ export type UserMenuProps = {
   userData: {
     profile_image?: string | null;
   } | null;
-  handleLogout: () => void;
+};
+
+export type DesktopHeaderProps = {
+  getLinkClasses: (path: string) => string;
+  isLoggedIn: boolean;
+  userData: any;
 };

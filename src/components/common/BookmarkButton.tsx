@@ -5,7 +5,6 @@ import UnfilledBookmark from '@/assets/images/bookmark/UnfilledBookmark';
 import { useAuth } from '@/context/auth.context';
 import { useBookmark } from '@/hooks/bookmark/useBookmark';
 import { BookmarkButtonProps, BookmarkType } from '@/types/buttons/bookmark';
-import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const BookmarkButton = ({ id, type }: BookmarkButtonProps) => {
@@ -23,7 +22,8 @@ const BookmarkButton = ({ id, type }: BookmarkButtonProps) => {
   const currentBookmarks = bookmarksMap[type] || [];
   const isBookmarked = currentBookmarks.includes(id);
 
-  const handleBookmark = async () => {
+  const handleBookmark = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     if (!me) {
       toast.error('로그인 후 북마크가 가능합니다.');
       return;
@@ -40,16 +40,16 @@ const BookmarkButton = ({ id, type }: BookmarkButtonProps) => {
     }));
 
     try {
-      console.log('Sending request:', {
-        user_id: me.id,
-        post_id: type.includes('Comment') ? undefined : id,
-        comment_id: type.includes('Comment') ? id : undefined,
-        type
-      });
+      // console.log('Sending request:', {
+      //   user_id: me.id,
+      //   post_id: type.includes('Comment') ? undefined : id,
+      //   comment_id: type.includes('Comment') ? id : undefined,
+      //   type
+      // });
       const response = await fetch('/api/common/bookmark', {
         method: isBookmarked ? 'DELETE' : 'POST',
         headers: {
-          'Context-Type': 'application/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           user_id: me.id,
@@ -61,19 +61,15 @@ const BookmarkButton = ({ id, type }: BookmarkButtonProps) => {
 
       if (!response.ok) {
         const errorResult = await response.json();
-        console.error('Server response error:', errorResult);
+        // console.error('Server response error:', errorResult);
         throw new Error('Failed to update bookmark');
       }
     } catch (error) {
-      console.error('bookmark 2', error);
+      // console.error('bookmark 2', error);
       setBookmarks(previousBookmarks);
     }
   };
-  return (
-    <button onClick={handleBookmark}>
-      {isBookmarked ? <FilledBookmark /> : <UnfilledBookmark width={24} height={24} />}
-    </button>
-  );
+  return <button onClick={handleBookmark}>{isBookmarked ? <FilledBookmark /> : <UnfilledBookmark />}</button>;
 };
 
 export default BookmarkButton;

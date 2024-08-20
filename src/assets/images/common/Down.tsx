@@ -1,11 +1,18 @@
-const Down = () => {
+type DownProps = {
+  width?: number;
+  height?: number;
+  stroke?: string;
+  strokeWidth?: number;
+};
+
+const Down = ({ width = 24, height = 24, stroke = '#292929', strokeWidth = 1.5 }: DownProps) => {
   return (
-    <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
-        d="M13 1L7.14142 6.85858C7.06332 6.93668 6.93668 6.93668 6.85858 6.85858L1 0.999999"
-        stroke="#0F0F0F"
-        stroke-width="2"
-        stroke-linecap="round"
+        d="M18 9L12.1414 14.8586C12.0633 14.9367 11.9367 14.9367 11.8586 14.8586L6 9"
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
       />
     </svg>
   );

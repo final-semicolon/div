@@ -2,24 +2,18 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/auth.context';
-import NicknameModal from './setting/NicknameModal';
-import GithubUrlModal from './setting/GithubUrlModal';
-import InfoModal from './setting/InfoModal';
-import Image from 'next/image';
-import { upDateImage, uploadImage } from '@/utils/imageUpload';
-import { toast, ToastContainer } from 'react-toastify';
+import { uploadImage, upDateImage } from '@/utils/imageUpload';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import EditIcon from '@/assets/images/common/EditIcon';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import SettingDefaultFlow from './setting/settingresponsive/SettingDefaultFlow';
+import SettingMobileFlow from './setting/settingresponsive/SettingMobileFlow';
 
 const ProfileSetting = () => {
   const { userData, me, updateUserData } = useAuth();
-  const [nickname, setNickname] = useState('');
-  const [profileImage, setProfileImage] = useState('');
-  const [info, setInfo] = useState('');
-  const [githubUrl, setGithubUrl] = useState('');
-  const [isNicknameModalOpen, setNicknameModalOpen] = useState(false);
-  const [isGithubUrlModalOpen, setGithubUrlModalOpen] = useState(false);
-  const [isInfoModalOpen, setInfoModalOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
+  const [info, setInfo] = useState<string>('');
   const newProfileRef = useRef<File | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -28,37 +22,27 @@ const ProfileSetting = () => {
       setNickname(userData.nickname || '');
       setProfileImage(userData.profile_image || '');
       setInfo(userData.info || '');
-      setGithubUrl(userData.github_url || '');
     }
   }, [userData]);
 
-  const handleImageClick = () => {
-    if (inputRef.current) {
-      inputRef.current.click();
-    }
-  };
+  const handleImageClick = () => inputRef.current?.click();
 
   const handleImageUpload: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     const file = e.target.files?.[0];
     if (!file || !me?.id) return;
 
     newProfileRef.current = file;
-
     const userId = me.id;
     const defaultProfileImage =
       'https://jtorewqfshytdtgldztv.supabase.co/storage/v1/object/public/profile_images/default_profile_image.png';
-
     const oldPath = profileImage.split('/').slice(-1)[0];
     const filePath = `${userId}_${Date.now()}.png`;
 
-    let publicUrl: string | null = null;
-
     try {
-      if (profileImage === defaultProfileImage) {
-        publicUrl = await uploadImage(file as File, filePath);
-      } else {
-        publicUrl = await upDateImage(file as File, filePath, oldPath);
-      }
+      const publicUrl =
+        profileImage === defaultProfileImage
+          ? await uploadImage(file, filePath)
+          : await upDateImage(file, filePath, oldPath);
 
       if (publicUrl) {
         await updateProfile({ profile_image: publicUrl });
@@ -68,130 +52,76 @@ const ProfileSetting = () => {
         toast.error('이미지 업로드에 실패했습니다.');
       }
     } catch (error) {
-      console.error('이미지 업로드 실패:', (error as Error).message);
+      // console.error('이미지 업로드 실패:', error);
     }
   };
 
-  const handleNicknameUpdate = async (newNickname: string) => {
-    setNickname(newNickname);
-    await updateProfile({ nickname: newNickname });
-    updateUserData({ nickname: newNickname });
-  };
-
-  const handleGithubUrlUpdate = async (newGithubUrl: string) => {
-    setGithubUrl(newGithubUrl);
-    await updateProfile({ github_url: newGithubUrl });
-    updateUserData({ github_url: newGithubUrl });
-  };
-
-  const handleInfoUpdate = async (newInfo: string) => {
-    setInfo(newInfo);
-    await updateProfile({ info: newInfo });
-    updateUserData({ info: newInfo });
-  };
-
-  const updateProfile = async (
-    updates: Partial<{ nickname: string; profile_image: string; info: string; github_url: string }>
-  ) => {
+  const updateProfile = async (updates: Partial<{ nickname: string; profile_image: string; info: string }>) => {
     if (!me) return;
 
-    const response = await fetch('/api/profile/profileauth', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        user_id: me.id,
-        ...updates
-      })
-    });
+    try {
+      const response = await fetch('/api/profile/profileauth', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: me.id, ...updates })
+      });
 
-    if (response.ok) {
-      toast.success('프로필이 성공적으로 수정되었습니다.');
-    } else {
-      toast.error('프로필이 성공 실패했습니다.');
+      if (response.ok) {
+        if (updates.nickname && updates.nickname !== nickname) {
+          toast.success('닉네임이 변경되었습니다.');
+          setNickname(updates.nickname);
+        }
+
+        if (updates.info && updates.info !== info) {
+          toast.success('자기 소개가 변경되었습니다.');
+          setInfo(updates.info);
+        }
+
+        if (updates.profile_image && updates.profile_image !== profileImage) {
+          toast.success('프로필 이미지가 변경되었습니다.');
+        }
+
+        await updateUserData(updates);
+      } else {
+        toast.error('프로필 업데이트에 실패했습니다.');
+      }
+    } catch (error) {
+      // console.error('프로필 업데이트 실패:', (error as Error).message);
+      toast.error('프로필 업데이트 중 오류가 발생했습니다.');
     }
   };
 
   if (!userData) return <p>Loading...</p>;
 
   return (
-    <div className=" flex flex-col justify-center items-center p-6 border border-sub-200 rounded-lg">
-      <ToastContainer />
-      <div className="w-[588px]">
-        <div className="mb-4 flex flex-col justify-center items-center">
-          <div
-            className="relative w-32 h-32 border border-[#ccc] rounded-full overflow-hidden bg-[#fdfbfb] flex items-center justify-center cursor-pointer"
-            onClick={handleImageClick}
-          >
-            {profileImage ? (
-              <Image
-                src={profileImage}
-                alt="Profile"
-                fill
-                priority
-                className="rounded-full object-cover"
-                sizes="120px"
-              />
-            ) : (
-              <div></div>
-            )}
-            <input type="file" className="hidden" ref={inputRef} onChange={handleImageUpload} accept=".png" />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-30 rounded-full">
-              <span className="text-white text-title">+</span>
-            </div>
-          </div>
-          <div className="relative">
-            <div
-              onClick={handleImageClick}
-              className="absolute cursor-pointer border border-sub-100 rounded-full right-[-75px] top-[-50px]"
-            >
-              <EditIcon />
-            </div>
-          </div>
-          <p className="text-neutral-900 text-h4 font-bold p-[24px_0_24px_0]">{nickname}님, 좋은 하루 보내세요!</p>
-        </div>
-        <div className="flex justify-between p-[24px_0_24px_0]">
-          <span className="text-neutral-900 text-subtitle1 font-medium">이메일</span>
-          <span className="text-neutral-700 text-body1 font-regular">{me?.email}</span>
-        </div>
-        <div className="flex justify-between p-[24px_0_24px_0]">
-          <span className="text-neutral-900 text-subtitle1 font-medium">닉네임</span>
-          <span className="text-neutral-700 text-body1 font-regular" onClick={() => setNicknameModalOpen(true)}>
-            {nickname} ›
-          </span>
-          <NicknameModal
-            isOpen={isNicknameModalOpen}
-            onClose={() => setNicknameModalOpen(false)}
-            currentNickname={nickname}
-            onNicknameUpdate={handleNicknameUpdate}
-          />
-        </div>
-        <div className="flex justify-between p-[24px_0_24px_0]">
-          <span className="text-neutral-900 text-subtitle1 font-medium">깃허브 링크 주소</span>
-          <span className="text-neutral-700 text-body1 font-regular" onClick={() => setGithubUrlModalOpen(true)}>
-            {githubUrl} ›
-          </span>
-          <GithubUrlModal
-            isOpen={isGithubUrlModalOpen}
-            onClose={() => setGithubUrlModalOpen(false)}
-            currentGithubUrl={githubUrl}
-            onGithubUrlUpdate={handleGithubUrlUpdate}
-          />
-        </div>
-        <div onClick={() => setInfoModalOpen(true)} className="flex justify-between p-[24px_0_24px_0]">
-          <span className="text-neutral-900 text-subtitle1 font-medium">자기소개</span>
-          <span>›</span>
-        </div>
-        <p className="text-neutral-700 text-body1 font-regular line-clamp-5 whitespace-pre-wrap">{info}</p>
-        <InfoModal
-          isOpen={isInfoModalOpen}
-          onClose={() => setInfoModalOpen(false)}
-          currentInfo={info}
-          onInfoUpdate={handleInfoUpdate}
+    <>
+      <Default>
+        <SettingDefaultFlow
+          profileImage={profileImage}
+          handleImageClick={handleImageClick}
+          handleImageUpload={handleImageUpload}
+          inputRef={inputRef}
+          nickname={nickname}
+          me={me}
+          info={info}
+          updateProfile={updateProfile}
+          updateUserData={updateUserData}
         />
-      </div>
-    </div>
+      </Default>
+      <Mobile>
+        <SettingMobileFlow
+          profileImage={profileImage}
+          handleImageClick={handleImageClick}
+          handleImageUpload={handleImageUpload}
+          inputRef={inputRef}
+          nickname={nickname}
+          me={me}
+          info={info}
+          updateProfile={updateProfile}
+          updateUserData={updateUserData}
+        />
+      </Mobile>
+    </>
   );
 };
 

@@ -1,103 +1,114 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useFormContext } from 'react-hook-form';
+import CheckBox from '@/assets/images/auth/CheckBox';
+import UnCheckBox from '@/assets/images/auth/UnCheckBox';
+import RedI from '@/assets/images/auth/RedI';
 
 type CheckboxGroupProps = {
-  agreeAll: boolean;
-  setAgreeAll: (value: boolean) => void;
-  agreeTerms: boolean;
-  setAgreeTerms: (value: boolean) => void;
-  agreePrivacy: boolean;
-  setAgreePrivacy: (value: boolean) => void;
+  showError: boolean;
 };
 
-const CheckboxGroup = ({
-  agreeAll,
-  setAgreeAll,
-  agreeTerms,
-  setAgreeTerms,
-  agreePrivacy,
-  setAgreePrivacy
-}: CheckboxGroupProps) => {
-  const handleAgreeAllChange = (checked: boolean) => {
-    setAgreeAll(checked);
-    setAgreeTerms(checked);
-    setAgreePrivacy(checked);
+const CheckboxGroup = ({ showError }: CheckboxGroupProps) => {
+  const {
+    register,
+    watch,
+    setValue,
+    clearErrors,
+    formState: { errors }
+  } = useFormContext();
+
+  const agreeTerms = watch('terms');
+  const agreePrivacy = watch('privacy');
+
+  const renderCheckbox = (checked: boolean) => {
+    return checked ? <CheckBox /> : <UnCheckBox />;
   };
 
-  const handleIndividualChange = (type: string, checked: boolean) => {
-    if (type === 'terms') {
-      setAgreeTerms(checked);
-    } else if (type === 'privacy') {
-      setAgreePrivacy(checked);
-    }
+  const borderColor = showError && (!agreeTerms || !agreePrivacy) ? 'border-red' : 'border-gray-900';
+  const textColor = showError && (!agreeTerms || !agreePrivacy) ? 'text-red' : 'text-gray-900';
 
-    if (agreeTerms && agreePrivacy && !checked) {
-      setAgreeAll(false);
-    } else if (checked && agreeTerms && type === 'privacy') {
-      setAgreeAll(true);
-    } else if (checked && agreePrivacy && type === 'terms') {
-      setAgreeAll(true);
+  const handleAgreeAll = () => {
+    const newCheckedState = !(agreeTerms && agreePrivacy);
+    setValue('terms', newCheckedState);
+    setValue('privacy', newCheckedState);
+
+    if (newCheckedState) {
+      clearErrors(['terms', 'privacy']);
     }
   };
 
-  useEffect(() => {
-    if (agreeTerms && agreePrivacy) {
-      setAgreeAll(true);
-    }
-  }, [agreeTerms, agreePrivacy, setAgreeAll]);
+  const handleIndividualCheckboxChange = (field: 'terms' | 'privacy', currentValue: boolean) => {
+    const newValue = !currentValue;
+    setValue(field, newValue);
 
-  //약관 클릭 시 새로운 창으로 보여주기
-  const handleLabelClick = (url: string, e: React.MouseEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    window.open(url, '_blank');
+    if (newValue) {
+      clearErrors([field]);
+    }
   };
 
   return (
-    <div className="mb-4">
-      <div className="flex items-center mb-4">
-        <input
-          id="agreeAll"
-          type="checkbox"
-          checked={agreeAll}
-          onChange={(e) => handleAgreeAllChange(e.target.checked)}
-          className="mr-2"
-        />
-        <label htmlFor="agreeAll" className="text-sm text-gray-600">
-          모두 확인하였으며 동의합니다.
-        </label>
+    <div>
+      <div className={`subtitle2-bold-16px ${textColor} mb-3`}>약관동의</div>
+      <div className={`p-4 border rounded ${borderColor}`}>
+        <div className="flex items-center mb-3">
+          <div className="mr-2 cursor-pointer" onClick={handleAgreeAll}>
+            {renderCheckbox(agreeTerms && agreePrivacy)}
+          </div>
+          <label htmlFor="agreeAll" className="subtitle2-bold-16px text-gray-900 cursor-pointer">
+            전체동의
+          </label>
+        </div>
+        <hr className="border-gray-300 mb-3" />
+        <div className="flex items-center mb-2">
+          <div className="mr-2 cursor-pointer" onClick={() => handleIndividualCheckboxChange('terms', agreeTerms)}>
+            {renderCheckbox(agreeTerms)}
+          </div>
+          <label
+            htmlFor="terms"
+            onClick={(e) => {
+              e.preventDefault();
+              window.open('/legal/terms', '_blank');
+            }}
+            className={`body2-regular-16px underline cursor-pointer text-gray-900`}
+          >
+            통합 서비스 이용약관 <span className="text-main-400">(필수)</span>
+          </label>
+          <input
+            type="checkbox"
+            id="terms"
+            {...register('terms', { required: '필수 항목에 동의해 주세요' })}
+            className="hidden"
+          />
+        </div>
+        <div className="flex items-center mb-2">
+          <div className="mr-2 cursor-pointer" onClick={() => handleIndividualCheckboxChange('privacy', agreePrivacy)}>
+            {renderCheckbox(agreePrivacy)}
+          </div>
+          <label
+            htmlFor="privacy"
+            onClick={(e) => {
+              e.preventDefault();
+              window.open('/legal/privacy', '_blank');
+            }}
+            className={`body2-regular-16px underline cursor-pointer text-gray-900`}
+          >
+            개인정보수집 및 이용동의 <span className="text-main-400">(필수)</span>
+          </label>
+          <input
+            type="checkbox"
+            id="privacy"
+            {...register('privacy', { required: '필수 항목에 동의해 주세요' })}
+            className="hidden"
+          />
+        </div>
       </div>
-      <div className="flex items-center mb-4">
-        <input
-          id="agreeTerms"
-          type="checkbox"
-          checked={agreeTerms}
-          onChange={(e) => handleIndividualChange('terms', e.target.checked)}
-          className="mr-2"
-        />
-        <label
-          htmlFor="agreeTerms"
-          className="text-sm text-gray-600"
-          onClick={(e) => handleLabelClick('/legal/terms', e)}
-        >
-          활용 서비스 이용약관 (필수)
-        </label>
-      </div>
-      <div className="flex items-center mb-4">
-        <input
-          id="agreePrivacy"
-          type="checkbox"
-          checked={agreePrivacy}
-          onChange={(e) => handleIndividualChange('privacy', e.target.checked)}
-          className="mr-2"
-        />
-        <label
-          htmlFor="agreePrivacy"
-          className="text-sm text-gray-600"
-          onClick={(e) => handleLabelClick('/legal/privacy', e)}
-        >
-          개인정보수집 및 이용동의 (필수)
-        </label>
-      </div>
+      {showError && (!agreeTerms || !agreePrivacy) && (
+        <div className="mt-1 body2-regular-16px text-red flex items-center">
+          <RedI />
+          필수 항목에 동의해 주세요
+        </div>
+      )}
     </div>
   );
 };

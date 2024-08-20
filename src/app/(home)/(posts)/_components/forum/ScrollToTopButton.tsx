@@ -2,17 +2,16 @@
 
 import GoToTop from '@/assets/images/common/GoToTop';
 import GoToTopHover from '@/assets/images/common/GoToTopHover';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import { throttle } from 'lodash';
 import { useEffect, useState } from 'react';
 
 const ScrollToTopButton = () => {
-  const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const toggleVisibility = () => {
-    if (window.scrollY > 300) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
+  const [scrollY, setScrollY] = useState(0);
+
+  const handleScroll = () => {
+    setScrollY(window.scrollY);
   };
 
   const scrollToTop = () => {
@@ -23,27 +22,37 @@ const ScrollToTopButton = () => {
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', toggleVisibility);
+    const throttledHandleScroll = throttle(handleScroll, 200);
+    window.addEventListener('scroll', throttledHandleScroll);
     return () => {
-      window.removeEventListener('scroll', toggleVisibility);
+      window.removeEventListener('scroll', throttledHandleScroll);
     };
   }, []);
-  return (
-    <div>
-      {isVisible && (
+
+  return scrollY > 300 ? (
+    <>
+      <Default>
         <button
           onClick={scrollToTop}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className={`fixed bottom-4 right-20 transition-transform duration-500 ease-in-out transform ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-          }`}
+          className="fixed bottom-4 right-20 transition-transform duration-500 ease-in-out transform translate-y-0 opacity-100"
         >
           {isHovered ? <GoToTopHover /> : <GoToTop />}
         </button>
-      )}
-    </div>
-  );
+      </Default>
+      <Mobile>
+        <button
+          onClick={scrollToTop}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="fixed bottom-5 right-5 transition-transform duration-500 ease-in-out transform translate-y-0 opacity-100"
+        >
+          {isHovered ? <GoToTopHover width={40} height={40} /> : <GoToTop width={40} height={40} />}
+        </button>
+      </Mobile>
+    </>
+  ) : null;
 };
 
 export default ScrollToTopButton;

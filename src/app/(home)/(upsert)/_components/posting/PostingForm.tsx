@@ -1,19 +1,11 @@
 'use client';
-import { FormEvent, FormEventHandler, useState } from 'react';
-import Link from 'next/link';
+import { MouseEventHandler, useState } from 'react';
 import { TpostFormData } from '@/types/upsert';
-import FormTitleInput from './postingform/FormTitleInput';
+import FormTitleInput from '../FormTitleInput';
 import FormTagInput from './postingform/FormTagInput';
-import FormContentArea from './postingform/FormContentArea';
-import {
-  CATEGORY_LIST_EN,
-  CATEGORY_LIST_KR,
-  FORUM_SUB_CATEGORY_LIST,
-  LOGIN_ALERT,
-  VALIDATION_SEQUENCE,
-  VALIDATION_SEQUENCE_KR
-} from '@/constants/upsert';
-import { toast, ToastContainer } from 'react-toastify';
+import FormContentArea from '../FormContentArea';
+import { CATEGORY_LIST_EN, CATEGORY_LIST_KR, FORUM_SUB_CATEGORY_LIST, LOGIN_ALERT } from '@/constants/upsert';
+import { toast } from 'react-toastify';
 import FormSubmitButton from '../FormSubmitButton';
 import { useAuth } from '@/context/auth.context';
 import { useRouter } from 'next/navigation';
@@ -22,98 +14,111 @@ import { usePostingCategoryStore } from '@/store/postingCategoryStore';
 import PostingCategoryBox from './postingform/PostingCategoryBox';
 import UpsertTheme from '../UpsertTheme';
 import ThumbNailBox from '../ThumbNailBox';
-import { v4 as uuidv4 } from 'uuid';
+import { TAG_LIST } from '@/constants/tags';
+import { uploadThumbnail } from '../../_utils/thumbnail';
+import { useUpsertValidationStore } from '@/store/upsertValidationStore';
+import { POST_ALERT_TEXT } from '@/constants/alert';
+import MobileBackIconBlack from '@/assets/images/upsert_image/MobileBackIconBlack';
 
 const PostingForm = () => {
+  const router = useRouter();
   const { categoryGroup, subCategory, clearCategory } = usePostingCategoryStore();
   const { me: user } = useAuth();
-  const router = useRouter();
-
+  const [title, setTitle] = useState<string>('');
+  const [tagList, setTagList] = useState<Array<Ttag>>(TAG_LIST);
+  const [thumbnail, setThumbnail] = useState<File>();
   const [content, setContent] = useState<string>('');
+  const { setIsValidCategory, setIsValidContent, setIsValidTitle, clearAllValid } = useUpsertValidationStore();
 
   if (!user?.id) {
-    toast.error(LOGIN_ALERT, { hideProgressBar: false, autoClose: 1500, onClose: () => router.push(`/login`) });
+    router.push(`/login`);
+    toast.error(LOGIN_ALERT);
     return;
   }
 
-  const handleSubmit: FormEventHandler = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const category = CATEGORY_LIST_EN[CATEGORY_LIST_KR.indexOf(categoryGroup.category)];
+  const handleSubmit = async (): Promise<void> => {
+    const category = CATEGORY_LIST_EN[CATEGORY_LIST_KR.indexOf(categoryGroup.category ?? '')];
 
-    if (
-      category === 'forum' &&
-      !FORUM_SUB_CATEGORY_LIST.find((FORUM_SUB_CATEGORY) => subCategory === FORUM_SUB_CATEGORY)
-    ) {
-      toast.error('포럼 서브 카테고리를 선택해 주세요!', { autoClose: 1500, hideProgressBar: true });
+    // 폼 유효성 검사 로직
+    const isForumSubCategory = FORUM_SUB_CATEGORY_LIST.find((FORUM_SUB_CATEGORY) => subCategory === FORUM_SUB_CATEGORY);
+
+    const validArray = [category, title, content];
+    const invalidSequance = [
+      () => setIsValidCategory(false),
+      () => setIsValidTitle(false),
+      () => setIsValidContent(false)
+    ];
+
+    const invalidCheckArray = validArray.map((valid, index) => {
+      if ((index === 0 && !valid) || (valid === 'forum' && !isForumSubCategory)) {
+        invalidSequance[index]();
+        return 'invalid';
+      } else if (valid.length === 0) {
+        invalidSequance[index]();
+        return 'invalid';
+      }
+      return 'valid';
+    });
+
+    invalidCheckArray.forEach((isInvalid, index) => {
+      isInvalid === 'invalid' && index !== 2 ? window.scrollTo({ top: 0, behavior: 'smooth' }) : null;
+    });
+
+    if (invalidCheckArray.includes('invalid')) {
       return;
     }
 
     const postData: TpostFormData = {
-      user_id: user?.id as string,
+      title: title,
+      user_id: user?.id,
       content: content,
       category,
       forum_category: subCategory
     };
 
-    formData.forEach((value, key) => {
-      postData[key] = value;
-    });
+    // 유효성 검사 통과시 업로드 썸네일-글-태그순서로 업로드
 
-    //폼 유효성 검사 로직
-    const invalidItems = Object.keys(postData).filter((key) => !postData[key]);
-    const invalidItemIndex = VALIDATION_SEQUENCE.findIndex((sequence) => {
-      return !!invalidItems.find((item) => item === sequence);
-    });
-    const invalidItem = VALIDATION_SEQUENCE_KR[invalidItemIndex];
-
-    if (invalidItem) {
-      toast.error(invalidItem + ' 입력이 필요합니다!', { hideProgressBar: true });
-      return;
-    }
-
-    const thumbnailFormData = new FormData(event.currentTarget);
-    thumbnailFormData.append('category', category);
-    thumbnailFormData.append('name', uuidv4());
-
-    //유효성 검사 통과시 업로드 썸네일 업로드 후 글업로드
-
-    const thumbnail = await fetch('/api/upsert/thumbnail', {
-      method: 'POST',
-      body: thumbnailFormData
-    });
-    const { url: thumbnailUrl, message: thumbnailMessage } = await thumbnail.json();
-
-    if (thumbnailMessage) {
-      toast.error(thumbnailMessage);
-      return;
-    }
+    const thumbnailUrl = thumbnail ? await uploadThumbnail(thumbnail, category) : null;
 
     const response = await fetch('/api/upsert/posting', {
       method: 'POST',
       body: JSON.stringify({ ...postData, thumbnailUrl })
     });
-    const { message } = await response.json();
-
-    toast.success(message, { autoClose: 1500, onClose: () => router.push(`/${category}`) });
+    const { data, message } = await response.json();
+    const tagsArray = tagList.filter((tag) => tag.selected === true);
+    if (tagsArray.length > 0 && !!data[0].id) {
+      const response = await fetch(`/api/upsert/tags/${data[0].id}`, {
+        method: 'POST',
+        body: JSON.stringify({ user_id: user.id, tags: tagsArray, category: data[0].category })
+      });
+    }
+    router.push(`/${category}/${data[0].id}`);
+    toast.success(POST_ALERT_TEXT);
     clearCategory();
+    clearAllValid();
     return;
   };
 
+  const handleBackClick: MouseEventHandler<HTMLDivElement> = () => {
+    router.back();
+  };
+
   return (
-    <div className="w-[1204px] mx-auto flex flex-col gap-y-5 max-h-screen">
-      <ToastContainer />
-      <Link className="mb-4" href={'/'}>
+    <div className="max-w-full px-5 md:px-0 md:max-w-[1204px] mx-auto flex flex-col  max-h-screen ">
+      <div className="w-6 h-6 mb-6 md:hidden" onClick={handleBackClick}>
+        <MobileBackIconBlack />
+      </div>
+      <div className="w-9 h-9 md:mb-14 hidden md:block" onClick={handleBackClick}>
         <BackArrowIcon />
-      </Link>
+      </div>
       <UpsertTheme />
-      <form className="flex flex-col gap-y-10 h-full" onSubmit={handleSubmit}>
+      <form className="w-full md:max-w-full flex flex-col gap-y-10 h-full ">
         <PostingCategoryBox />
-        <FormTitleInput />
-        <FormTagInput />
-        <ThumbNailBox />
+        <FormTitleInput title={title} setTitle={setTitle} />
+        <FormTagInput tagList={tagList} setTagList={setTagList} />
+        <ThumbNailBox setThumbnail={setThumbnail} />
         <FormContentArea content={content} setContent={setContent} />
-        <FormSubmitButton />
+        <FormSubmitButton handleSubmit={handleSubmit} isEdit={false} />
       </form>
     </div>
   );
