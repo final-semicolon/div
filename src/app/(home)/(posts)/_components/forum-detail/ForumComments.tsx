@@ -43,7 +43,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   //댓글 수정
   const commentRetouch = useMutation({
     mutationFn: async ({ id, user_id, mdEditorChange }: commentRetouch) => {
-      const response = await fetch(`/api/posts/forum-detail/forum-comments/${param.id}`, {
+      await fetch(`/api/posts/forum-detail/forum-comments/${param.id}`, {
         method: 'PATCH',
         body: JSON.stringify({ id, user_id, mdEditorChange })
       });
