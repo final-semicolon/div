@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import PostCard from './common/PostCard';
 import CommentCard from './common/CommentCard';
 import { CombinedItem } from '@/types/profile/profileType';
@@ -13,6 +13,9 @@ import ContentFilters from '@/components/categoryfilter/ContentFilters';
 import Reset from '@/assets/images/common/Reset';
 import CommentPageButton from '@/components/common/CommentPageButton';
 import ActivitiesSkeletonUi from './activitiesskeleton/ActivitiesSkeletonUi';
+import { BookmarkContext } from '@/providers/BookmarkProvider';
+import { BookmarkType } from '@/types/buttons/bookmark';
+import { useQueryClient } from '@tanstack/react-query';
 
 type BookmarksListProps = {
   primaryCategory: 'all' | 'qna' | 'forum' | 'archive';
@@ -38,6 +41,14 @@ const BookmarksList = ({
   const [selectAll, setSelectAll] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showForumMenu, setShowForumMenu] = useState(false);
+  const context = useContext(BookmarkContext);
+  const queryClient = useQueryClient();
+
+  if (!context) {
+    throw new Error('Error');
+  }
+
+  const { removeBookmarks } = context;
 
   useEffect(() => {
     setCurrentPage(1);
@@ -135,6 +146,11 @@ const BookmarksList = ({
         if (!response.ok) throw new Error('포스트 삭제 요청 실패');
       }
 
+      postsToDelete.forEach((post) => {
+        removeBookmarks(post.id, post.category as BookmarkType);
+        queryClient.invalidateQueries({ queryKey: ['bookmarksPosts'] });
+      });
+
       if (commentsToDelete.length > 0) {
         const response = await fetch('/api/profile/bookmarkscomments', {
           method: 'DELETE',
@@ -145,6 +161,12 @@ const BookmarksList = ({
         });
         if (!response.ok) throw new Error('댓글 삭제 요청 실패');
       }
+
+      commentsToDelete.forEach((comment) => {
+        removeBookmarks(comment.id, comment.category as BookmarkType);
+        queryClient.invalidateQueries({ queryKey: ['bookmarksComments'] });
+      });
+
       // 업데이트된 combinedItems 생성
       const updatedCombinedItems = combinedItems.filter((item) => !selectedItems.has(item.id));
 

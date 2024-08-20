@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/context/auth.context';
-import { LikeContextType } from '@/types/buttons/like';
+import { LikeContextType, LikeType } from '@/types/buttons/like';
 import { createContext, ReactNode, useEffect, useState } from 'react';
 
 export const LikeContext = createContext<LikeContextType | undefined>(undefined);
@@ -16,6 +16,13 @@ const LikeProvider = ({ children }: { children: ReactNode }) => {
     archiveLikes: [],
     archiveCommentLikes: []
   });
+
+  const removeLikes = (id: string, type: LikeType) => {
+    setLikes((prev) => ({
+      ...prev,
+      [`${type}Likes`]: prev[`${type}Likes`].filter((likeId: string) => likeId !== id)
+    }));
+  };
 
   useEffect(() => {
     const fetchLikes = async () => {
@@ -41,7 +48,7 @@ const LikeProvider = ({ children }: { children: ReactNode }) => {
     };
     fetchLikes();
   }, [me]);
-  return <LikeContext.Provider value={{ likes, setLikes }}>{children}</LikeContext.Provider>;
+  return <LikeContext.Provider value={{ likes, setLikes, removeLikes }}>{children}</LikeContext.Provider>;
 };
 
 export default LikeProvider;

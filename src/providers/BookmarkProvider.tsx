@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/context/auth.context';
-import { BookmarkContextType } from '@/types/buttons/bookmark';
+import { BookmarkContextType, BookmarkType } from '@/types/buttons/bookmark';
 import { createContext, ReactNode, useEffect, useState } from 'react';
 
 export const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);
@@ -16,6 +16,13 @@ export const BookmarkProvider = ({ children }: { children: ReactNode }) => {
     archiveBookmarks: [],
     archiveCommentBookmarks: []
   });
+
+  const removeBookmarks = (id: string, type: BookmarkType) => {
+    setBookmarks((prev) => ({
+      ...prev,
+      [`${type}Bookmarks`]: prev[`${type}Bookmarks`].filter((bookmarkId: string) => bookmarkId !== id)
+    }));
+  };
 
   useEffect(() => {
     const fetchBookmarks = async () => {
@@ -48,5 +55,7 @@ export const BookmarkProvider = ({ children }: { children: ReactNode }) => {
     fetchBookmarks();
   }, [me]);
 
-  return <BookmarkContext.Provider value={{ bookmarks, setBookmarks }}>{children}</BookmarkContext.Provider>;
+  return (
+    <BookmarkContext.Provider value={{ bookmarks, setBookmarks, removeBookmarks }}>{children}</BookmarkContext.Provider>
+  );
 };
