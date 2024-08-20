@@ -59,7 +59,7 @@ const QuestionKebobBtn = () => {
         </button>
 
         <ul
-          className={`${openKebab ? 'border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute  -right-[6px] text-center hover:border-main-400 text-body4 md:text-body2 z-50`}
+          className={`${openKebab ? ' border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute  -right-[6px] text-center hover:border-main-400 text-body4 md:text-body2 z-50`}
         >
           <ConfirmModal
             isOpen={isEditModalOpen}
