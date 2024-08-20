@@ -26,7 +26,9 @@ const ForumDetailPage = async ({ params }: { params: { id: string } }) => {
         <InputComments />
       </div>
       <ForumComments post_user_id={data[0].user_id} />
-      <TopButton />
+      <div className=" hidden md:block">
+        <TopButton />
+      </div>
     </div>
   );
 };
