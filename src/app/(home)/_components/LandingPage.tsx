@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import mainPageLanding from '/public/images/mainPageImages/mainPageLanding.webp';
-import mobileLanding from '@/assets/images/main-page_image/mobileLanding.svg';
+import mobileLanding from '@/assets/images/main-page_image/mobileLanding.png';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
 const LandingPage = () => {
