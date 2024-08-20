@@ -23,16 +23,23 @@ const SearchFilter = ({
   const [showMenu, setShowMenu] = useState(false);
   const [showForumMenu, setShowForumMenu] = useState(false);
 
-  const handleScroll = () => {
-    setShowMenu(false);
-    setShowForumMenu(false);
-  };
-
   useEffect(() => {
+    const handleScroll = () => {
+      setShowMenu(false);
+      setShowForumMenu(false);
+    };
+
+    const handleTouch = () => {
+      setShowMenu(false);
+      setShowForumMenu(false);
+    };
+
     window.addEventListener('scroll', handleScroll);
+    window.addEventListener('touchmove', handleTouch);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchmove', handleTouch);
     };
   }, []);
 
@@ -43,7 +50,7 @@ const SearchFilter = ({
   };
 
   return (
-    <div className="p-[24px_0px] md:p-[28px_0px_36px] flex justify-between overflow-x-auto">
+    <div className="p-[24px_0px] md:p-[28px_0px_36px] flex justify-between overflow-x-auto hide-scrollbar">
       <div className="order-2 md:order-1 ">
         <PrimaryCategories
           primaryCategory={primaryCategory}
