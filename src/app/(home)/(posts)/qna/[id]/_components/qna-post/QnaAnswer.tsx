@@ -274,8 +274,8 @@ const QnaAnswer = ({
             <div className="border border-neutral-100 bg-white rounded-xl">
               <CustomMDEditor content={content} setContent={setContent} />
             </div>
-            <div className="h-[182px] mt-12 flex flex-col gap-4">
-              <h5 className="text-h5 font-bold text-neutral-900">태그</h5>
+            <div className="h-[182px] mt-12 flex flex-col gap-2 md:gap-4">
+              <h5 className="text-subtitle3 md:text-h5 font-bold text-neutral-900">태그</h5>
               <SelectTagInput tagList={tagList} setTagList={setTagList} />
             </div>
             <div className="flex gap-4 ml-auto">
