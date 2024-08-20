@@ -78,14 +78,14 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
         <div className="ml-auto flex gap-4 ">
           <Chip
             type="button"
-            intent={`${content.length === 0 ? 'gray_disabled' : 'gray'}`}
+            intent={`${content.trim().length === 0 ? 'gray_disabled' : 'gray'}`}
             size={'medium'}
             label="취소"
             onClick={handleOpenCancleModal}
           />
           <Chip
             type="button"
-            intent={`${content.length === 0 ? 'primary_disabled' : 'primary'}`}
+            intent={`${content.trim().length === 0 ? 'primary_disabled' : 'primary'}`}
             size={'medium'}
             label="등록"
             onClick={handlePostingReply}

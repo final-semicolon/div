@@ -79,7 +79,7 @@ const QnaAnswer = ({
   };
 
   const handleEditClick = () => {
-    if (content.length === 0) return;
+    if (content.trim().length === 0) return;
     setIsEditModalOpen(true);
   };
 
@@ -112,12 +112,13 @@ const QnaAnswer = ({
     mutationFn: selectCommentMutation,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+      await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
       toast.success(SELECT_ANSWER_ALERT_TEXT);
     }
   });
 
   const editComment = async (): Promise<void> => {
-    if (content.length === 0) {
+    if (content.trim().length === 0) {
       toast.error('내용을 입력해주세요!');
       return;
     }
@@ -155,9 +156,10 @@ const QnaAnswer = ({
     mutationFn: editCommentMutation,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+      await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myComments'] });
       toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
       setIsEdit(false);
-      await revalidatePostTag(`qna-detail-${postId}`);
     }
   });
 
@@ -283,7 +285,7 @@ const QnaAnswer = ({
                 <div className="flex gap-4 ml-auto">
                   <Chip intent={'gray'} size={'medium'} label="취소하기" onClick={handleCancleClick} />
                   <Chip
-                    intent={`${content.length === 0 ? 'secondary_disabled' : 'secondary'}`}
+                    intent={`${content.trim().length === 0 ? 'secondary_disabled' : 'secondary'}`}
                     size={'medium'}
                     label="수정하기"
                     onClick={handleEditClick}
@@ -319,7 +321,7 @@ const QnaAnswer = ({
                     <X stroke="#757575" />
                   </button>
                   <div className="max-h-[35px] ">
-                    {content.length === 0 ? (
+                    {content.trim().length === 0 ? (
                       <Chip intent={'primary_disabled'} size="medium" label="수정하기" />
                     ) : (
                       <Chip intent={'primary'} size="medium" label="수정하기" onClick={handleEditClick} />

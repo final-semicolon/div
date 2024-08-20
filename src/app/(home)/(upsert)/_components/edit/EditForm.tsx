@@ -19,6 +19,8 @@ import { deleteThumbnail, patchThumbnail, uploadThumbnail } from '../../_utils/t
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
 import { POST_EDIT_ALERT_TEXT } from '@/constants/alert';
 import MobileBackIconBlack from '@/assets/images/upsert_image/MobileBackIconBlack';
+import { useQueryClient } from '@tanstack/react-query';
+import { revalidate } from '@/actions/revalidate';
 
 type UpsertFormProps = {
   data: TeditForumData | TeditQnaData | TeditArchiveData;
@@ -27,6 +29,7 @@ type UpsertFormProps = {
 
 const EditForm = ({ data, path }: UpsertFormProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { me: user } = useAuth();
   const { categoryGroup, subCategory, setCategoryGroup, setSubCategory, clearCategory } = usePostingCategoryStore();
   const [title, setTitle] = useState<string>('');
@@ -100,8 +103,21 @@ const EditForm = ({ data, path }: UpsertFormProps) => {
       return;
     }
 
+    if (category === 'forum') {
+      await queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+      await revalidatePostTag(`forum-detail-${data[0].id}`);
+    } else if (category === 'qna') {
+      await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+      await revalidatePostTag(`qna-detail-${data[0].id}`);
+    } else if (category === 'archive') {
+      await queryClient.invalidateQueries({ queryKey: ['archivePosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+      await revalidate('/', 'layout');
+    }
     await revalidatePostTag(`${path}`);
-    router.push(`/${category}`);
+    router.push(`/${category}/${data[0].id}`);
     toast.success(POST_EDIT_ALERT_TEXT);
     clearAllValid();
     return;

@@ -19,9 +19,11 @@ import { uploadThumbnail } from '../../_utils/thumbnail';
 import { useUpsertValidationStore } from '@/store/upsertValidationStore';
 import { POST_ALERT_TEXT } from '@/constants/alert';
 import MobileBackIconBlack from '@/assets/images/upsert_image/MobileBackIconBlack';
+import { useQueryClient } from '@tanstack/react-query';
 
 const PostingForm = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { categoryGroup, subCategory, clearCategory } = usePostingCategoryStore();
   const { me: user } = useAuth();
   const [title, setTitle] = useState<string>('');
@@ -92,6 +94,18 @@ const PostingForm = () => {
         body: JSON.stringify({ user_id: user.id, tags: tagsArray, category: data[0].category })
       });
     }
+
+    if (category === 'forum') {
+      await queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+    } else if (category === 'qna') {
+      await queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+    } else if (category === 'archive') {
+      await queryClient.invalidateQueries({ queryKey: ['archivePosts'] });
+      await queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+    }
+
     router.push(`/${category}/${data[0].id}`);
     toast.success(POST_ALERT_TEXT);
     clearCategory();

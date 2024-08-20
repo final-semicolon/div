@@ -24,7 +24,7 @@ const useReplyForm = ({ commentId, userId, replyType }: useReplyFormProps) => {
   }, []);
 
   const handleOpenCancleModal = useCallback((): void => {
-    if (content.length === 0) return;
+    if (content.trim().length === 0) return;
     setIsSelectModalOpen(true);
   }, [content.length]);
 
@@ -42,7 +42,7 @@ const useReplyForm = ({ commentId, userId, replyType }: useReplyFormProps) => {
   }, []);
 
   const handlePostingReply = useCallback((): void => {
-    if (content.length === 0) return;
+    if (content.trim().length === 0) return;
     else if (!userId) return;
     postingReply();
     setContent('');

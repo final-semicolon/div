@@ -34,7 +34,7 @@ const useReply = ({ commentId, replyId, replyContent, replyType }: useReplyProps
   }, []);
 
   const handleEditReply = useCallback(() => {
-    if (content.length === 0) {
+    if (content.trim().length === 0) {
       return;
     }
     editReply();
