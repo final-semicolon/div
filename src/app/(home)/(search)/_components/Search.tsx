@@ -8,7 +8,7 @@ import { useAuth } from '@/context/auth.context';
 import PostCountDisplay from './PostCountDisplay';
 import { SearchData } from '@/types/search/SearchType';
 import SearchBar from '@/components/header/SearchBar';
-import { Mobile, NotDesktop } from '@/hooks/common/useMediaQuery';
+import { Default, Mobile, NotDesktop } from '@/hooks/common/useMediaQuery';
 import SearchSkeletonUi from './SearchSkeletonUi';
 
 const Search = () => {
@@ -137,16 +137,30 @@ const Search = () => {
           />
         </div>
       </div>
-      <div className="relative ml-5">
-        <SearchFilter
-          primaryCategory={filters.primaryCategory}
-          primaryForumCategory={filters.primaryForumCategory}
-          sortingType={filters.sortingType}
-          onCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryCategory: value }))}
-          onForumCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryForumCategory: value }))}
-          onTypeChange={(value) => setFilters((prev) => ({ ...prev, sortingType: value }))}
-        />
-      </div>
+      <Mobile>
+        <div className="relative px-5 overflow-x-auto hide-scrollbar">
+          <SearchFilter
+            primaryCategory={filters.primaryCategory}
+            primaryForumCategory={filters.primaryForumCategory}
+            sortingType={filters.sortingType}
+            onCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryCategory: value }))}
+            onForumCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryForumCategory: value }))}
+            onTypeChange={(value) => setFilters((prev) => ({ ...prev, sortingType: value }))}
+          />
+        </div>
+      </Mobile>
+      <Default>
+        <div className="relative px-5">
+          <SearchFilter
+            primaryCategory={filters.primaryCategory}
+            primaryForumCategory={filters.primaryForumCategory}
+            sortingType={filters.sortingType}
+            onCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryCategory: value }))}
+            onForumCategoryChange={(value) => setFilters((prev) => ({ ...prev, primaryForumCategory: value }))}
+            onTypeChange={(value) => setFilters((prev) => ({ ...prev, sortingType: value }))}
+          />
+        </div>
+      </Default>
       {renderItems}
     </>
   );

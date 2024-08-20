@@ -162,9 +162,9 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                       height={48}
                       className="rounded-full "
                     />
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                       {post_user_id === reply.user_id && (
-                        <p className="text-subtitle2 font-medium px-[12px] py-[4px] text-white bg-main-500 text-center rounded-[4px]">
+                        <p className="w-[66px] h-[30px] text-subtitle2 font-medium  px-[12px] py-[4px] text-white bg-main-500 text-center rounded-[4px]">
                           글쓴이
                         </p>
                       )}
@@ -304,9 +304,9 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                         height={36}
                         className="rounded-full "
                       />
-                      <div className="flex flex-col">
+                      <div className="flex flex-col gap-1">
                         {post_user_id === reply.user_id && (
-                          <p className="text-white text-subtitle4 font-semibold  bg-main-400 text-center rounded-[4px]">
+                          <p className="w-[34px] h-[19px] text-white text-subtitle4 font-semibold  bg-main-400 text-center rounded-[4px]">
                             글쓴이
                           </p>
                         )}

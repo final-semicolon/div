@@ -126,7 +126,7 @@ const SearchPostCard = ({ post, isLiked: initialIsLiked, currentUserId, primaryC
                   <MDEditor.Markdown style={{ color: '#8f8f8f ' }} source={markdownFilterSlang(processedContent)} />
                 </div>
               ) : (
-                <div className="line-clamp-3 md:line-clamp-6 ">
+                <div className="line-clamp-3 md:line-clamp-6 md:h-[175px] ">
                   <MDEditor.Markdown style={{ color: '#8f8f8f ' }} source={markdownFilterSlang(processedContent)} />
                 </div>
               )
@@ -135,7 +135,7 @@ const SearchPostCard = ({ post, isLiked: initialIsLiked, currentUserId, primaryC
                 <MDEditor.Markdown style={{ color: '#8f8f8f ' }} source={markdownFilterSlang(processedContent)} />
               </div>
             ) : (
-              <div className=" line-clamp-3 md:line-clamp-5 ">
+              <div className=" line-clamp-3 md:line-clamp-5 md:h-[130px] ">
                 <MDEditor.Markdown style={{ color: '#8f8f8f ' }} source={markdownFilterSlang(processedContent)} />
               </div>
             )}
