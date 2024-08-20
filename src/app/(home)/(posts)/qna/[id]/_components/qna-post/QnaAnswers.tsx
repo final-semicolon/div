@@ -33,7 +33,7 @@ const QnaAnswers = ({ qnaCommentsCount, questioner, title }: QnaAnswersProps) =>
     queryKey: sortedByLikes ? ['qnaComments', postId, page, 'likes'] : ['qnaComments', postId, page],
     queryFn: async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${postId}?page=${page}&selected=${selectedComment}&sortedByLikes=${sortedByLikes}`
+        `/api/posts/qna-detail/comment/${postId}?page=${page}&selected=${selectedComment}&sortedByLikes=${sortedByLikes}`
       );
       const {
         data,
