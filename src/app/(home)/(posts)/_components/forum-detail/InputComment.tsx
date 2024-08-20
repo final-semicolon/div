@@ -32,6 +32,7 @@ const InputComments = () => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['forumComments', params.id] });
+      await queryClient.invalidateQueries({ queryKey: ['myComments'] });
       if (comment) {
         setComment('');
         revalidatePostTag(`forum-detail-${params.id}`);
