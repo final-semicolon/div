@@ -94,7 +94,7 @@ const Reply = ({ commentId, reply }: ReplyProps) => {
           <div className="ml-auto flex gap-4">
             <Chip intent={'gray'} size="medium" label="취소" onClick={handleCancleClick} />
             <Chip
-              intent={`${content.length === 0 ? 'primary_disabled' : 'primary'}`}
+              intent={`${content.trim().length === 0 ? 'primary_disabled' : 'primary'}`}
               size="medium"
               label="등록"
               onClick={handleEditReply}

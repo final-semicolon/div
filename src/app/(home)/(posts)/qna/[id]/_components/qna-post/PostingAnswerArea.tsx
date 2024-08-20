@@ -120,7 +120,7 @@ const PostingAnswerArea = ({ title, content, setContent, setToggleAnswer }: Post
         </div>
         <div className="flex gap-6 h-12 w-[240px] ml-auto mt-12 ">
           <Chip intent={'gray'} size="medium" label="취소하기" onClick={handleCancleClick} />
-          {content.length === 0 ? (
+          {content.trim().length === 0 ? (
             <Chip intent={'primary_disabled'} size="medium" label="답변등록" />
           ) : (
             <Chip intent={'primary'} size="medium" label="답변등록" onClick={handleApproveClick} />
@@ -154,7 +154,7 @@ const PostingAnswerArea = ({ title, content, setContent, setToggleAnswer }: Post
               <X stroke="#757575" />
             </button>
             <div className="max-h-[35px] ">
-              {content.length === 0 ? (
+              {content.trim().length === 0 ? (
                 <Chip intent={'primary_disabled'} size="medium" label="답변등록" />
               ) : (
                 <Chip intent={'primary'} size="medium" label="답변등록" onClick={handleApproveClick} />
