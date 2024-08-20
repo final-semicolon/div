@@ -5,9 +5,9 @@ const UnCheckBox = () => {
       <path
         d="M8 12.8L10.8204 15.888C10.8294 15.8979 10.8393 15.907 10.8505 15.9144C11.0714 16.0606 11.4265 16.0141 11.5618 15.8168L16 8"
         stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
