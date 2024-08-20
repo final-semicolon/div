@@ -20,6 +20,7 @@ import { useUpsertValidationStore } from '@/store/upsertValidationStore';
 import { POST_ALERT_TEXT } from '@/constants/alert';
 import MobileBackIconBlack from '@/assets/images/upsert_image/MobileBackIconBlack';
 import { useQueryClient } from '@tanstack/react-query';
+import Loading from '@/app/(home)/loading';
 
 const PostingForm = () => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const PostingForm = () => {
   const [tagList, setTagList] = useState<Array<Ttag>>(TAG_LIST);
   const [thumbnail, setThumbnail] = useState<File>();
   const [content, setContent] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setIsValidCategory, setIsValidContent, setIsValidTitle, clearAllValid } = useUpsertValidationStore();
 
   if (!user?.id) {
@@ -39,6 +41,7 @@ const PostingForm = () => {
   }
 
   const handleSubmit = async (): Promise<void> => {
+    setIsLoading(true);
     const category = CATEGORY_LIST_EN[CATEGORY_LIST_KR.indexOf(categoryGroup.category ?? '')];
 
     // 폼 유효성 검사 로직
@@ -55,7 +58,7 @@ const PostingForm = () => {
       if ((index === 0 && !valid) || (valid === 'forum' && !isForumSubCategory)) {
         invalidSequance[index]();
         return 'invalid';
-      } else if (valid.length === 0) {
+      } else if (valid.trim().length === 0) {
         invalidSequance[index]();
         return 'invalid';
       }
@@ -67,6 +70,7 @@ const PostingForm = () => {
     });
 
     if (invalidCheckArray.includes('invalid')) {
+      setIsLoading(false);
       return;
     }
 
@@ -116,6 +120,10 @@ const PostingForm = () => {
   const handleBackClick: MouseEventHandler<HTMLDivElement> = () => {
     router.back();
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="max-w-full px-5 md:px-0 md:max-w-[1204px] mx-auto flex flex-col  max-h-screen ">

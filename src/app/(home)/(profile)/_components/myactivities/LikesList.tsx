@@ -1,4 +1,4 @@
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction, useContext } from 'react';
 import { useLikesComments, useLikesPosts } from '@/hooks/common/useLikes';
 import { CombinedItem } from '@/types/profile/profileType';
 import { combineItems } from '@/utils/combineItems';
@@ -13,6 +13,9 @@ import Reset from '@/assets/images/common/Reset';
 import ContentFilters from '@/components/categoryfilter/ContentFilters';
 import CommentPageButton from '@/components/common/CommentPageButton';
 import ActivitiesSkeletonUi from './activitiesskeleton/ActivitiesSkeletonUi';
+import { LikeContext } from '@/providers/LikeProvider';
+import { LikeType } from '@/types/buttons/like';
+import { useQueryClient } from '@tanstack/react-query';
 
 type LikesListProps = {
   primaryCategory: 'all' | 'qna' | 'forum' | 'archive';
@@ -38,6 +41,14 @@ const LikesList = ({
   const [selectAll, setSelectAll] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showForumMenu, setShowForumMenu] = useState(false);
+  const context = useContext(LikeContext);
+  const queryClient = useQueryClient();
+
+  if (!context) {
+    throw new Error('Error');
+  }
+
+  const { removeLikes } = context;
 
   useEffect(() => {
     setCurrentPage(1);
@@ -132,6 +143,11 @@ const LikesList = ({
         if (!response.ok) throw new Error('포스트 삭제 요청 실패');
       }
 
+      postsToDelete.forEach((post) => {
+        removeLikes(post.id, post.category as LikeType);
+        queryClient.invalidateQueries({ queryKey: ['likesPosts'] });
+      });
+
       if (commentsToDelete.length > 0) {
         const response = await fetch('/api/profile/likescomments', {
           method: 'DELETE',
@@ -142,6 +158,11 @@ const LikesList = ({
         });
         if (!response.ok) throw new Error('댓글 삭제 요청 실패');
       }
+
+      commentsToDelete.forEach((comment) => {
+        removeLikes(comment.id, comment.category as LikeType);
+        queryClient.invalidateQueries({ queryKey: ['likesComments'] });
+      });
 
       const updatedCombinedItems = combinedItems.filter((item) => !selectedItems.has(item.id));
 

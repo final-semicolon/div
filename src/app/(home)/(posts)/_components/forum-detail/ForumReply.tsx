@@ -206,34 +206,20 @@ const ForumReply = ({
                     />
                   </div>
                   <div className="flex justify-end items-end mt-4 gap-6">
+                    <Chip
+                      intent="gray"
+                      size="medium"
+                      label="취소"
+                      onClick={() => setReplyEditor({ [reply.id]: false })}
+                    />
                     {replyRetouch === reply.reply ? (
-                      <>
-                        <Chip
-                          intent="gray"
-                          size="medium"
-                          label="취소"
-                          onClick={() => setReplyEditor({ [reply.id]: false })}
-                        />
-                        <Chip intent="primary_disabled" size="medium" label="수정" />
-                      </>
+                      <Chip intent="primary_disabled" size="medium" label="수정" />
                     ) : (
-                      <>
-                        <Chip intent="gray" size="medium" label="취소" onClick={() => setReplyCancelModal(true)} />
-                        <Chip
-                          intent="primary"
-                          size="medium"
-                          label="수정"
-                          onClick={() => replyRetouchHandle(reply.id, reply.user_id)}
-                        />
-                      </>
-                    )}
-
-                    {replyCancelModal && (
-                      <ConfirmModal
-                        isOpen={replyCancelModal}
-                        onClose={() => setReplyCancelModal(false)}
-                        onConfirm={() => setReplyEditor({ [reply.id]: false })}
-                        message={'댓글을 수정 하시겠습니까?'}
+                      <Chip
+                        intent="primary"
+                        size="medium"
+                        label="수정"
+                        onClick={() => replyRetouchHandle(reply.id, reply.user_id)}
                       />
                     )}
                   </div>
