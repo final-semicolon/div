@@ -92,7 +92,7 @@ const ProfileSetting = () => {
     }
   };
 
-  if (userData) return <SettingSkeletonUi />;
+  if (!userData) return <SettingSkeletonUi />;
 
   return (
     <>
