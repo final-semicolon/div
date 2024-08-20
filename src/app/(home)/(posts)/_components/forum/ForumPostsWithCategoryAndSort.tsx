@@ -17,6 +17,7 @@ import PostCardSkeleton from './skeleton/PostCardSkeleton';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import DraggableScroll from '@/components/common/DraggableScroll';
 import MobileWriteButton from './mobile/MobileWriteButton';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ForumPostsWithCategoryAndSort = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending, error } = useFetchForumPosts();
@@ -25,6 +26,7 @@ const ForumPostsWithCategoryAndSort = () => {
   const [ref, inView] = useInView();
   const { me, userData } = useAuth();
   const currentUserId = me?.id;
+  const queryClient = useQueryClient();
 
   const categories: ForumCategory[] = ['전체', '일상', '커리어', '자기개발', '토론', '코드 리뷰'];
   const sortOptions: { value: SortOption; label: string }[] = [
@@ -85,6 +87,8 @@ const ForumPostsWithCategoryAndSort = () => {
 
         const data = await response.json();
         // console.log(`${action === 'like' ? 'Liked' : 'Unliked'} post with ID: ${postId}`, data);
+
+        queryClient.invalidateQueries({ queryKey: ['likesPosts'] });
       } catch (error) {
         // console.error(`Error ${action === 'like' ? 'liking' : 'unliking'} post with ID: ${postId}`, error);
       }
