@@ -15,13 +15,13 @@ const FormTitleInput = ({ title, setTitle }: FormTitleInputProps) => {
   return (
     <div>
       <label
-        className={`block mb-2 ${isValidTitle === false ? 'text-red' : 'text-gray-900'}  text-h5 font-bold`}
+        className={`block mb-2 ${isValidTitle === false ? 'text-red' : 'text-gray-900'} text-subtitle3 md:text-h5 font-bold`}
         htmlFor="title"
       >
         제목
       </label>
       <input
-        className={`px-6 py-3 w-full text-neutral-900 border h-[51px] rounded-xl text-body1  focus:border-main-400 outline-none ${isValidTitle === false ? 'placeholder:text-red border-red ' : 'text-gray-900 border-neutral-100 placeholder:text-neutral-400 placeholder:text-body1'} `}
+        className={`md:max-h-[51px] px-4 md:px-6 py-2 md:py-3 w-full text-neutral-900 border rounded-lg text-body3 md:rounded-xl md:text-body1  focus:border-main-400 outline-none ${isValidTitle === false ? 'placeholder:text-red border-red ' : 'text-gray-900 border-neutral-100 placeholder:text-neutral-400 placeholder:text-body3 md:placeholder:text-body1'} `}
         type="text"
         name="title"
         id="title"

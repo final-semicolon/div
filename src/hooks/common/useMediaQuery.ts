@@ -10,6 +10,11 @@ export const Desktop = ({ children }: ResponsiveProps) => {
   return isDesktop ? children : null;
 };
 
+export const NotDesktop = ({ children }: ResponsiveProps) => {
+  const isNotDesktop = useMediaQuery({ maxWidth: 1151 });
+  return isNotDesktop ? children : null;
+};
+
 export const Tablet = ({ children }: ResponsiveProps) => {
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1151 });
   return isTablet ? children : null;

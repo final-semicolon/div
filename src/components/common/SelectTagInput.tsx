@@ -43,11 +43,11 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
 
   return (
     <div
-      className=" min-h-[37px] md:min-h-[51px] flex flex-col text-neutral-900 text-body3 md:text-body1 border rounded-md md:rounded-xl border-neutral-100 focus:border-main-400 outline-none relative "
+      className="whitespace-nowrap min-h-[37px] md:min-h-[51px] flex flex-col text-neutral-900 text-body3 md:text-body1 border rounded-md md:rounded-xl border-neutral-100 focus:border-main-400 outline-none relative "
       id="tag"
       onClick={handleOpenTag}
     >
-      <div className=" min-h-[37px] md:min-h-[51px] flex  items-center  gap-2 px-4 py-2 md:px-6 md:py-3 cursor-pointer overflow-auto">
+      <div className=" min-h-[37px] md:min-h-[51px] flex  items-center  gap-2 px-4 py-2 md:px-6 md:py-2 cursor-pointer overflow-auto">
         <p className={`${selectedCount > 0 ? 'hidden' : ''} text-neutral-400 `}>
           태그를 선택하세요! (최대 3개까지 가능해요)
         </p>
@@ -73,7 +73,10 @@ const SelectTagInput = ({ tagList, setTagList }: SelectTagInputProps) => {
               </div>
             );
           })}
-        <div className="ml-auto">
+        <div className="ml-auto md:hidden">
+          <Down width={20} height={20} />
+        </div>
+        <div className="ml-auto hidden md:block">
           <Down />
         </div>
       </div>
