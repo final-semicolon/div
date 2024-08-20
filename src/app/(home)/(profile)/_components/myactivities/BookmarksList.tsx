@@ -3,7 +3,6 @@ import PostCard from './common/PostCard';
 import CommentCard from './common/CommentCard';
 import { CombinedItem } from '@/types/profile/profileType';
 import { combineItems } from '@/utils/combineItems';
-import MyActivitiesPagination from './common/MyActivitiesPagination';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import { toast } from 'react-toastify';
 import Check from '@/assets/images/common/Check';
@@ -13,6 +12,7 @@ import PrimaryCategories from '@/components/categoryfilter/PrimaryCategories';
 import ContentFilters from '@/components/categoryfilter/ContentFilters';
 import Reset from '@/assets/images/common/Reset';
 import CommentPageButton from '@/components/common/CommentPageButton';
+import ActivitiesSkeletonUi from './activitiesskeleton/ActivitiesSkeletonUi';
 
 type BookmarksListProps = {
   primaryCategory: 'all' | 'qna' | 'forum' | 'archive';
@@ -49,11 +49,8 @@ const BookmarksList = ({
     setSelectAll(false);
   }, [currentPage]);
 
-  const {
-    data: posts = { archivePosts: [], forumPosts: [], qnaPosts: [] },
-    error: postError,
-    isLoading: postLoading
-  } = useBookmarksPosts();
+  const { data: posts = { archivePosts: [], forumPosts: [], qnaPosts: [] }, isLoading: postLoading } =
+    useBookmarksPosts();
 
   const {
     data: comments = {
@@ -61,7 +58,6 @@ const BookmarksList = ({
       forum: { posts: [], comments: [] },
       qna: { posts: [], comments: [] }
     },
-    error: commentError,
     isLoading: commentLoading
   } = useBookmarksComments();
 
@@ -72,9 +68,6 @@ const BookmarksList = ({
       setCombinedItems(combined);
     }
   }, [postLoading, commentLoading, posts, comments]);
-
-  if (postLoading || commentLoading) return <div>Loading...</div>;
-  if (postError || commentError) return <div>Error: {postError?.message || commentError?.message}</div>;
 
   const categoryFilteredItems =
     primaryCategory === 'all'
@@ -90,10 +83,7 @@ const BookmarksList = ({
   const typeFilteredItems =
     contentType === 'all' ? categoryFilteredItems : categoryFilteredItems.filter((item) => item.type === contentType);
 
-  console.log(typeFilteredItems);
-
-  const itemsPerPage = 4;
-  const totalPages = Math.ceil(typeFilteredItems.length / itemsPerPage);
+  const itemsPerPage = 5;
   const paginatedItems = typeFilteredItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,6 +164,8 @@ const BookmarksList = ({
     onCategoryChange('all');
     onForumCategoryChange(null);
   };
+
+  if (postLoading || commentLoading) return <ActivitiesSkeletonUi />;
 
   return (
     <div className="relative min-h-screen">
@@ -325,16 +317,14 @@ const BookmarksList = ({
         )}
       </div>
       {paginatedItems.length > 1 && (
-        <>
+        <div className="py-2">
           <Default>
-            <div className="">
-              <CommentPageButton
-                totalItems={typeFilteredItems.length}
-                itemsPerPage={itemsPerPage}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-              />
-            </div>
+            <CommentPageButton
+              totalItems={typeFilteredItems.length}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
           </Default>
           <Mobile>
             <CommentPageButton
@@ -344,7 +334,7 @@ const BookmarksList = ({
               onPageChange={setCurrentPage}
             />
           </Mobile>
-        </>
+        </div>
       )}
 
       <ConfirmModal

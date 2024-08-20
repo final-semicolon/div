@@ -10,10 +10,10 @@ const ArchivePostsSkeleton = ({ width, height }: { width: number; height: number
             <p className="text-subtitle1 text-neutral-400 font-medium mb-3">Level Up Course</p>
             <p className="text-h3 text-neutral-900 font-bold">더 많은 코드를 만나보세요!</p>
             <div className="flex items-center justify-between text-subtitle1 font-medium text-neutral-700 mt-6">
-              <p className="flex items-center ">
+              <div className="flex items-center ">
                 전체 게시글
                 <p className="flex items-center text-subtitle1 font-bold text-neutral-800 ml-1">(로딩 중...)</p>
-              </p>
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-5">
@@ -29,10 +29,10 @@ const ArchivePostsSkeleton = ({ width, height }: { width: number; height: number
             <p className="text-subtitle3 text-neutral-400 font-medium mb-1">Level Up Course</p>
             <p className="text-subtitle2 text-neutral-900 font-bold">더 많은 코드를 만나보세요!</p>
             <div className="flex items-center justify-between text-subtitle3 font-medium text-neutral-700 mt-5">
-              <p className="flex items-center ">
+              <div className="flex items-center ">
                 전체 게시글
                 <p className="flex items-center text-subtitle3 font-bold text-neutral-800 ml-1">(로딩중...)</p>
-              </p>
+              </div>
             </div>
           </div>
           <div className="flex flex-col mx-5">

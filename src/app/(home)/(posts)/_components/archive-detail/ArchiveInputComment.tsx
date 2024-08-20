@@ -127,20 +127,17 @@ const ArchiveInputComments = () => {
         </div>
       </Default>
       <Mobile>
-        <div
-          className="py-6 w-[335px] flex flex-col border-t-[1px] border-y"
-          onClick={me?.id ? () => {} : handleLoginModal}
-        >
+        <div className="p-5 flex flex-col border-t-[1px] border-y" onClick={me?.id ? () => {} : handleLoginModal}>
           {isLoginModalOpen ? <LoginAlertModal /> : ''}
           <form className=" w-full" onSubmit={handleSubmit}>
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center mb-5">
               <div className="border border-neutral-100 rounded-xl focus-within:border-main-400">
                 {me?.id ? (
                   <MDEditor
                     value={comment}
                     onChange={handleCommentChange}
                     height={120}
-                    style={{ width: '335px' }}
+                    style={{ width: '350px' }}
                     preview="edit"
                     extraCommands={commands.getCommands().filter(() => false)}
                     textareaProps={{ maxLength: 1000, placeholder: '자유롭게 소통해 보세요!' }}
@@ -148,7 +145,7 @@ const ArchiveInputComments = () => {
                 ) : (
                   <MDEditor
                     height={120}
-                    style={{ width: '335px' }}
+                    style={{ width: '350px' }}
                     preview="edit"
                     extraCommands={commands.getCommands().filter(() => false)}
                     textareaProps={{ maxLength: 0, placeholder: '로그인 후 자유롭게 소통해 보세요!' }}
@@ -157,7 +154,7 @@ const ArchiveInputComments = () => {
               </div>
             </div>
             {me && (
-              <div className=" flex justify-end items-end gap-6 mb-6 mr-5">
+              <div className=" flex justify-end items-end gap-4">
                 <button
                   type="button"
                   disabled={!comment}

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import NotFound from '@/app/not-found';
 import { useQuery } from '@tanstack/react-query';
-import Loading from '@/app/(home)/loading';
 import { TqnaReplyWithUser, Treply } from '@/types/posts/qnaDetailTypes';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
 import ReplyForm from './ReplyForm';

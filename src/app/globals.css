@@ -231,11 +231,17 @@
   .profile-like-bookmark {
     @apply text-subtitle3 md:text-subtitle1 font-medium cursor-pointer p-[0px_25px_0px_25px];
   }
+  .profile-skeleton {
+    @apply border border-gray-200 bg-gray-200 rounded-md animate-pulse;
+  }
   .searchbar-toggle-list {
     @apply absolute top-[50px] md:top-[60px] z-[1000] pt-4 max-h-52 mt-1 w-[287px] md:w-[318px] md:ml-10 border bg-white border-neutral-200 rounded-md shadow-custom-search overflow-y-auto scrollbar-hide;
   }
   .searchbar-toggle-item {
     @apply cursor-pointer mb-4 p-[4px_16px] text-body2 font-regular w-full text-neutral-700 hover:bg-neutral-50;
+  }
+  .search-skeleton {
+    @apply border border-gray-200 bg-gray-200 rounded-md animate-pulse;
   }
   .filters-item {
     @apply p-[8px_8px_8px_8px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium cursor-pointer center-alignment;
@@ -249,13 +255,13 @@
 }
 
 .custom-dashed-border {
-  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23DBDBDBFF' stroke-width='2' stroke-dasharray='8 7' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23DBDBDBFF' strokeWidth='2' strokeDasharray='8 7' strokeDashoffset='0' strokeLinecap='square'/%3e%3c/svg%3e");
   border-radius: 8px;
   box-shadow: 2px 2px 8px 0px rgba(163, 163, 163, 0.25);
 }
 
 .custom-dashed-border-invalid {
-  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23F66161FF' stroke-width='2' stroke-dasharray='8 7' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23F66161FF' strokeWidth='2' strokeDasharray='8 7' strokeDashoffset='0' strokeLinecap='square'/%3e%3c/svg%3e");
   border-radius: 8px;
   box-shadow: 2px 2px 8px 0px rgba(163, 163, 163, 0.25);
 }

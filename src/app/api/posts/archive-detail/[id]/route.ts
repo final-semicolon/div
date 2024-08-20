@@ -20,7 +20,7 @@ export const GET = async (request: Request, { params }: { params: { id: string }
     .select(`*,user:users(*),tags:archive_tags(*)`)
     .eq('id', params.id);
   if (error) {
-    console.error('error', error);
+    // console.error('error', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
   const commentCount = await getCommentCount(params.id);

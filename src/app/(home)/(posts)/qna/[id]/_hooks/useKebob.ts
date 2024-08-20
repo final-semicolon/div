@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { useQnaDetailStore } from '@/store/qnaDetailStore';
-import { InvalidateQueryFilters } from '@tanstack/react-query';
 import useDeleteMutation from './useDeleteMutation';
 
 type useReplyKebobProps = {

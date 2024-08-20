@@ -5,7 +5,7 @@ import { timeForToday } from '@/utils/timeForToday';
 import { useAuth } from '@/context/auth.context';
 import Chip from '@/components/common/Chip';
 import Tag from '@/components/common/Tag';
-import { cutText, filterSlang } from '@/utils/markdownCut';
+import { filterSlang } from '@/utils/markdownCut';
 import KebobBtn from '../kebob-btn/KebobBtn';
 import useReply from '../../_hooks/reply/useReply';
 

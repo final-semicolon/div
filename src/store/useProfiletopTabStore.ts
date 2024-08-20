@@ -1,21 +1,22 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
 type ProfiletopTabState = {
   topButtonTab: string;
-  settopButtonTab: (tab: string) => void;
+  setTopButtonTab: (tab: string) => void;
 };
 
 const useProfiletopTabStore = create<ProfiletopTabState>()(
-  persist(
-    (set) => ({
-      topButtonTab: 'profile',
-      settopButtonTab: (tab) => set({ topButtonTab: tab })
-    }),
-    {
-      name: 'Profile-tab',
-      getStorage: () => localStorage
-    }
+  devtools(
+    persist(
+      (set) => ({
+        topButtonTab: 'profile',
+        setTopButtonTab: (tab) => set({ topButtonTab: tab })
+      }),
+      {
+        name: 'Profile-tab'
+      }
+    )
   )
 );
 

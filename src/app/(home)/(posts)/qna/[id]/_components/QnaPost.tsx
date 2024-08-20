@@ -38,8 +38,10 @@ const QnaPost = ({ data }: QnaPostProps) => {
       {me && me.id !== data.user_id ? (
         <PostingQnaAnswer title={data.title} content={content} setContent={setContent} />
       ) : null}
-      <QnaAnswers qnaCommentsCount={data.qna_comments[0].count} questioner={data.user_id} />
-      <TopButton />
+      <QnaAnswers title={data.title} qnaCommentsCount={data.qna_comments[0].count} questioner={data.user_id} />
+      <div className="hidden md:block">
+        <TopButton />
+      </div>
     </div>
   );
 };

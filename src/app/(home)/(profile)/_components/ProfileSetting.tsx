@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import SettingDefaultFlow from './setting/settingresponsive/SettingDefaultFlow';
 import SettingMobileFlow from './setting/settingresponsive/SettingMobileFlow';
+import SettingSkeletonUi from './setting/settingskeleton/SettingSkeletonUi';
 
 const ProfileSetting = () => {
   const { userData, me, updateUserData } = useAuth();
@@ -52,7 +53,7 @@ const ProfileSetting = () => {
         toast.error('이미지 업로드에 실패했습니다.');
       }
     } catch (error) {
-      console.error('이미지 업로드 실패:', error);
+      // console.error('이미지 업로드 실패:', error);
     }
   };
 
@@ -86,12 +87,12 @@ const ProfileSetting = () => {
         toast.error('프로필 업데이트에 실패했습니다.');
       }
     } catch (error) {
-      console.error('프로필 업데이트 실패:', (error as Error).message);
+      // console.error('프로필 업데이트 실패:', (error as Error).message);
       toast.error('프로필 업데이트 중 오류가 발생했습니다.');
     }
   };
 
-  if (!userData) return <p>Loading...</p>;
+  if (!userData) return <SettingSkeletonUi />;
 
   return (
     <>

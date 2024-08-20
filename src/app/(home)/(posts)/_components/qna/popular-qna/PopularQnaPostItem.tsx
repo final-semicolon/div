@@ -1,5 +1,5 @@
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
-import { cutText, processMarkdown } from '@/utils/markdownCut';
+import { processMarkdown } from '@/utils/markdownCut';
 import MDEditor from '@uiw/react-md-editor';
 import Link from 'next/link';
 import { memo } from 'react';

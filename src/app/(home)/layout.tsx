@@ -3,7 +3,7 @@ import OAuthNicknameModalWrapper from './(auth)/_components/OAuthNicknameModalWr
 import HeaderWrapper from '@/components/header/HeaderWrapper';
 import QnaBackground from './_components/QnaBackground';
 import ArchiveBackground from './_components/ArchiveBackground';
-import SearchPadding from '@/components/common/SearchPadding';
+import PaddingOrNot from '@/components/common/PaddingOrNot';
 
 type HomeLayoutProps = {
   children: React.ReactNode;
@@ -16,7 +16,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
       <HeaderWrapper />
       <div className="flex justify-center flex-1 w-full px-0" data-color-mode="light">
         <main className="md:max-w-[1204px] max-w-[767px] w-full">
-          <SearchPadding>{children}</SearchPadding>
+          <PaddingOrNot>{children}</PaddingOrNot>
           <ArchiveBackground />
         </main>
       </div>

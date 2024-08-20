@@ -51,7 +51,7 @@ const PostsLink = () => {
   return (
     <>
       <Default>
-        <div className=" relative flex justify-between items-center gap-5 mt-5">
+        <div className=" relative flex justify-between items-center gap-5 mt-5  rounded-xl">
           <Swiper
             onSwiper={setSwiperInstance}
             slidesPerView={1}
@@ -72,18 +72,30 @@ const PostsLink = () => {
                   loading="eager"
                   width={1500}
                   height={500}
-                  className="w-[1204px] h-[234px]"
+                  className="rounded-xl w-[1204px] h-[234px]"
                 />
               </Link>
             </SwiperSlide>
             <SwiperSlide className="swiper-slide">
               <Link href={'/forum'}>
-                <Image src={forum} alt="Q&A 게시판" width={1500} height={500} className="w-[1204px] h-[234px]" />
+                <Image
+                  src={forum}
+                  alt="Q&A 게시판"
+                  width={1500}
+                  height={500}
+                  className="rounded-xl w-[1204px] h-[234px]"
+                />
               </Link>
             </SwiperSlide>
             <SwiperSlide className="swiper-slide">
               <Link href={'/archive'}>
-                <Image src={library} alt="Q&A 게시판" width={1500} height={500} className="w-[1204px] h-[234px]" />
+                <Image
+                  src={library}
+                  alt="Q&A 게시판"
+                  width={1500}
+                  height={500}
+                  className="rounded-xl w-[1204px] h-[234px]"
+                />
               </Link>
             </SwiperSlide>
           </Swiper>
