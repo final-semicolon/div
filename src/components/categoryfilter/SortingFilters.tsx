@@ -58,6 +58,7 @@ const SortingFilters = ({ sortingType, onTypeChange, showMenu, onShowMenu }: Sor
       {showMenu && (
         <div
           ref={menuButtonRef}
+          onClick={() => onShowMenu(false)}
           className="absolute z-[1000] top-[24px] md:top-[28px] w-[109px] md:w-[140px] border overflow-hidden border-neutral-100 rounded-lg bg-white hover:border hover:border-main-400 "
         >
           <li

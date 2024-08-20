@@ -21,7 +21,13 @@ import LoginAlertModal from '@/components/modal/LoginAlertModal';
 import CommentPageButton from '@/components/common/CommentPageButton';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 
-const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
+const ArchiveComments = ({
+  post_user_id,
+  setCommentCount
+}: {
+  post_user_id: string;
+  setCommentCount: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const { me } = useAuth();
   const param = useParams<{ id: string }>();
   const queryClient = useQueryClient();
@@ -74,6 +80,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['archiveComments'] });
       revalidate('/', 'page');
+      setCommentCount((prev) => prev - 1);
     }
   });
 
@@ -165,7 +172,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
                     />
                     <div className=" flex flex-col gap-1 ">
                       {post_user_id === comment.user_id && (
-                        <p className=" text-subtitle2 font-medium  px-[12px] py-[4px] text-white bg-main-500 text-center rounded-[4px]  ">
+                        <p className="w-[66px] h-[30px] text-subtitle2 font-medium  px-[12px] py-[4px] text-white bg-main-500 text-center rounded-[4px]  ">
                           글쓴이
                         </p>
                       )}
@@ -349,7 +356,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
                   />
                   <div className=" flex flex-col">
                     {post_user_id === comment.user_id && (
-                      <p className="text-white text-subtitle4 font-semibold  bg-main-400 text-center rounded-[4px] ">
+                      <p className="w-[34px] h-[19px] text-white text-subtitle4 font-semibold  bg-main-400 text-center rounded-[4px] ">
                         글쓴이
                       </p>
                     )}

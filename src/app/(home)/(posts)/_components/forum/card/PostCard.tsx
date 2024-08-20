@@ -42,7 +42,7 @@ const PostCard = ({
       } else if (lastAction === 'unlike') {
         onUnlike();
       }
-    }, 1000),
+    }, 100),
     [lastAction, onLike, onUnlike]
   );
 

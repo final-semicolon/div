@@ -12,7 +12,11 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const ArchiveInputComments = () => {
+const ArchiveInputComments = ({
+  setCommentCount
+}: {
+  setCommentCount: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const params = useParams<{ id: string }>();
   const { me, userData } = useAuth();
   const queryClient = useQueryClient();
@@ -38,6 +42,7 @@ const ArchiveInputComments = () => {
       if (comment) {
         setComment('');
         await revalidate('/', 'layout');
+        setCommentCount((prev) => prev + 1);
       }
     }
   });
@@ -66,7 +71,7 @@ const ArchiveInputComments = () => {
   return (
     <>
       <Default>
-        <div className="py-6 w-[1156px] flex flex-col border-y" onClick={me?.id ? () => {} : handleLoginModal}>
+        <div className="py-6 w-[1156px] flex flex-col" onClick={me?.id ? () => {} : handleLoginModal}>
           {isLoginModalOpen ? <LoginAlertModal /> : ''}
           <form className=" w-full" onSubmit={handleSubmit}>
             <div className="flex items-center gap-4 mb-6">
