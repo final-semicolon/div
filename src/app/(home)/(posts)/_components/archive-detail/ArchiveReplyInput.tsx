@@ -129,25 +129,23 @@ const ArchiveReplyInput = ({ comment_id, toggle, count }: archiveReplyInputProps
         </div>
       </Default>
       <Mobile>
-        <div className="border-l-4 border-[#C7DCF5] border-b-[1px] p-6 w-[335px] h-[254px] mx-[20px]">
+        <div className="border-l-4 border-[#C7DCF5] border-b-[1px] py-5 p-6 mx-5">
           <div className="w-[287px] h-[19px] gap-[4px] mb-[20px]">
             <p>댓글 {count}</p>
           </div>
-          <div className="flex justify-center items-center gap-6 px-[24px] ml-[24px] ">
-            <div className="border border-neutral-100 rounded-xl focus-within:border-main-400">
-              <MDEditor
-                value={reply}
-                onChange={changeReply}
-                preview="edit"
-                extraCommands={[]}
-                commands={commands.getCommands().filter((command) => command.name !== 'image')}
-                textareaProps={{ maxLength: 1000, placeholder: '자유롭게 소통해 보세요!' }}
-                height={120}
-                style={{ width: '335px' }}
-              />
-            </div>
+          <div className="flex justify-center items-center border border-neutral-100 rounded-xl focus-within:border-main-400">
+            <MDEditor
+              value={reply}
+              onChange={changeReply}
+              preview="edit"
+              extraCommands={[]}
+              commands={commands.getCommands().filter((command) => command.name !== 'image')}
+              textareaProps={{ maxLength: 1000, placeholder: '자유롭게 소통해 보세요!' }}
+              height={120}
+              style={{ width: '335px' }}
+            />
           </div>
-          <div className="w-[287px] h-[35px] flex justify-end items-end gap-4 mt-4">
+          <div className="flex justify-end items-end gap-4 mt-4">
             <button
               onClick={handleCancelClick}
               className="bg-neutral-50 hover:bg-neutral-100 hover:text-neutral-600 text-neutral-100 py-2 px-4 rounded-lg"

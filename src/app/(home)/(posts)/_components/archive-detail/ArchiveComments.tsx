@@ -36,7 +36,6 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
   const itemsPerPage = 5;
   const { isOpen, loginAlertModal } = useLoginAlertStore();
 
-  // 댓글 수정
   const commentRetouch = useMutation({
     mutationFn: async ({ id, user_id, mdEditorChange }: commentRetouch) => {
       const response = await fetch(`/api/posts/forum-detail/archive-comments/${param.id}`, {
@@ -58,7 +57,6 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
     toast.success('댓글이 수정되었어요', { autoClose: 1500 });
   };
 
-  // 댓글 삭제
   const commentDelete = useMutation({
     mutationFn: async ({ id, user_id }: { id: string; user_id: string }) => {
       const response = await fetch(`/api/posts/archive-detail/archive-comments/${param.id}`, {
@@ -111,7 +109,6 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
     setMdEditorChange(value!);
   };
 
-  // 댓글 가져오기
   const { data: comments } = useQuery<archiveCommentsType>({
     queryKey: ['archiveComments', param.id, page],
     queryFn: async () => {
@@ -333,22 +330,16 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
         </div>
       </Default>
       <Mobile>
-        <div className="mt-5 px-5 pb-2 subtitle3-bold-14px ">
+        <div className="mt-5 mb-6 px-5 subtitle3-bold-14px ">
           {comments && comments.data.length > 0 && <p>댓글 {comments.count}</p>}
         </div>
         {comments?.data.map((comment) => (
-          <div
-            key={comment.id}
-            className=" flex flex-col  "
-            style={{ width: replyToggle[comment.id] ? '335px' : '375px' }}
-          >
+          <div key={comment.id} className={`w-full flex flex-col  `}>
             <div
-              className={`w-[395px] flex flex-col justify-around border-b-2 gap-4 p-6 ${
-                comment.user_id === me?.id ? 'bg-sub-50' : 'bg-white'
-              }`}
+              className={`flex flex-col justify-around border-b-2 gap-2 md:gap-4 p-5 md:px-5 md:py-6 ${replyToggle[comment.id] ? 'mx-5' : 'mx-0'} md:mx-0 ${comment.user_id === me?.id ? 'bg-sub-50' : 'bg-white'}`}
             >
               <div className="flex justify-between ">
-                <div className="flex justify-start items-center gap-4 ">
+                <div className="flex justify-start items-center gap-3 ">
                   <Image
                     src={comment.user.profile_image}
                     alt="commentUserImage"
@@ -358,7 +349,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
                   />
                   <div className=" flex flex-col">
                     {post_user_id === comment.user_id && (
-                      <p className="p-[4px] text-white text-subtitle4 font-semibold  bg-main-400 text-center rounded-[4px]  ">
+                      <p className="text-white text-subtitle4 font-semibold  bg-main-400 text-center rounded-[4px] ">
                         글쓴이
                       </p>
                     )}
@@ -406,7 +397,7 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
               </div>
               {editingState[comment.id] ? (
                 <div className=" flex flex-col ">
-                  <div className="border border-neutral-100 bg-white rounded-xl focus-within:border-main-400">
+                  <div className="border border-neutral-100 bg-white rounded-xl  focus-within:border-main-400">
                     <MDEditor
                       value={mdEditorChange}
                       onChange={changEditor}
@@ -443,26 +434,23 @@ const ArchiveComments = ({ post_user_id }: { post_user_id: string }) => {
                   </div>
                 </div>
               ) : commentLength ? (
-                <p className="text-body1 font-regular whitespace-pre-wrap break-words">
+                <p className="text-neutral-900 body3-regular-14px whitespace-pre-wrap break-words mb-2">
                   {filterSlang(comment.comment)}
                 </p>
               ) : (
                 <div>
-                  <p className="text-body1 font-regular whitespace-pre-wrap break-words">
+                  <p className="text-neutral-900 body3-regular-14px whitespace-pre-wrap break-words mb-2">
                     {cutText(filterSlang(comment.comment), 370)}
                   </p>
                   {comment.comment.length >= 370 && (
-                    <button
-                      className="text-subtitle2 font-bold text-neutral-700"
-                      onClick={() => setCommentLength(true)}
-                    >
+                    <button className="subtitle3-bold-14px text-neutral-700" onClick={() => setCommentLength(true)}>
                       ...더보기
                     </button>
                   )}
                 </div>
               )}
-              <div className="flex justify-start items-start gap-2">
-                <p className="text-body1 font-regular text-neutral-400">
+              <div className="flex justify-start items-start gap-2 mb-2">
+                <p className="body3-regular-14px text-neutral-400">
                   {comment.created_at.slice(0, 10).replace(/-/g, '.')}
                 </p>
               </div>
