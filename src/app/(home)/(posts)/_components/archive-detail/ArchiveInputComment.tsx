@@ -71,7 +71,7 @@ const ArchiveInputComments = ({
   return (
     <>
       <Default>
-        <div className="py-6 w-[1156px] flex flex-col border-y" onClick={me?.id ? () => {} : handleLoginModal}>
+        <div className="py-6 w-[1156px] flex flex-col" onClick={me?.id ? () => {} : handleLoginModal}>
           {isLoginModalOpen ? <LoginAlertModal /> : ''}
           <form className=" w-full" onSubmit={handleSubmit}>
             <div className="flex items-center gap-4 mb-6">

@@ -164,12 +164,12 @@ const ArchiveReply = ({ comment_id, post_user_id }: { comment_id: string; post_u
                     />
                     <div className="flex flex-col gap-1">
                       {post_user_id === reply.user_id && (
-                        <p className="w-[66px] h-[30px] text-subtitle2 font-medium  px-[12px] py-[4px] text-white bg-main-500 text-center rounded-[4px]">
+                        <p className="w-[66px] h-[30px] text-subtitle2 font-medium px-[12px] py-[4px] text-white bg-main-500 text-center rounded-[4px]">
                           글쓴이
                         </p>
                       )}
                       <p className="text-subtitle1 font-medium">{reply.user.nickname}</p>
-                      <p className="text-body2 font-regular">{timeForToday(reply.updated_at)}</p>
+                      <p className="text-body2 font-regular text-neutral-400">{timeForToday(reply.updated_at)}</p>
                     </div>
                   </div>
                   <div className="relative">
