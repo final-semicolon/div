@@ -37,6 +37,7 @@ const BookmarksList = ({
   const [combinedItems, setCombinedItems] = useState<CombinedItem[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showForumMenu, setShowForumMenu] = useState(false);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -193,6 +194,8 @@ const BookmarksList = ({
             primaryForumCategory={primaryForumCategory}
             onCategoryChange={onCategoryChange}
             onForumCategoryChange={onForumCategoryChange}
+            showForumMenu={showForumMenu}
+            onShowForumMenu={setShowForumMenu}
           />
         </div>
         <div className="flex items-center justify-between p-[8px_20px] text-subtitle3">

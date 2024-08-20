@@ -34,6 +34,8 @@ import KebobBtn from '../kebob-btn/KebobBtn';
 import Replies from '../qna-comments/Replies';
 import Dot from '@/assets/images/common/Dot';
 import CommentBubble from '@/assets/images/common/CommentBubble';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import X from '@/assets/images/common/X';
 
 type QnaAnswerProps = {
   sortedByLikes?: boolean;
@@ -42,6 +44,7 @@ type QnaAnswerProps = {
   questioner: string;
   index?: number;
   qnaCommentsCount?: number;
+  title: string;
 };
 
 const QnaAnswer = ({
@@ -50,7 +53,8 @@ const QnaAnswer = ({
   qnaComment,
   questioner,
   index,
-  qnaCommentsCount
+  qnaCommentsCount,
+  title
 }: QnaAnswerProps) => {
   const { me } = useAuth();
   const { postId, selectedComment, setSelectedComment } = useQnaDetailStore();
@@ -249,45 +253,99 @@ const QnaAnswer = ({
       </div>
       <div className=" max-w-[1204px]">
         {isEdit ? (
-          <div className="flex flex-col">
-            <ConfirmModal
-              isOpen={isEditModalOpen}
-              onClose={() => {
-                setIsEditModalOpen(false);
-              }}
-              onConfirm={editComment}
-              message={POST_APPROVE_CONFIRM_TEXT}
-            />
+          <>
+            <Default>
+              <div className="flex flex-col">
+                <ConfirmModal
+                  isOpen={isEditModalOpen}
+                  onClose={() => {
+                    setIsEditModalOpen(false);
+                  }}
+                  onConfirm={editComment}
+                  message={POST_APPROVE_CONFIRM_TEXT}
+                />
 
-            <ConfirmModal
-              isOpen={isCancleModalOpen}
-              onClose={() => {
-                setIsCancleModalOpen(false);
-              }}
-              onConfirm={() => {
-                toast.success(QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT);
-                setIsEdit(false);
-                setContent(qnaComment.comment);
-              }}
-              message={POST_EDIT_CANCLE_CONFIRM_TEXT}
-            />
-            <div className="border border-neutral-100 bg-white rounded-xl">
-              <CustomMDEditor content={content} setContent={setContent} />
-            </div>
-            <div className="h-[182px] mt-12 flex flex-col gap-2 md:gap-4">
-              <h5 className="text-subtitle3 md:text-h5 font-bold text-neutral-900">태그</h5>
-              <SelectTagInput tagList={tagList} setTagList={setTagList} />
-            </div>
-            <div className="flex gap-4 ml-auto">
-              <Chip intent={'gray'} size={'medium'} label="취소하기" onClick={handleCancleClick} />
-              <Chip
-                intent={`${content.length === 0 ? 'secondary_disabled' : 'secondary'}`}
-                size={'medium'}
-                label="수정하기"
-                onClick={handleEditClick}
-              />
-            </div>
-          </div>
+                <ConfirmModal
+                  isOpen={isCancleModalOpen}
+                  onClose={() => {
+                    setIsCancleModalOpen(false);
+                  }}
+                  onConfirm={() => {
+                    toast.success(QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT);
+                    setIsEdit(false);
+                    setContent(qnaComment.comment);
+                  }}
+                  message={POST_EDIT_CANCLE_CONFIRM_TEXT}
+                />
+                <div className="border border-neutral-100 bg-white rounded-xl">
+                  <CustomMDEditor content={content} setContent={setContent} />
+                </div>
+                <div className="h-[182px] mt-12 flex flex-col gap-2 md:gap-4">
+                  <h5 className="text-subtitle3 md:text-h5 font-bold text-neutral-900">태그</h5>
+                  <SelectTagInput tagList={tagList} setTagList={setTagList} />
+                </div>
+                <div className="flex gap-4 ml-auto">
+                  <Chip intent={'gray'} size={'medium'} label="취소하기" onClick={handleCancleClick} />
+                  <Chip
+                    intent={`${content.length === 0 ? 'secondary_disabled' : 'secondary'}`}
+                    size={'medium'}
+                    label="수정하기"
+                    onClick={handleEditClick}
+                  />
+                </div>
+              </div>
+            </Default>
+            <Mobile>
+              <div className="bg-white w-full h-full fixed z-[1000] px-5 py-5 left-0 top-0 overflow-auto">
+                <ConfirmModal
+                  isOpen={isEditModalOpen}
+                  onClose={() => {
+                    setIsEditModalOpen(false);
+                  }}
+                  onConfirm={editComment}
+                  message={POST_APPROVE_CONFIRM_TEXT}
+                />
+
+                <ConfirmModal
+                  isOpen={isCancleModalOpen}
+                  onClose={() => {
+                    setIsCancleModalOpen(false);
+                  }}
+                  onConfirm={() => {
+                    toast.success(QNA_ANSWER_EDIT_CANCLE_ALRERT_TEXT);
+                    setIsEdit(false);
+                    setContent(qnaComment.comment);
+                  }}
+                  message={POST_EDIT_CANCLE_CONFIRM_TEXT}
+                />
+                <div className="flex h-[51px] justify-between items-center ">
+                  <button onClick={handleCancleClick}>
+                    <X stroke="#757575" />
+                  </button>
+                  <div className="max-h-[35px] ">
+                    {content.length === 0 ? (
+                      <Chip intent={'primary_disabled'} size="medium" label="수정하기" />
+                    ) : (
+                      <Chip intent={'primary'} size="medium" label="수정하기" onClick={handleEditClick} />
+                    )}
+                  </div>
+                </div>
+                <div className="text-subtitle2 flex gap-2 max-h-[60px] mb-5 py-2 border-y">
+                  <span className=" text-main-400 font-regular ">Q.</span>
+                  <h2 className=" text-neutral-900 font-medium inline max-h-[44px] overflow-hidden">
+                    {filterSlang(title ?? '')}
+                  </h2>
+                </div>
+                <div className="border rounded-2xl border-neutral-100">
+                  <CustomMDEditor content={content} setContent={setContent} />
+                </div>
+                <div className="min-w-full whitespace-nowrap h-[182px] mt-12 flex flex-col gap-2">
+                  <h5 className="text-subtitle3 font-bold text-neutral-900">태그</h5>
+                  <SelectTagInput tagList={tagList} setTagList={setTagList} />
+                </div>
+              </div>
+            </Mobile>
+          </>
         ) : (
           <MDEditor.Markdown
             style={{

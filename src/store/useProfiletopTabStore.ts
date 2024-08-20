@@ -9,7 +9,7 @@ type ProfiletopTabState = {
 const useProfiletopTabStore = create<ProfiletopTabState>()(
   persist(
     (set) => ({
-      topButtonTab: 'posts',
+      topButtonTab: 'profile',
       settopButtonTab: (tab) => set({ topButtonTab: tab })
     }),
     {

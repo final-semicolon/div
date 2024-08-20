@@ -6,7 +6,11 @@ import X from '@/assets/images/header/X';
 import { isSearchValid } from '@/utils/validateBannedWords';
 import { TAG_LIST } from '@/constants/tags';
 
-const SearchBar = () => {
+type SearchBarProps = {
+  Searching?: string;
+};
+
+const SearchBar = ({ Searching }: SearchBarProps) => {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -105,9 +109,11 @@ const SearchBar = () => {
   };
 
   return (
-    <div ref={searchBarRef} className=" relative flex flex-col items-center text-neutral-400">
-      <div className=" flex items-center border border-neutral-200 rounded-md w-[287px] md:w-[318px] h-[48px] md:h-[56px] md:ml-10">
-        <div className="flex items-center ml-4">
+    <div ref={searchBarRef} className=" relative flex flex-col text-neutral-400">
+      <div
+        className={`flex items-center justify-between px-5 border border-neutral-200 rounded-md h-[48px] md:h-[56px] md:ml-10 ${Searching === 'ture' ? 'w-full' : 'w-[287px] md:w-[318px]'}`}
+      >
+        <div className="flex items-center">
           <SearchButton stroke="#8F8F8F" />
           <input
             type="text"
@@ -116,8 +122,10 @@ const SearchBar = () => {
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={handleSearch}
             onFocus={() => setIsFocused(true)}
-            className="mx-2 pr-4 w-[191px] md:w-[222px] text-body2 font-regular focus:outline-none bg-transparent"
+            className={`mx-2 pr-4 text-body2 font-regular focus:outline-none ${Searching === 'ture' ? ' w-full' : 'w-[191px] md:w-[222px]'}`}
           />
+        </div>
+        <div>
           {!keyword || (
             <button className="my-4 mr-4" onClick={handleClearKeyword}>
               <X />
