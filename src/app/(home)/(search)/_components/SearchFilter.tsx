@@ -50,7 +50,7 @@ const SearchFilter = ({
   };
 
   return (
-    <div className="p-[24px_0px] md:p-[28px_0px_36px] flex justify-between overflow-x-auto hide-scrollbar">
+    <div className="p-[24px_0px] md:p-[28px_0px_36px] flex justify-between">
       <div className="order-2 md:order-1 ">
         <PrimaryCategories
           primaryCategory={primaryCategory}

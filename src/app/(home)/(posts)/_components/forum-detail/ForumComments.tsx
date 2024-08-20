@@ -159,7 +159,7 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                   />
                   <div className=" flex flex-col md:gap-1 ">
                     {post_user_id === comment.user_id && (
-                      <p className=" text-subtitle4 font-semibold md:text-subtitle2 md:font-medium p-1 md:px-[12px] md:py-[4px] text-white bg-main-400 text-center rounded-[4px]  ">
+                      <p className=" text-subtitle4 font-semibold md:text-subtitle2 md:font-medium p-1 md:w-[66px] w-[34px] md:px-[12px] md:py-[4px] text-white bg-main-400 text-center rounded-[4px]  ">
                         글쓴이
                       </p>
                     )}
@@ -261,9 +261,9 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                 </p>
               ) : (
                 <div>
-                  <p className="text-body3 md:text-body1 w-full font-regular whitespace-pre-wrap break-words text-neutral-900">
+                  <div className="text-body3 md:text-body1 w-full font-regular whitespace-pre-wrap break-words text-neutral-900">
                     <MDEditor.Markdown source={cutText(filterSlang(comment.comment), 370)} />
-                  </p>
+                  </div>
                   {comment.comment.length >= 370 && (
                     <button
                       className="text-subtitle3 md:text-subtitle2 font-bold text-neutral-700"

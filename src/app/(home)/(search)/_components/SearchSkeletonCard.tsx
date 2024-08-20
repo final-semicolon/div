@@ -4,21 +4,26 @@ const SearchSkeletonCard = () => {
       <div className="flex-1">
         <div className="mb-4 md:mb-5">
           <div className="flex items-center text-body3 md:text-body1 font-regular text-neutral-500">
-            <div className="w-24 h-4 bg-gray-200 rounded"></div>
+            <p className="w-24 h-4 bg-gray-200 rounded" />
           </div>
-          <div className="w-full h-6 bg-gray-200 rounded mt-2"></div>
+          <p className="w-full h-6 bg-gray-200 rounded mt-2" />
         </div>
-        <div className="mb-4 md:mb-5 overflow-hidden break-words whitespace-pre-wrap">
-          <div className="w-full h-16 bg-gray-200 rounded"></div>
+        <div className="mb-4 md:mb-5 ">
+          <p className="w-full h-[175px] bg-gray-200 rounded" />
+        </div>
+        <div className="mb-4 md:mb-5 flex">
+          <p className="w-16 h-4 mr-2 bg-gray-200 rounded" />
+          <p className="w-16 h-4 mr-2 bg-gray-200 rounded" />
+          <p className="w-16 h-4 mr-2 bg-gray-200 rounded" />
         </div>
         <div className="flex items-center">
-          <div className="w-24 h-4 bg-gray-200 rounded"></div>
+          <p className="w-24 h-4 bg-gray-200 rounded" />
         </div>
         <div className="flex justify-between mt-1">
           <div className="flex items-center">
-            <div className="w-16 h-4 bg-gray-200 rounded"></div>
+            <p className="w-16 h-4 bg-gray-200 rounded" />
           </div>
-          <div className="w-16 h-4 bg-gray-200 rounded"></div>
+          <p className="w-16 h-4 bg-gray-200 rounded" />
         </div>
       </div>
     </div>

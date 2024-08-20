@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -23,6 +23,7 @@ function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isCapsLockOn, setIsCapsLockOn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const {
     register,
@@ -59,10 +60,8 @@ function LoginForm() {
       const response = await logIn(data.email, data.password);
 
       if (response.status === 200) {
-        toast.success('로그인이 완료되었어요.', {
-          autoClose: 2000,
-          onClose: () => router.replace('/')
-        });
+        setIsLoggedIn(true);
+        router.replace('/');
       } else {
         toast.error('이메일과 비밀번호를 확인해주세요');
       }
@@ -70,6 +69,12 @@ function LoginForm() {
       toast.error('이메일과 비밀번호를 확인해주세요');
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      toast.success('로그인이 완료되었어요.');
+    }
+  }, [isLoggedIn]);
 
   const handleOAuthLogin = async (provider: 'google' | 'kakao' | 'github') => {
     setError(null);
