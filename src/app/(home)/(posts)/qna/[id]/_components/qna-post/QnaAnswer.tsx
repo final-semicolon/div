@@ -166,7 +166,6 @@ const QnaAnswer = ({
 
   useEffect(() => {
     const commentTagList = qnaComment.qna_comment_tag.map((tag) => tag.tag);
-
     setTagList(
       TAG_LIST.map((TAG) => {
         return commentTagList.includes(TAG.name) ? { ...TAG, selected: !TAG.selected } : TAG;
@@ -175,7 +174,7 @@ const QnaAnswer = ({
   }, [qnaComment.qna_comment_tag]);
   return (
     <div
-      className={`bg-white md:max-w-[1204px] md:py-12 py-5 md:mb-8 mb-4 px-5 md:px-6 md:border md:${selectedComment === qnaComment.id ? 'border-main-400' : ''} md:rounded-2xl overflow-auto`}
+      className={`bg-white md:max-w-[1204px] md:py-12 py-5 md:mb-8 mb-4 px-5 md:px-6 md:border ${selectedComment === qnaComment.id ? 'md:border-main-400' : ''} md:rounded-2xl overflow-auto`}
     >
       <div className="mb-6">
         {index === 0 ? (
