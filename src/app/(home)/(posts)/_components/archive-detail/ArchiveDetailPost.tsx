@@ -22,6 +22,7 @@ import MobileBackClickWhite from '@/components/common/MobileBackClickWhite ';
 import KebabWhite from '@/assets/images/common/KebabWhite';
 import ArchiveInputComments from './ArchiveInputComment';
 import ArchiveComments from './ArchiveComments';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ArchiveDetailPost = ({ data }: { data: archiveDetailType[] }) => {
   const { me } = useAuth();
@@ -32,6 +33,7 @@ const ArchiveDetailPost = ({ data }: { data: archiveDetailType[] }) => {
   const [archiveDetail, setArchiveDetail] = useState<archiveDetailType | null>(null);
   const [commentCount, setCommentCount] = useState<number>(0);
   const [scroll, setScroll] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const fetchArchiveDetail = async () => {
@@ -61,8 +63,10 @@ const ArchiveDetailPost = ({ data }: { data: archiveDetailType[] }) => {
       method: 'DELETE',
       body: JSON.stringify({ id: me?.id })
     });
-    router.push('/archive');
-    return;
+    if (response.ok) {
+      await queryClient.invalidateQueries({ queryKey: ['archivePosts'] });
+      router.push('/archive');
+    }
   };
 
   const handlePostRetouch = () => {
@@ -119,7 +123,9 @@ const ArchiveDetailPost = ({ data }: { data: archiveDetailType[] }) => {
                         </button>
                         <button
                           className="h-[44px] w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
-                          onClick={() => setConfirmModal(true)}
+                          onClick={() => {
+                            setConfirmModal(true);
+                          }}
                         >
                           게시글 삭제
                         </button>
