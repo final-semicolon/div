@@ -43,18 +43,7 @@ const MyPostsList = ({
   const [showMenu, setShowMenu] = useState(false);
   const [showForumMenu, setShowForumMenu] = useState(false);
 
-  useEffect(() => {
-    setCurrentPage(1);
-    setSelectedItems(new Map());
-  }, [primaryCategory, primaryForumCategory, contentType]);
-
-  useEffect(() => {
-    setSelectedItems(new Map());
-    setSelectAll(false);
-  }, [currentPage]);
-
   const { data: posts = { archivePosts: [], forumPosts: [], qnaPosts: [] }, isLoading: postLoading } = useMyPosts();
-
   const {
     data: comments = {
       archive: { posts: [], comments: [] },
@@ -65,22 +54,32 @@ const MyPostsList = ({
   } = useMyComments();
 
   useEffect(() => {
+    setCurrentPage(1);
+    setSelectedItems(new Map());
+  }, [primaryCategory, primaryForumCategory, contentType]);
+
+  useEffect(() => {
+    setSelectedItems(new Map());
+    setSelectAll(false);
+  }, [currentPage]);
+
+  useEffect(() => {
     if (me === null || !me.id) return;
 
     if (!postLoading && !commentLoading && posts && comments) {
       const combined = myCombineItems(posts, comments);
       combined.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       setCombinedItems(combined);
-
-      const totalPosts = posts.archivePosts.length + posts.forumPosts.length + posts.qnaPosts.length;
-      const totalComments =
-        comments.archive.comments.length + comments.forum.comments.length + comments.qna.comments.length;
-
-      if (onTotalsChange) {
-        onTotalsChange(totalPosts, totalComments);
-      }
     }
-  }, [postLoading, commentLoading, posts, comments, onTotalsChange]);
+  }, [postLoading, commentLoading, posts, comments, me]);
+
+  useEffect(() => {
+    if (onTotalsChange) {
+      const totalPosts = combinedItems.filter((item) => item.type === 'post').length;
+      const totalComments = combinedItems.filter((item) => item.type === 'comment').length;
+      onTotalsChange(totalPosts, totalComments);
+    }
+  }, [combinedItems, onTotalsChange]);
 
   const categoryFilteredItems =
     primaryCategory === 'all'
