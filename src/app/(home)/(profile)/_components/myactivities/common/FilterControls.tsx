@@ -31,7 +31,7 @@ const FilterControls = ({
 
   return (
     <div>
-      <div className="p-6 bg-sub-50 flex justify-between overflow-x-auto">
+      <div className="p-6 bg-sub-50 flex justify-between">
         <div className="order-2 md:order-1 ">
           <PrimaryCategories
             primaryCategory={primaryCategory}

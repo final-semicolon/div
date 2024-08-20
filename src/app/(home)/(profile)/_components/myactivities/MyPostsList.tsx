@@ -1,29 +1,45 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { MyCombinedItem } from '@/types/profile/profileType';
 import { myCombineItems } from '@/utils/combineItems';
 import PostCard from './common/PostCard';
 import CommentCard from './common/CommentCard';
-import MyActivitiesPagination from './common/MyActivitiesPagination';
 import { useMyComments, useMyPosts } from '@/hooks/myactivities/useMyPosts';
 import { useAuth } from '@/context/auth.context';
 import { toast } from 'react-toastify';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import Check from '@/assets/images/common/Check';
+import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import PrimaryCategories from '@/components/categoryfilter/PrimaryCategories';
+import ContentFilters from '@/components/categoryfilter/ContentFilters';
+import Reset from '@/assets/images/common/Reset';
+import CommentPageButton from '@/components/common/CommentPageButton';
 
 type MyPostsListProps = {
   onTotalsChange?: (postCount: number, commentCount: number) => void;
   primaryCategory: 'all' | 'qna' | 'forum' | 'archive';
   primaryForumCategory: string | null;
   contentType: 'all' | 'post' | 'comment';
+  onCategoryChange: Dispatch<SetStateAction<'all' | 'qna' | 'forum' | 'archive'>>;
+  onForumCategoryChange: Dispatch<SetStateAction<string | null>>;
+  onTypeChange: Dispatch<SetStateAction<'all' | 'post' | 'comment'>>;
 };
 
-const MyPostsList = ({ onTotalsChange, primaryCategory, primaryForumCategory, contentType }: MyPostsListProps) => {
+const MyPostsList = ({
+  onTotalsChange,
+  primaryCategory,
+  primaryForumCategory,
+  contentType,
+  onCategoryChange,
+  onForumCategoryChange,
+  onTypeChange
+}: MyPostsListProps) => {
   const { me, userData } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState<Map<string, { category: string; type: string }>>(new Map());
   const [combinedItems, setCombinedItems] = useState<MyCombinedItem[]>([]);
   const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -164,86 +180,182 @@ const MyPostsList = ({ onTotalsChange, primaryCategory, primaryForumCategory, co
     }
   };
 
+  const handleResetClick = () => {
+    onTypeChange('all');
+    setShowMenu(false);
+    onCategoryChange('all');
+    onForumCategoryChange(null);
+  };
+
   return (
     <div className="relative min-h-screen">
-      <div className="flex mb-[40px] items-center">
-        <label className="flex items-center">
-          <input type="checkbox" checked={selectAll} onChange={handleSelectAll} hidden />
-          {selectedItems.size === 0 ? (
-            <span className="mr-4 flex border border-neutral-200 text-neutral-500 rounded p-[8px_16px] h-[40px] mt-6">
-              <Check stroke="#757575" />
-              전체선택
-            </span>
-          ) : (
-            <span className="mr-4 flex border border-main-400 text-main-400 bg-sub-50  rounded p-[8px_16px] h-[40px] mt-6">
-              <Check stroke="#423edf" />
-              전체선택
-            </span>
-          )}
-        </label>
-        {selectedItems.size === 0 ? (
-          <button
-            onClick={() => toast.error('삭제할 게시물을 선택해주세요')}
-            className="border border-neutral-200 text-neutral-500 rounded p-[8px_16px] h-[40px] mt-6"
-          >
-            삭제
-          </button>
-        ) : (
-          <button
-            onClick={() => setConfirmModalOpen(true)}
-            className="border border-neutral-200 text-neutral-500 rounded p-[8px_16px] h-[40px] mt-6"
-          >
-            {selectedItems.size} 삭제
-          </button>
-        )}
-      </div>
-
-      {paginatedItems.length === 0 ? (
-        <div>내가 쓴 글을 추가해보세요</div>
-      ) : (
-        paginatedItems.map((item) => (
-          <div key={item.id} className="mb-6">
-            {item.type === 'post' ? (
-              <PostCard
-                id={item.id}
-                title={item.title}
-                content={item.content}
-                thumbnail={item.thumbnail}
-                tags={item.tags}
-                created_at={item.created_at}
-                category={item.category}
-                likesCount={item.likesCount}
-                commentsCount={item.commentsCount}
-                forum_category={item.forum_category}
-                nickname={userData?.nickname || ''}
-                isSelected={selectedItems.has(item.id)}
-                onCheckboxChange={(id) => handleCheckboxChange(id, item.category, 'post')}
-              />
+      <Mobile>
+        <div className="p-[32px_20px]">
+          <div className="mb-6">
+            {contentType === 'comment' ? (
+              <p>총 댓글 ({typeFilteredItems.length})</p>
+            ) : contentType === 'post' ? (
+              <p>총 게시글 ({typeFilteredItems.length})</p>
             ) : (
-              <CommentCard
-                id={item.id}
-                post_id={item.post_id}
-                title={item.title}
-                tags={item.tags}
-                comment={item.comment}
-                time={new Date(item.created_at)}
-                category={item.category}
-                nickname={userData?.nickname || ''}
-                profile_image={userData?.profile_image || ''}
-                forum_category={item.forum_category}
-                likesCount={item.likesCount}
-                commentsCount={item.commentsCount}
-                created_at={item.created_at}
-                isSelected={selectedItems.has(item.id)}
-                onCheckboxChange={(id) => handleCheckboxChange(id, item.category, 'comment')}
-              />
+              <p>총 게시물 ({typeFilteredItems.length})</p>
             )}
           </div>
-        ))
-      )}
-      <div className="flex justify-between items-center">
-        <MyActivitiesPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+
+          <PrimaryCategories
+            primaryCategory={primaryCategory}
+            primaryForumCategory={primaryForumCategory}
+            onCategoryChange={onCategoryChange}
+            onForumCategoryChange={onForumCategoryChange}
+          />
+        </div>
+        <div className="flex items-center justify-between p-[8px_20px] text-subtitle3">
+          <div className="flex">
+            <label className="flex items-center">
+              <input type="checkbox" checked={selectAll} onChange={handleSelectAll} hidden />
+              {selectedItems.size === 0 ? (
+                <span className="mr-4 flex border border-neutral-200 text-neutral-500 rounded-lg p-2 h-9">
+                  <Check stroke="#757575" width={20} height={20} strokeWidth={1.4} />
+                  전체선택
+                </span>
+              ) : (
+                <span className="mr-4 flex border border-main-400 text-main-400 bg-sub-50  rounded-lg p-2 h-9">
+                  <Check stroke="#423edf" width={20} height={20} strokeWidth={1.4} />
+                  전체선택
+                </span>
+              )}
+            </label>
+            {selectedItems.size === 0 ? (
+              <button
+                onClick={() => toast.error('삭제할 게시물을 선택해주세요')}
+                className="border border-neutral-200 text-neutral-500 rounded-lg p-[8px_16px] h-9"
+              >
+                삭제
+              </button>
+            ) : (
+              <button
+                onClick={() => setConfirmModalOpen(true)}
+                className="border border-neutral-200 text-neutral-500 rounded-lg p-[8px_16px] h-9"
+              >
+                {selectedItems.size} 삭제
+              </button>
+            )}
+          </div>
+          <div className="flex">
+            {primaryCategory === 'all' && contentType === 'all' ? (
+              <div className="mx-2"></div>
+            ) : (
+              <div className="mx-2" onClick={handleResetClick}>
+                <Reset />
+              </div>
+            )}
+            <div className="relative">
+              <ContentFilters
+                contentType={contentType}
+                onTypeChange={onTypeChange}
+                showMenu={showMenu}
+                onShowMenu={setShowMenu}
+              />
+            </div>
+          </div>
+        </div>
+      </Mobile>
+      <Default>
+        <div className="flex mb-[40px] items-center">
+          <label className="flex items-center">
+            <input type="checkbox" checked={selectAll} onChange={handleSelectAll} hidden />
+            {selectedItems.size === 0 ? (
+              <span className="mr-4 flex border border-neutral-200 text-neutral-500 rounded p-[8px_16px] h-10 mt-6">
+                <Check stroke="#757575" />
+                전체선택
+              </span>
+            ) : (
+              <span className="mr-4 flex border border-main-400 text-main-400 bg-sub-50  rounded p-[8px_16px] h-10 mt-6">
+                <Check stroke="#423edf" />
+                전체선택
+              </span>
+            )}
+          </label>
+          {selectedItems.size === 0 ? (
+            <button
+              onClick={() => toast.error('삭제할 게시물을 선택해주세요')}
+              className="border border-neutral-200 text-neutral-500 rounded p-[8px_16px] h-[40px] mt-6"
+            >
+              삭제
+            </button>
+          ) : (
+            <button
+              onClick={() => setConfirmModalOpen(true)}
+              className="border border-neutral-200 text-neutral-500 rounded p-[8px_16px] h-[40px] mt-6"
+            >
+              {selectedItems.size} 삭제
+            </button>
+          )}
+        </div>
+      </Default>
+      <div className="min-h-[600px]">
+        {paginatedItems.length === 0 ? (
+          <div className="p-10 text-body3 md:text-body1">내가 쓴 글을 추가해보세요</div>
+        ) : (
+          paginatedItems.map((item) => (
+            <div key={item.id} className="md:mb-6 ">
+              {item.type === 'post' ? (
+                <PostCard
+                  id={item.id}
+                  title={item.title}
+                  content={item.content}
+                  thumbnail={item.thumbnail}
+                  tags={item.tags}
+                  created_at={item.created_at}
+                  category={item.category}
+                  likesCount={item.likesCount}
+                  commentsCount={item.commentsCount}
+                  forum_category={item.forum_category}
+                  nickname={userData?.nickname || ''}
+                  isSelected={selectedItems.has(item.id)}
+                  onCheckboxChange={(id) => handleCheckboxChange(id, item.category, 'post')}
+                />
+              ) : (
+                <CommentCard
+                  id={item.id}
+                  post_id={item.post_id}
+                  title={item.title}
+                  comment={item.comment}
+                  category={item.category}
+                  nickname={userData?.nickname || ''}
+                  forum_category={item.forum_category}
+                  likesCount={item.likesCount}
+                  commentsCount={item.commentsCount}
+                  created_at={item.created_at}
+                  isSelected={selectedItems.has(item.id)}
+                  onCheckboxChange={(id) => handleCheckboxChange(id, item.category, 'comment')}
+                />
+              )}
+            </div>
+          ))
+        )}
       </div>
+      {paginatedItems.length > 1 && (
+        <>
+          <Default>
+            <div className="">
+              <CommentPageButton
+                totalItems={typeFilteredItems.length}
+                itemsPerPage={itemsPerPage}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          </Default>
+          <Mobile>
+            <CommentPageButton
+              totalItems={typeFilteredItems.length}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
+          </Mobile>
+        </>
+      )}
       <ConfirmModal
         message={'삭제 할까요?'}
         isOpen={isConfirmModalOpen}

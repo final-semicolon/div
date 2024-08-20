@@ -36,6 +36,9 @@ const MyActivities = () => {
             primaryCategory={primaryCategory}
             primaryForumCategory={primaryForumCategory}
             contentType={contentType}
+            onCategoryChange={setPrimaryCategory}
+            onForumCategoryChange={setPrimaryForumCategory}
+            onTypeChange={setContentType}
           />
         );
       case 'likes':
@@ -44,6 +47,9 @@ const MyActivities = () => {
             primaryCategory={primaryCategory}
             primaryForumCategory={primaryForumCategory}
             contentType={contentType}
+            onCategoryChange={setPrimaryCategory}
+            onForumCategoryChange={setPrimaryForumCategory}
+            onTypeChange={setContentType}
           />
         );
       case 'bookmarks':
@@ -52,6 +58,9 @@ const MyActivities = () => {
             primaryCategory={primaryCategory}
             primaryForumCategory={primaryForumCategory}
             contentType={contentType}
+            onCategoryChange={setPrimaryCategory}
+            onForumCategoryChange={setPrimaryForumCategory}
+            onTypeChange={setContentType}
           />
         );
     }

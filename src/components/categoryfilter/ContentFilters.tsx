@@ -42,7 +42,7 @@ const ContentFilters = ({ contentType, onTypeChange, showMenu, onShowMenu }: Con
     <div className="flex">
       <button
         onClick={toggleMenu}
-        className={`flex items-center justify-center p-[8px_0px] w-[109px] md:w-[127px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium ${
+        className={`flex items-center justify-center p-[8px_0px] w-[87px] md:w-[127px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium ${
           contentType !== 'all'
             ? 'text-main-400 border border-main-400 rounded-lg bg-main-50'
             : 'text-neutral-700 border border-neutral-100 rounded-lg bg-white'
@@ -57,7 +57,7 @@ const ContentFilters = ({ contentType, onTypeChange, showMenu, onShowMenu }: Con
       {showMenu && (
         <div
           ref={menuButtonRef}
-          className="absolute z-10 top-[24px] w-[109px] md:w-[127px] border overflow-hidden border-neutral-100 rounded-lg bg-white hover:border hover:border-main-400 "
+          className="absolute z-10 md:top-[24px] w-[87px] md:w-[127px] border overflow-hidden border-neutral-100 rounded-lg bg-white hover:border hover:border-main-400 "
         >
           <li
             className={`flex items-center justify-center p-[8px_0px] h-[40px] text-subtitle3 md:text-subtitle1 font-medium ${
