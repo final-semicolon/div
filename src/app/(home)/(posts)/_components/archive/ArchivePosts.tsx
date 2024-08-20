@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
-import SortDropdown from '@/components/common/SortDropdownGrey';
+import SortDropdownGrey from '@/components/common/SortDropdownGrey';
 import { useArchivePosts } from '@/hooks/archive/useFetchArchivePosts';
 import { Post, SortOption } from '@/types/posts/archiveTypes';
 import Pagination from './Pagination';
@@ -16,7 +15,6 @@ const ArchivePosts = () => {
   const [page, setPage] = useState(0);
   const [sortMethod, setSortMethod] = useState<SortOption>('latest');
   const POSTS_PER_PAGE = 6;
-  const router = useRouter();
 
   const {
     data: archiveResult,
@@ -45,7 +43,16 @@ const ArchivePosts = () => {
   ];
 
   if (isPendingArchive) {
-    return <ArchivePostsSkeleton />;
+    return (
+      <>
+        <Default>
+          <ArchivePostsSkeleton width={388} height={414} />
+        </Default>
+        <Mobile>
+          <ArchivePostsSkeleton width={335} height={234} />
+        </Mobile>
+      </>
+    );
   }
 
   if (isErrorArchive) {
@@ -79,7 +86,7 @@ const ArchivePosts = () => {
                 </p>
               </p>
               <label className="flex items-center">
-                <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+                <SortDropdownGrey sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
               </label>
             </div>
           </div>
@@ -109,7 +116,7 @@ const ArchivePosts = () => {
                 </p>
               </p>
               <label className="flex items-center">
-                <SortDropdown sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
+                <SortDropdownGrey sortBy={sortMethod} handleSortChange={handleSortChange} sortOptions={sortOptions} />
               </label>
             </div>
           </div>

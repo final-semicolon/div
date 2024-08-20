@@ -5,7 +5,7 @@ import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import { SortDropdownProps, SortOption } from '@/types/buttons/sortDropdown';
 import { useState } from 'react';
 
-const SortDropdown = ({ sortBy, handleSortChange, sortOptions }: SortDropdownProps) => {
+const SortDropdownGrey = ({ sortBy, handleSortChange, sortOptions }: SortDropdownProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleDropdownClick = () => {
@@ -21,8 +21,12 @@ const SortDropdown = ({ sortBy, handleSortChange, sortOptions }: SortDropdownPro
           <div
             onClick={handleDropdownClick}
             className={`flex justify-between items-center h-[40px] px-4 py-2 bg-white border cursor-pointer ${
-              isOpen ? 'rounded-tl-lg rounded-tr-lg border-b-0 border-main-400' : 'rounded-lg border-neutral-100'
-            } ${!isOpen ? `hover:border-main-400` : ''}`}
+              isOpen
+                ? 'rounded-tl-lg rounded-tr-lg border-main-400 border-b-0'
+                : sortBy && sortBy !== 'latest'
+                  ? 'rounded-lg border-main-400 bg-main-50 text-main-400'
+                  : 'rounded-lg border-neutral-100 bg-white text-neutral-700'
+            } ${!isOpen && sortBy !== 'latest' ? `hover:border-main-400` : ''}`}
           >
             <span className="flex-grow w-[71px] text-body1 font-medium text-center text-neutral-700">
               {selectedOptionLabel}
@@ -43,9 +47,9 @@ const SortDropdown = ({ sortBy, handleSortChange, sortOptions }: SortDropdownPro
                   }}
                   className={`flex justify-center items-center h-[40px] gap-2 px-3 py-1 cursor-pointer ${
                     index === sortOptions.length - 1 ? 'rounded-bl-lg rounded-br-lg' : ''
-                  } hover:bg-main-50`}
+                  } ${option.value === sortBy ? 'bg-main-50 text-main-400' : 'text-neutral-700'} hover:bg-main-50`}
                 >
-                  <span className="flex-grow-0 flex-shrink-0 w-[95px] text-body1 font-medium text-center text-neutral-700">
+                  <span className="flex-grow-0 flex-shrink-0 w-[95px] text-body1 font-medium text-center ">
                     {option.label}
                   </span>
                 </div>
@@ -58,13 +62,15 @@ const SortDropdown = ({ sortBy, handleSortChange, sortOptions }: SortDropdownPro
         <div className="sort-dropdown relative w-[77px]">
           <div
             onClick={handleDropdownClick}
-            className={`flex justify-between items-center h-[28px] px-2 py-1 bg-white border cursor-pointer ${
-              isOpen ? 'rounded-tl-lg rounded-tr-lg border-b-0 border-main-400' : 'rounded-lg border-neutral-100'
-            } ${!isOpen ? `hover:border-main-400` : ''}`}
+            className={`flex justify-between items-center h-[28px] px-2 py-1 border cursor-pointer ${
+              isOpen
+                ? 'rounded-tl-lg rounded-tr-lg border-main-400 border-b-0'
+                : sortBy && sortBy !== 'latest'
+                  ? 'rounded-lg border-main-400 bg-main-50 text-main-400'
+                  : 'rounded-lg border-neutral-100 bg-white text-neutral-700'
+            } ${!isOpen && sortBy !== 'latest' ? `hover:border-main-400` : ''}`}
           >
-            <span className="flex-grow w-[45px] text-body4 font-medium text-center text-neutral-700">
-              {selectedOptionLabel}
-            </span>
+            <span className="flex-grow w-[45px] text-body4 font-medium text-center ">{selectedOptionLabel}</span>
             <Down width={16} height={16} stroke={'#292929'} />
           </div>
           {isOpen && (
@@ -81,11 +87,9 @@ const SortDropdown = ({ sortBy, handleSortChange, sortOptions }: SortDropdownPro
                   }}
                   className={`flex justify-center items-center h-[40px]px-[21.5px] py-2 cursor-pointer ${
                     index === sortOptions.length - 1 ? 'rounded-bl-lg rounded-br-lg' : ''
-                  } hover:bg-main-50`}
+                  } ${option.value === sortBy ? 'bg-main-50 text-main-400' : 'text-neutral-700'} hover:bg-main-50`}
                 >
-                  <span className="flex-grow-0 flex-shrink-0 text-body4 font-medium text-center text-neutral-700">
-                    {option.label}
-                  </span>
+                  <span className="flex-grow-0 flex-shrink-0 text-body4 font-medium text-center ">{option.label}</span>
                 </div>
               ))}
             </div>
@@ -96,4 +100,4 @@ const SortDropdown = ({ sortBy, handleSortChange, sortOptions }: SortDropdownPro
   );
 };
 
-export default SortDropdown;
+export default SortDropdownGrey;

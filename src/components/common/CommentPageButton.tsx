@@ -49,13 +49,13 @@ const CommentPageButton = ({ totalItems, itemsPerPage, currentPage, onPageChange
   };
 
   return (
-    <div className="flex justify-center items-center mt-4 space-x-2 gap-4">
+    <div className="flex justify-center items-center mt-4 mx-3 md:gap-4 gap-3">
       <button
         onClick={handleFirstPage}
         disabled={currentPage === 1}
         className={`w-8 h-8 rounded ${
           currentPage === 1
-            ? 'stroke-neutral-100 '
+            ? 'bg-neutral-50 stroke-neutral-100 '
             : 'bg-neutral-50 stroke-neutral-500 hover:stroke-main-400 hover:bg-main-50 active:bg-main-50 active:stroke-main-400'
         }`}
       >
