@@ -3,7 +3,6 @@ import PostCard from './common/PostCard';
 import CommentCard from './common/CommentCard';
 import { CombinedItem } from '@/types/profile/profileType';
 import { combineItems } from '@/utils/combineItems';
-import MyActivitiesPagination from './common/MyActivitiesPagination';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import { toast } from 'react-toastify';
 import Check from '@/assets/images/common/Check';
@@ -90,7 +89,7 @@ const BookmarksList = ({
   const typeFilteredItems =
     contentType === 'all' ? categoryFilteredItems : categoryFilteredItems.filter((item) => item.type === contentType);
 
-  console.log(typeFilteredItems);
+  // console.log(typeFilteredItems);
 
   const itemsPerPage = 4;
   const totalPages = Math.ceil(typeFilteredItems.length / itemsPerPage);

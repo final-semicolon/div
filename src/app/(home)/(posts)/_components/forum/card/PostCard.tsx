@@ -6,7 +6,6 @@ import Link from 'next/link';
 import dayjs from 'dayjs';
 import MDEditor from '@uiw/react-md-editor';
 import { debounce } from 'lodash';
-
 import CommentBubble from '@/assets/images/common/CommentBubble';
 import Share from '@/assets/images/common/Share';
 import BookmarkButton from '@/components/common/BookmarkButton';
@@ -77,7 +76,15 @@ const PostCard = ({
             <PostHeader post={post} />
             {post.thumbnail && (
               <div className="post-image mt-2">
-                <Image src={post.thumbnail} alt="Post Thumbnail" width={300} height={300} objectFit="cover" />
+                <Image
+                  src={post.thumbnail}
+                  alt="Post Thumbnail"
+                  width={500}
+                  height={500}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover"
+                  style={{ height: 'auto' }}
+                />
               </div>
             )}
             <h2 className="text-h4 font-bold text-neutral-900 mt-3 line-clamp-1">{filterSlang(post.title)}</h2>
@@ -111,8 +118,16 @@ const PostCard = ({
           <Link href={`/forum/${post.id}`} rel="preload">
             <PostHeader post={post} />
             {post.thumbnail && (
-              <div className="mt-2 w-full h-[446px]">
-                <Image src={post.thumbnail} alt="Post Thumbnail" width={295} height={446} objectFit="cover" />
+              <div className="mt-2">
+                <Image
+                  src={post.thumbnail}
+                  alt="Post Thumbnail"
+                  width={295}
+                  height={446}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                  style={{ width: '100%', height: 'auto' }}
+                />
               </div>
             )}
             <h2 className="text-subtitle2 font-bold text-neutral-900 mt-5 line-clamp-1">{filterSlang(post.title)}</h2>

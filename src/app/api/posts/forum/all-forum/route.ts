@@ -16,7 +16,7 @@ const getTopLikesPosts = async (req: NextRequest) => {
   );
 
   if (error) {
-    console.error('Error fetching posts:', error);
+    // console.error('Error fetching posts:', error);
     return NextResponse.json({ data: [], error: 'Error Fetching Posts' }, { status: 500 });
   }
   const sortedPosts = posts.sort((a, b) => {

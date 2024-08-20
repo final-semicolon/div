@@ -249,13 +249,13 @@
 }
 
 .custom-dashed-border {
-  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23DBDBDBFF' stroke-width='2' stroke-dasharray='8 7' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23DBDBDBFF' strokeWidth='2' strokeDasharray='8 7' strokeDashoffset='0' strokeLinecap='square'/%3e%3c/svg%3e");
   border-radius: 8px;
   box-shadow: 2px 2px 8px 0px rgba(163, 163, 163, 0.25);
 }
 
 .custom-dashed-border-invalid {
-  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23F66161FF' stroke-width='2' stroke-dasharray='8 7' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23F66161FF' strokeWidth='2' strokeDasharray='8 7' strokeDashoffset='0' strokeLinecap='square'/%3e%3c/svg%3e");
   border-radius: 8px;
   box-shadow: 2px 2px 8px 0px rgba(163, 163, 163, 0.25);
 }

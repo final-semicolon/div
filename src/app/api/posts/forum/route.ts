@@ -28,7 +28,7 @@ const getForumPosts = async (req: NextRequest) => {
     .range(page * limit, (page + 1) * limit - 1);
 
   if (error) {
-    console.error('Forum Posts API Error', error);
+    // console.error('Forum Posts API Error', error);
   }
 
   if (!posts || posts.length === 0) {

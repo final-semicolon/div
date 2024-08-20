@@ -1,14 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import BookmarkButton from '@/components/common/BookmarkButton';
 import { Post } from '@/types/posts/archiveTypes';
 import { cutText } from '@/utils/markdownCut';
 import DefaultThumbnail from '../../../../../../public/images/archive/default_thumbnail.png';
 import { useRouter } from 'next/navigation';
 import { Mobile } from '@/hooks/common/useMediaQuery';
 import ArchiveBookmarkButton from './ArchiveBookmarkButton';
-import Tag from '@/components/common/Tag';
 import TagBlock from '@/components/common/TagBlock';
 
 const ArchivePostCardMobile = ({ post }: { post: Post }) => {
