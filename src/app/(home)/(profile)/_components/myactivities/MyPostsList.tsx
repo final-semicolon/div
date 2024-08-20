@@ -14,6 +14,8 @@ import ContentFilters from '@/components/categoryfilter/ContentFilters';
 import Reset from '@/assets/images/common/Reset';
 import CommentPageButton from '@/components/common/CommentPageButton';
 import ActivitiesSkeletonUi from './activitiesskeleton/ActivitiesSkeletonUi';
+import { useQueryClient } from '@tanstack/react-query';
+import { revalidate } from '@/actions/revalidate';
 
 type MyPostsListProps = {
   onTotalsChange?: (postCount: number, commentCount: number) => void;
@@ -42,6 +44,7 @@ const MyPostsList = ({
   const [selectAll, setSelectAll] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showForumMenu, setShowForumMenu] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: posts = { archivePosts: [], forumPosts: [], qnaPosts: [] }, isLoading: postLoading } = useMyPosts();
   const {
@@ -164,6 +167,12 @@ const MyPostsList = ({
       setCombinedItems(updatedCombinedItems);
       setSelectedItems(new Map());
       setSelectAll(false);
+
+      queryClient.invalidateQueries({ queryKey: ['forumPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['qnaPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['archivePosts'] });
+
+      revalidate('/', 'layout');
 
       toast.success('삭제가 완료 되었습니다.');
     } catch (error) {
