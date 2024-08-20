@@ -11,11 +11,11 @@ export const POST = async (request: NextRequest) => {
       .from('forum_posts')
       .insert([
         {
-          user_id: jsonData.user_id,
-          title: jsonData.title,
-          content: jsonData.content,
-          forum_category: jsonData.forum_category,
-          thumbnail: jsonData.thumbnailUrl
+          user_id: jsonData.user_id as string,
+          title: jsonData.title as string,
+          content: jsonData.content as string,
+          forum_category: jsonData.forum_category as string,
+          thumbnail: jsonData.thumbnailUrl as string | null
         }
       ])
       .select();
@@ -26,23 +26,24 @@ export const POST = async (request: NextRequest) => {
       .from('qna_posts')
       .insert([
         {
-          user_id: jsonData.user_id,
-          title: jsonData.title,
-          content: jsonData.content,
-          thumbnail: jsonData.thumbnailUrl
+          user_id: jsonData.user_id as string,
+          title: jsonData.title as string,
+          content: jsonData.content as string,
+          thumbnail: jsonData.thumbnailUrl as string | null
         }
       ])
       .select();
+
     return error ? Response.json(POSTING_ERROR_MASSAGE) : Response.json({ data, ...POSTING_SUCCESS_MASSAGE });
   } else if (jsonData.category === 'archive') {
     const { data, error } = await supabase
       .from('archive_posts')
       .insert([
         {
-          user_id: jsonData.user_id,
-          title: jsonData.title,
-          content: jsonData.content,
-          thumbnail: jsonData.thumbnailUrl
+          user_id: jsonData.user_id as string,
+          title: jsonData.title as string,
+          content: jsonData.content as string,
+          thumbnail: jsonData.thumbnailUrl as string | null
         }
       ])
       .select();

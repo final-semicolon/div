@@ -85,7 +85,6 @@ const PostingForm = () => {
       body: JSON.stringify({ ...postData, thumbnailUrl })
     });
     const { data, message } = await response.json();
-
     const tagsArray = tagList.filter((tag) => tag.selected === true);
     if (tagsArray.length > 0 && !!data[0].id) {
       const response = await fetch(`/api/upsert/tags/${data[0].id}`, {

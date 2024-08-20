@@ -98,12 +98,9 @@ const QnaAnswer = ({
   };
 
   const selectCommentMutation = async () => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/question/${postId}?comment_id=${qnaComment.id}`,
-      {
-        method: 'PATCH'
-      }
-    );
+    const response = await fetch(`/api/posts/qna-detail/question/${postId}?comment_id=${qnaComment.id}`, {
+      method: 'PATCH'
+    });
     const { data, message } = await response.json();
     if (message) {
       toast.error(message);
@@ -130,9 +127,6 @@ const QnaAnswer = ({
       tags: tagList.filter((tag) => tag.selected),
       user_id: me?.id ?? ''
     });
-    toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
-    setIsEdit(false);
-    await revalidatePostTag(`qna-detail-${postId}`);
   };
 
   const editCommentMutation = async ({
@@ -146,7 +140,7 @@ const QnaAnswer = ({
     tags: Ttag[];
     user_id: string;
   }) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${commentId}`, {
+    const response = await fetch(`/api/posts/qna-detail/comment/${commentId}`, {
       method: 'PATCH',
       body: JSON.stringify({ comment, tags, user_id })
     });
@@ -159,8 +153,11 @@ const QnaAnswer = ({
 
   const { mutate: editMutate } = useMutation({
     mutationFn: editCommentMutation,
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['qnaComments', postId] });
+      toast.success(QNA_ANSWER_EDIT_ALERT_TEXT);
+      setIsEdit(false);
+      await revalidatePostTag(`qna-detail-${postId}`);
     }
   });
 
@@ -366,7 +363,7 @@ const QnaAnswer = ({
       </div>
       <div className="flex justify-between  h-[59px] items-center">
         <div className={`w-full flex flex-col md:flex-row gap-6 md:items-center `}>
-          <span className="text-body3 md:text-body1 text-neutral-400 md:min-w-24">
+          <span className="whitespace-nowrap text-body3 md:text-body1 text-neutral-400 md:min-w-24">
             {qnaComment.created_at?.slice(0, 10).split('-').join('. ')}
           </span>
           <div className={`w-full flex gap-2 md:gap-4 h-10 md:h-12 items-center`}>
