@@ -53,7 +53,7 @@ const PostingAnswerArea = ({ title, content, setContent, setToggleAnswer }: Post
     content: string;
     tags: Ttag[];
   }) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/comment/${postId}`, {
+    const response = await fetch(`/api/posts/qna-detail/comment/${postId}`, {
       method: 'POST',
       body: JSON.stringify({ user_id, comment: content })
     });
@@ -63,7 +63,7 @@ const PostingAnswerArea = ({ title, content, setContent, setToggleAnswer }: Post
     }
 
     if (data[0]) {
-      const tagResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/upsert/tags/${postId}`, {
+      const tagResponse = await fetch(`/api/upsert/tags/${postId}`, {
         method: 'POST',
         body: JSON.stringify({ comment_id: data[0]?.id, user_id: me?.id, tags: tags, category: 'comment' })
       });

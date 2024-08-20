@@ -37,7 +37,7 @@ const QuestionKebobBtn = () => {
   };
 
   const deletePost = async (): Promise<void> => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/qna-detail/question/${postId}`, {
+    const response = await fetch(`/api/posts/qna-detail/question/${postId}`, {
       method: 'DELETE'
     });
     const { data, message } = await response.json();
@@ -59,7 +59,7 @@ const QuestionKebobBtn = () => {
         </button>
 
         <ul
-          className={`${openKebab ? 'border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute  -right-[6px] text-center hover:border-main-400 text-body4 md:text-body2 z-50`}
+          className={`${openKebab ? ' border border-neutral-100 bg-white' : 'hidden'} rounded-lg flex flex-col absolute  -right-[6px] text-center hover:border-main-400 text-body4 md:text-body2 z-50`}
         >
           <ConfirmModal
             isOpen={isEditModalOpen}
