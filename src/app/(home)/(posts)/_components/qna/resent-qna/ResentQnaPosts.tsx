@@ -5,18 +5,20 @@ import SortDropdown from '@/components/common/SortDropdownGrey';
 import useFetchQnaPosts from '@/hooks/qna/useFetchQnaPosts';
 import { Post, SortOption } from '@/types/posts/qnaTypes';
 import dayjs from 'dayjs';
-import Pagination from './Pagination';
 import QnaPostItemWaiting from './QnaPostItemWaiting';
 import StatusTabs from './StatusTabs';
 import QnaPostItemSelected from './QnaPostItemSelected';
-import QnaPostItemSkeleton from '../skeleton/QnaPostItemSkeleton';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
+import CommentPageButton from '@/components/common/CommentPageButton';
+import { Skeleton } from '@/components/ui/skeleton';
+import QnaPostsSkeleton from '../skeleton/QnaPostsSkeleton';
 
 const ResentQnaPosts = () => {
   const [status, setStatus] = useState('waiting');
-  const [waitingPage, setWaitingPage] = useState(0);
-  const [selectedPage, setSelectedPage] = useState(0);
+  const [waitingPage, setWaitingPage] = useState(1);
+  const [selectedPage, setSelectedPage] = useState(1);
   const [sortMethod, setSortMethod] = useState<SortOption>('latest');
+  const pageSize = 5;
 
   const {
     data: waitingPosts,
@@ -25,7 +27,7 @@ const ResentQnaPosts = () => {
     isError: isErrorWaiting,
     totalPages: waitingTotalPages,
     goToPage: goToWaitingPage
-  } = useFetchQnaPosts('waiting');
+  } = useFetchQnaPosts('waiting', pageSize);
 
   const {
     data: selectedPosts,
@@ -34,7 +36,7 @@ const ResentQnaPosts = () => {
     isError: isErrorSelected,
     totalPages: selectedTotalPages,
     goToPage: goToSelectedPage
-  } = useFetchQnaPosts('selected');
+  } = useFetchQnaPosts('selected', pageSize);
 
   useEffect(() => {
     if (status === 'waiting') {
@@ -65,6 +67,7 @@ const ResentQnaPosts = () => {
 
   const posts = status === 'waiting' ? waitingPosts : selectedPosts;
   const totalPages = status === 'waiting' ? waitingTotalPages : selectedTotalPages;
+  const currentPage = status === 'waiting' ? waitingPage : selectedPage;
   const setPage = status === 'waiting' ? setWaitingPage : setSelectedPage;
 
   const sortedPosts = posts ? filterAndSortPosts(posts, sortMethod) : [];
@@ -74,7 +77,7 @@ const ResentQnaPosts = () => {
   }, []);
 
   if ((status === 'waiting' && isPendingWaiting) || (status === 'selected' && isPendingSelected)) {
-    return <QnaPostItemSkeleton />;
+    return <QnaPostsSkeleton />;
   }
 
   if ((status === 'waiting' && isErrorWaiting) || (status === 'selected' && isErrorSelected)) {
@@ -106,9 +109,10 @@ const ResentQnaPosts = () => {
           ) : (
             <div>게시물이 없습니다.</div>
           )}
-          <Pagination
-            totalPages={totalPages}
-            currentPage={status === 'waiting' ? waitingPage : selectedPage}
+          <CommentPageButton
+            totalItems={totalPages * sortedPosts.length}
+            itemsPerPage={sortedPosts.length}
+            currentPage={currentPage}
             onPageChange={setPage}
           />
         </>
@@ -136,11 +140,14 @@ const ResentQnaPosts = () => {
           ) : (
             <div>게시물이 없습니다.</div>
           )}
-          <Pagination
-            totalPages={totalPages}
-            currentPage={status === 'waiting' ? waitingPage : selectedPage}
-            onPageChange={setPage}
-          />
+          <div className="mb-2">
+            <CommentPageButton
+              totalItems={totalPages * sortedPosts.length}
+              itemsPerPage={sortedPosts.length}
+              currentPage={currentPage}
+              onPageChange={setPage}
+            />
+          </div>
         </>
       </Mobile>
     </>

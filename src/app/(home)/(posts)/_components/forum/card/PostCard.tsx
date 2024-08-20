@@ -121,7 +121,7 @@ const PostCard = ({
             </div>
             {post.forum_tags && <PostTags tags={post.forum_tags} />}
           </Link>
-          <div className="post-date mt-1 text-body3 font-regular text-neutral-400">
+          <div className="post-date mt-1 text-caption font-regular text-neutral-400">
             {dayjs(post.created_at).format('YYYY-MM-DD')}
           </div>
           <div className="flex items-center justify-end max-w-[844px]">
