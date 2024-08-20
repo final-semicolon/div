@@ -4,38 +4,29 @@ import { FetchResult } from '@/types/posts/qnaTypes';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 
-const getPostsPerPage = (status: string) => {
-  if (status === 'popular') {
-    return 6;
-  } else {
-    return 5;
-  }
-};
-
-const fetchQnaPosts = async (page: number, status: string): Promise<FetchResult> => {
-  const POSTS_PER_PAGE = getPostsPerPage(status);
-  const response = await fetch(`/api/posts/qna/${status}?page=${page}&limit=${POSTS_PER_PAGE}`);
+const fetchQnaPosts = async (page: number, status: string, limit: number): Promise<FetchResult> => {
+  const response = await fetch(`/api/posts/qna/${status}?page=${page - 1}&limit=${limit}`);
   if (!response.ok) {
     throw new Error('Network response is not ok');
   }
   const data = await response.json();
-  return { data: data.data, count: data.count, nextPage: data.data.length === POSTS_PER_PAGE ? page + 1 : null };
+  return { data: data.data, count: data.count, nextPage: data.data.length === limit ? page + 1 : null };
 };
 
-const useFetchQnaPosts = (status: string) => {
-  const [page, setPage] = useState(0);
-  const POSTS_PER_PAGE = getPostsPerPage(status);
+const useFetchQnaPosts = (status: string, pageSize: number) => {
+  const [page, setPage] = useState(1);
+
   const { data, error, isPending, isError } = useQuery<FetchResult, Error>({
     queryKey: ['qnaPosts', page, status],
-    queryFn: () => fetchQnaPosts(page, status)
-    // staleTime: 1000 * 60 * 5,
-    // gcTime: 1000 * 60 * 10
+    queryFn: () => fetchQnaPosts(page, status, pageSize),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10
   });
 
-  const totalPages = data ? Math.ceil(data.count / POSTS_PER_PAGE) : 0;
+  const totalPages = data ? Math.ceil(data.count / pageSize) : 0;
 
   const goToPage = useCallback((pageNumber: number) => {
-    setPage(pageNumber);
+    setPage(Math.max(1, pageNumber));
   }, []);
 
   return {

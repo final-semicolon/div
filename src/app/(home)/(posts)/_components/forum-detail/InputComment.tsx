@@ -57,16 +57,16 @@ const InputComments = () => {
   };
 
   return (
-    <div className={`flex ${me ? 'justify-start' : 'justify-center'} items-center  py-6`}>
+    <div className={`flex ${me ? 'justify-start' : 'justify-center'} items-center px-5 pb-5 md:pb-0 md:px-0  md:py-6`}>
       <div className=" w-full">
-        <div className=" flex justify-center items-center gap-6" data-color-mode="light">
+        <div className=" flex justify-center items-center gap-6">
           {me && (
             <Image
               src={userData?.profile_image ?? ''}
               alt="user profile image"
               width={48}
               height={48}
-              className=" rounded-full"
+              className=" rounded-full hidden md:block md:w-12 md:h-12 "
             />
           )}
           <MDEditor
@@ -81,7 +81,7 @@ const InputComments = () => {
               placeholder: `${me ? '자유롭게 소통해 보세요!' : '로그인 후 자유롭게 소통해 보세요!'}`,
               maxLength: 1000
             }}
-            className="w-full border border-neutral-100  first-of-type:rounded-xl focus-within:border-main-400"
+            className="w-full border  border-neutral-100  first-of-type:rounded-xl focus-within:border-main-400"
           />
         </div>
         {me && (

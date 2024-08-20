@@ -18,6 +18,9 @@ import TagBlock from '@/components/common/TagBlock';
 import { handleLinkCopy } from '@/utils/handleLinkCopy';
 import { Default, Mobile } from '@/hooks/common/useMediaQuery';
 import BackClick from '@/components/common/BackClick';
+import MobileBackClickBlack from '@/components/common/MobileBackClickBlack';
+import MobileBackClickWhite from '@/components/common/MobileBackClickWhite ';
+import KebabWhite from '@/assets/images/common/KebabWhite';
 
 const ArchiveDetailPost = () => {
   const { me } = useAuth();
@@ -160,11 +163,11 @@ const ArchiveDetailPost = () => {
       </Default>
       <Mobile>
         <div className="flex flex-col gap-5 md:gap-6 relative">
-          {thumbnailsArray.map((thumbnail: string, index: number) => (
+          {thumbnailsArray.map((thumbnail: string | null, index: number) => (
             <div
               key={index}
-              className={`flex flex-col justify-between h-[250px] w-full bg-cover p-5 ${
-                thumbnail ? 'none' : 'bg-sub-200'
+              className={`relative flex flex-col justify-between h-[250px] w-full bg-cover p-5 ${
+                thumbnail ? '' : 'bg-sub-200'
               }`}
               style={
                 thumbnail
@@ -174,49 +177,18 @@ const ArchiveDetailPost = () => {
                   : {}
               }
             >
-              <div className="relative z-10 p-4 mt-20 ">
-                <div className="flex flex-col justify-start items-start gap-4">
-                  <p className="text-subtitle1 font-bold text-white h-12">{archiveDetail.title}</p>
-
-                  {archiveDetail.user && (
-                    <div className="flex  items-center gap-3 ">
-                      <Image
-                        src={archiveDetail.user.profile_image}
-                        alt="forumUserImage"
-                        width={36}
-                        height={36}
-                        className="rounded-full w-[36px] h-[36px]"
-                      />
-                      <div className="flex flex-col gap-1">
-                        <p className="subtitle1-medium-14px text-white ">{archiveDetail.user.nickname}</p>
-                        <div className="flex justify-start items-center gap-2">
-                          <p className="body4-regular-13px text-neutral-100">
-                            {timeForToday(
-                              archiveDetail.updated_at ? archiveDetail.updated_at : archiveDetail.created_at
-                            )}
-                            <span>{archiveDetail.updated_at !== archiveDetail.created_at && '(수정됨)'}</span>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
               {scroll && <div className="h-[52px] w-full"></div>}
               <div
                 className={`flex justify-between items-center ${
                   scroll ? 'bg-white px-5 py-2 fixed top-0 left-0 w-full' : 'bg-none'
                 }`}
               >
-                {/* {scroll ? <MobileBackClickBlack /> : <MobileBackClickWhite />} */}
+                {scroll ? <MobileBackClickBlack /> : <MobileBackClickWhite />}
                 {archiveDetail.user_id === me?.id && (
                   <div className="relative">
-                    {/* <div
-                    className="p-4"
-                    onClick={() => setKebobToggle(!kebobToggle)}
-                  >
-                    {scroll ? <KebabButton /> : <KebabWhite />}
-                  </div> */}
+                    <div className="p-4" onClick={() => setKebobToggle(!kebobToggle)}>
+                      {scroll ? <KebabButton /> : <KebabWhite />}
+                    </div>
                     {kebobToggle && (
                       <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center bg-white z-50 shadow-lg border rounded-lg">
                         <button
@@ -245,6 +217,34 @@ const ArchiveDetailPost = () => {
                     )}
                   </div>
                 )}
+              </div>
+              <div className="absolute mt-20 left-0 z-10 p-4">
+                <div className="flex flex-col justify-start items-start gap-4">
+                  <p className="text-subtitle1 font-bold text-white h-12">{archiveDetail.title}</p>
+
+                  {archiveDetail.user && (
+                    <div className="flex  items-center gap-3 ">
+                      <Image
+                        src={archiveDetail.user.profile_image}
+                        alt="forumUserImage"
+                        width={36}
+                        height={36}
+                        className="rounded-full w-[36px] h-[36px]"
+                      />
+                      <div className="flex flex-col gap-1">
+                        <p className="subtitle1-medium-14px text-white ">{archiveDetail.user.nickname}</p>
+                        <div className="flex justify-start items-center gap-2">
+                          <p className="body4-regular-13px text-neutral-100">
+                            {timeForToday(
+                              archiveDetail.updated_at ? archiveDetail.updated_at : archiveDetail.created_at
+                            )}
+                            <span>{archiveDetail.updated_at !== archiveDetail.created_at && '(수정됨)'}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ))}

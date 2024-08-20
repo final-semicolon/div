@@ -116,7 +116,7 @@ const SearchBar = () => {
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={handleSearch}
             onFocus={() => setIsFocused(true)}
-            className="mx-2 pr-4 w-[191px] md:w-[222px] text-body2 font-regular focus:outline-none bg-white"
+            className="mx-2 pr-4 w-[191px] md:w-[222px] text-body2 font-regular focus:outline-none bg-transparent"
           />
           {!keyword || (
             <button className="my-4 mr-4" onClick={handleClearKeyword}>

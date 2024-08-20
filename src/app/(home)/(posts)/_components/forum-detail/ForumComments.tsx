@@ -110,6 +110,8 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
   if (isPending) {
     return <div>loading...</div>;
   }
+
+  console.log(comments?.count);
   const COMMENT_PAGE = 5;
   const commentsCount = comments?.count ?? 0;
 
@@ -136,32 +138,34 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
 
   return (
     <>
-      <div className=" mt-10 mb-6 px-6 text-subtitle1 font-medium ">
-        {comments && comments.length > 0 && <p>댓글 {comments.count}</p>}
+      <div className=" md:mt-10 mt-5 px-5 pb-2 md:mb-6 md:px-6 text-subtitle3 md:text-subtitle1 font-medium ">
+        <p>댓글 {comments?.count}</p>
       </div>
       {comments?.data?.map((comment) => (
         <div key={comment.id}>
-          <div key={comment.id} className="w-full flex flex-col ">
+          <div key={comment.id} className={`w-full flex flex-col  `}>
             <div
-              className={`flex flex-col justify-around border-b-2 gap-4 p-6 ${comment.user_id === me?.id ? 'bg-sub-50' : 'bg-white'}`}
+              className={`flex flex-col justify-around border-b-2 gap-2 md:gap-4 p-5 md:px-5 md:py-6 ${replyToggle[comment.id] ? 'mx-5' : 'mx-0'} md:mx-0 ${comment.user_id === me?.id ? 'bg-sub-50' : 'bg-white'}`}
             >
               <div className="flex justify-between ">
-                <div className="flex justify-start items-center gap-4 ">
+                <div className="flex justify-start items-center gap-3 md:gap-4">
                   <Image
                     src={comment.user.profile_image}
                     alt="commentUserImage"
                     width={48}
                     height={48}
-                    className="rounded-full "
+                    className="rounded-full w-9 h-9 md:w-10 md:h-10"
                   />
-                  <div className=" flex flex-col gap-1 ">
+                  <div className=" flex flex-col md:gap-1 ">
                     {post_user_id === comment.user_id && (
-                      <p className=" text-subtitle2 font-medium  px-[12px] py-[4px] text-white bg-main-400 text-center rounded-[4px]  ">
+                      <p className=" text-subtitle4 font-semibold md:text-subtitle2 md:font-medium p-1 md:px-[12px] md:py-[4px] text-white bg-main-400 text-center rounded-[4px]  ">
                         글쓴이
                       </p>
                     )}
-                    <p className="text-subtitle1 font-medium text-neutral-900">{comment.user.nickname}</p>
-                    <p className="text-body2 font-regular text-neutral-300">{timeForToday(comment.updated_at)}</p>
+                    <p className="text-body4 md:text-subtitle1 font-medium text-neutral-900">{comment.user.nickname}</p>
+                    <p className="text-body4 md:text-body2 font-regular text-neutral-300">
+                      {timeForToday(comment.updated_at)}
+                    </p>
                   </div>
                 </div>
                 <div className=" relative">
@@ -174,15 +178,15 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                           </div>
                         )}
                         {editingToggleState[comment.id] && (
-                          <div className="w-[105px] right-0 absolute flex flex-col justify-center items-center border-main-400 bg-white shadow-lg border rounded-lg z-50">
+                          <div className="w-[82px] md:w-[105px] right-0 absolute flex flex-col justify-center text-body4 md:text-body2 font-regular items-center border-main-400 bg-white shadow-lg border rounded-lg z-50">
                             <button
-                              className="h-[44px]  w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
+                              className="h-9 md:h-11  w-full rounded-t-lg hover:bg-main-50 hover:text-main-400"
                               onClick={() => toggleEditing(comment.id, comment.comment)}
                             >
                               댓글 수정
                             </button>
                             <button
-                              className="h-[44px]  w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
+                              className="h-9 md:h-11  w-full rounded-b-lg hover:bg-main-50 hover:text-main-400"
                               onClick={() => setDeleteConfirmModal(true)}
                             >
                               댓글 삭제
@@ -256,12 +260,12 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                 </p>
               ) : (
                 <div>
-                  <p className="text-body1 font-regular whitespace-pre-wrap break-words">
+                  <p className="text-body3 md:text-body1 w-full font-regular whitespace-pre-wrap break-words text-neutral-900">
                     <MDEditor.Markdown source={cutText(filterSlang(comment.comment), 370)} />
                   </p>
                   {comment.comment.length >= 370 && (
                     <button
-                      className="text-subtitle2 font-bold text-neutral-700"
+                      className="text-subtitle3 md:text-subtitle2 font-bold text-neutral-700"
                       onClick={() => setCommentLength(true)}
                     >
                       ...더보기
@@ -269,23 +273,25 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                   )}
                 </div>
               )}
-              <div className=" flex justify-between gap-4">
-                <p className="text-body1 font-regular text-neutral-400">
+              <div className=" md:flex md:justify-between md:gap-4">
+                <p className="text-body3 md:text-body1 font-regular text-neutral-400">
                   {comment.created_at.slice(0, 10).replace(/-/g, '.')}
                 </p>
-                <div className=" flex gap-4">
-                  <LikeButton id={comment.id} type="forumComment" />
-                  <BookmarkButton id={comment.id} type="forumComment" />
+                <div className=" flex justify-between md:justify-end  md:gap-4">
+                  <div className=" flex gap-3 md:gap-4 mt-2 md:mt-0">
+                    <LikeButton id={comment.id} type="forumComment" />
+                    <BookmarkButton id={comment.id} type="forumComment" />
+                  </div>
                   {replyToggle[comment.id] ? (
                     <div className="flex gap-5">
                       <button
                         onClick={() => replyOpenToggle(comment.id)}
-                        className="text-subtitle1 font-medium text-main-400"
+                        className="text-body3 md:text-subtitle1 font-medium text-main-400"
                       >
                         댓글 모두 숨기기
                       </button>
                       <button
-                        className="text-subtitle1 font-medium text-neutral-400"
+                        className="text-body3 md:text-subtitle1 font-medium text-neutral-400"
                         onClick={() => handleInputReplyToggle(comment.id, comment.reply[0].count)}
                       >
                         {inputReplyToggle[comment.id] ? '댓글 취소' : '댓글 쓰기'}
@@ -294,13 +300,13 @@ const ForumComments = ({ post_user_id }: { post_user_id: string }) => {
                   ) : comment.reply[0].count !== 0 ? (
                     <button
                       onClick={() => replyOpenToggle(comment.id)}
-                      className="text-subtitle1 font-medium text-main-400"
+                      className="text-body3 md:text-subtitle1 font-medium text-main-400"
                     >
                       {comment.reply[0].count}개의 댓글 보기
                     </button>
                   ) : (
                     <button
-                      className="text-subtitle1 font-medium text-neutral-400"
+                      className="text-body3 md:text-subtitle1 font-medium text-neutral-400"
                       onClick={() => handleInputReplyToggle(comment.id, comment.reply[0].count)}
                     >
                       댓글 쓰기
