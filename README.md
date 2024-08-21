@@ -708,10 +708,9 @@
 ## 🛠 트러블 슈팅
 
 <details>
-<summary>트러블 슈팅 1</summary>
+<summary>Profile 데이터 업데이트 내용 즉시 반영 문제</summary>
 <br>
 
-## Profile 데이터 업데이트 내용 즉시 반영 문제
 
 **`문제`**
 
@@ -724,10 +723,9 @@ Supabase Storage를 사용하여 이미지를 업데이트가 이루어지는 �
 </details>
 
 <details>
-<summary>트러블 슈팅 2</summary>
+<summary>QnA 상세 페이지 데이터 캐싱 효율성 문제</summary>
 <br>
 
-## QnA 상세 페이지 데이터 캐싱 효율성 문제
 
 **`문제`**
 
@@ -745,10 +743,9 @@ invalidateQuery를 하되 좀 더 범위를 좁혀서 수정 시에는 해당 �
 </details>
 
 <details>
-<summary>트러블 슈팅 3</summary>
+<summary>forum 상세 페이지 댓글 카운트 문제</summary>
 <br>
 
-## forum 상세 페이지 댓글 카운트 문제
 
 **`문제`**
 
@@ -761,10 +758,10 @@ invalidateQuery를 하되 좀 더 범위를 좁혀서 수정 시에는 해당 �
 </details>
 
 <details>
-<summary>트러블 슈팅 4</summary>
+<summary>Promise.all 및 불필요한 API요청 감소</summary>
 <br>
 
-## Promise.all 및 불필요한 API요청 감소
+
 
 **`문제`**
 
@@ -777,10 +774,9 @@ invalidateQuery를 하되 좀 더 범위를 좁혀서 수정 시에는 해당 �
 </details>
 
 <details>
-<summary>트러블 슈팅 5</summary>
+<summary>Signup 닉네임 유효성 검사 문제</summary>
 <br>
 
-## 닉네임 유효성 검사 문제
 
 **`문제`**
 
