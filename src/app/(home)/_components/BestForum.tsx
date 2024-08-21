@@ -104,7 +104,6 @@ const BestForum = () => {
                         <span className="text-body font-regular text-neutral-300">▪</span>
                         <p className="text-body font-regular text-neutral-300">
                           {timeForToday(forum.updated_at ? forum.updated_at : forum.created_at)}
-                          <span className="text-xs">{forum.updated_at !== forum.created_at && '(수정됨)'}</span>
                         </p>
                       </div>
                     </div>
@@ -121,7 +120,7 @@ const BestForum = () => {
                         />
                       ) : null}
                       <div
-                        className={`flex flex-col ${forum.thumbnail ? 'h-[85px] overflow-hidden' : 'h-[250px]'} gap-2`}
+                        className={`flex flex-col ${forum.thumbnail ? 'h-[85px] overflow-hidden' : 'h-[300px]'} gap-2`}
                       >
                         <h1 className="text-h5 font-bold truncate ">{forum.title}</h1>
                         {forum.thumbnail ? (
